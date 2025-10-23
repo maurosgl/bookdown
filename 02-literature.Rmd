@@ -1,3 +1,161 @@
 # Literature
 
-Here is a review of existing methods.
+### **Cargue de Datos**
+
+```{r}
+# Librerias
+
+library(readr)
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+library(forecast)
+library(tseries)
+```
+
+
+### **Cargue de datos**
+
+```{r}
+# Cargar datos
+data <- read_csv("C:/Users/Steba/OneDrive/Escritorio/kalimati_tarkari_dataset (2).csv", show_col_types = FALSE)
+```
+
+### **Análisis Exploratorio de Datos (EDA)**
+
+```{r}
+# Vista previa de los datos
+head(data)
+```
+
+```{r}
+# comando para saber el tipo de datos
+str(data)
+```
+
+```{r}
+# Resumen estadístico de los datos
+summary(data)
+```
+
+```{r}
+# Verificar valores faltantes
+sum(is.na(data))
+```
+
+No se observan datos faltantes en el dataset
+
+```{r}
+# Verificar datos duplicados
+sum(duplicated(data))
+```
+No se observan datos duplicados en el dataset
+
+### **análisis Univariado**
+
+```{r}
+# Distribución de precios promedio
+
+ggplot(data, aes(x = Average)) +
+  geom_histogram(binwidth = 5, fill = "blue", color = "black", alpha = 0.7) +
+  labs(title = "Distribución de Precios Promedio", x = "Precio Promedio", y = "Frecuencia") +
+  theme_minimal()
+```
+
+```{r}
+# Estadísticas descriptivas de precios promedio
+data %>%
+  summarise(
+    Mean = mean(Average),
+    Median = median(Average),
+    SD = sd(Average),
+    Min = min(Average),
+    Max = max(Average)
+  )
+```
+
+### **Análisis Bivariado**
+
+```{r}
+# Relación entre precio mínimo y precio máximo
+ggplot(data, aes(x = Minimum, y = Maximum)) +
+  geom_point(alpha = 0.5) +
+  labs(title = "Relación entre Precio Mínimo y Máximo", x = "Precio Mínimo", y = "Precio Máximo") +
+  theme_minimal()
+```
+
+
+```{r}
+# Correlación entre precio mínimo y precio máximo
+cor(data$Minimum, data$Maximum)
+```
+
+### **Análisis de Series de Tiempo**
+
+### Filtrar 3 items
+
+```{r}
+# Filtrar datos para un solo commodity
+potatored_ts <- data %>% filter(Commodity == "Potato Red")
+
+```
+
+
+
+```{r}
+# autoplot de la serie de tiempo del precio promedio
+
+autoplot(ts(potatored_ts$Average, frequency = 365, start = c(2013, 1))) +
+  labs(title = "Serie de Tiempo: Precio Promedio de Papa Roja", y = "Precio Promedio") +
+  theme_minimal()
+```
+
+```{r}
+autoplot(decompose(ts(potatored_ts$Average, frequency = 365, start = c(2013, 1))))
+```
+
+```{r}
+ggseasonplot(ts(potatored_ts$Average, frequency = 365, start = c(2013, 1)), year.labels=TRUE, year.labels.left=TRUE) +
+  labs(title = "Seasonal Plot: Precio Promedio", y = "Precio Promedio") +
+  theme_minimal()
+```
+
+```{r}
+ggsubseriesplot(ts(potatored_ts$Average, frequency = 365, start = c(2013, 1))) +
+  labs(title = "Subseries Plot: Precio Promedio", y = "Precio Promedio") +
+  theme_minimal()
+```
+
+```{r}
+ggAcf(ts(potatored_ts$Average, frequency = 365, start = c(2013, 1)), main = "ACF del Precio Promedio")
+```
+
+```{r}
+decompose(ts_data <- ts(potatored_ts$Average, frequency = 365, start = c(2013, 1))
+)$trend %>% autoplot() + labs(title = "Tendencia del Precio Promedio", y = "Tendencia") + theme_minimal()
+```
+
+```{r}
+decompose(ts_data <- ts(potatored_ts$Average, frequency = 365, start = c(2013, 1))
+)$seasonal %>% autoplot() + labs(title = "Estacionalidad del Precio Promedio", y = "Estacionalidad") + theme_minimal()
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
