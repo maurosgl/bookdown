@@ -1,10 +1,30 @@
 book_filename: "bookdown-demo"
-language:
-  ui:
-    chapter_name: "Chapter "
+new_session: yes
 delete_merged_file: true
 
-rmd_files:
-  - index.Rmd
-  - 01-intro.Rmd
-  - 02-literature.Rmd
+language:
+  label:
+    fig: "Figura "
+    tab: "Tabla "
+    eq: "Ecuación "
+    thm: "Teorema "
+    lem: "Lema "
+    def: "Definición "
+    cor: "Corolario "
+    prp: "Proposición "
+    exm: "Ejemplo "
+    exr: "Ejercicio "
+  ui:
+    chapter_name: "Capítulo "
+
+rmd_files: [
+  "index.Rmd",
+  "01-intro.Rmd",
+  "02-literature.Rmd",
+  "03-method.Rmd",
+  "04-application.Rmd",
+  "05-summary.Rmd",
+  "06-references.Rmd"
+]
+
+output_dir: "_book"

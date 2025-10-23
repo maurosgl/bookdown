@@ -1,11 +1,6 @@
---- 
-<<<<<<< HEAD
-title: "Series de Tiempo - Predicción de Precios de Frutas y Verduras Nepal"
+---
+title: "Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal"
 author: "Grupo 2"
-=======
-title: "A Minimal Book Example"
-author: "Yihui Xie"
->>>>>>> 238c340ff1f8051b5e1cd9a5ccd948b1c4981349
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
@@ -14,7 +9,7 @@ bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
 github-repo: rstudio/bookdown-demo
-description: "This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook."
+description: "Análisis y predicción de precios de frutas y verduras en Nepal usando técnicas de series de tiempo y machine learning."
 ---
 
 <<<<<<< HEAD
