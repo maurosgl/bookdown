@@ -1,0 +1,51 @@
+---
+title: "Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal"
+author: "Grupo 2"
+date: "2025-10-22"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+github-repo: rstudio/bookdown-demo
+description: "Análisis y predicción de precios de frutas y verduras en Nepal usando técnicas de series de tiempo y machine learning."
+---
+
+<<<<<<< HEAD
+# Introducción {#intro}
+
+**Time Series Price Vegetables and Fruits**
+El conjunto de datos “Time Series Price Vegetables and Fruits” contiene información oficial sobre los precios diarios de las principales frutas y verduras en Nepal entre 2013 y 2021 de una fuente oficial del gobierno (Kalimati), compilada en un repositorio público Kaggle.
+
+* **Commodity:** Nombre de las frutas o vegetales
+* **Date:** Fecha en formato año - mes – día
+* **Unit:** Unidad de medida (Kg)
+* **Minimum:** Precio mínimo registrado de venta del día
+* **Maximum:** Precio máximo registrado de venta del día
+* **Average:** Precio promedio de venta del día
+
+
+Analizar y predecir el precio de productos agrícolas es fundamental para poder tomar decisiones informadas, asignar los recursos de una manera óptima y contribuir al crecimiento económico del agro. Por la dinámica de los precios en frutas y verduras, que se encuentra condicionada por temporadas de cosecha, factores climáticos y la relación entre oferta y demanda, resulta complejo proyectar precios de manera certera. Con modelos tradicionales de análisis, captar patrones puede ser difícil; sin embargo, esta limitación puede superarse mediante técnicas de *machine learning* aplicadas a series de tiempo.
+
+La selección del dataset se debe al carácter temporal y a la granularidad de los datos, lo que facilita hallar tendencias y estacionalidades en los precios, emplear datos históricos para predecir precios futuros, así como detectar patrones inusuales o anomalías en los datos. Otro valor importante que puede lograrse a través del análisis del conjunto de datos es el desarrollo de estrategias de precios basadas en los patrones hallados.
+=======
+# Prerequisites
+
+This is a _sample_ book written in **Markdown**. You can use anything that Pandoc's Markdown supports, e.g., a math equation $a^2 + b^2 = c^2$.
+
+The **bookdown** package can be installed from CRAN or Github:
+
+
+``` r
+install.packages("bookdown")
+# or the development version
+# devtools::install_github("rstudio/bookdown")
+```
+
+Remember each Rmd file contains one and only one chapter, and a chapter is defined by the first-level heading `#`.
+
+To compile this example to PDF, you need XeLaTeX. You are recommended to install TinyTeX (which includes XeLaTeX): <https://yihui.org/tinytex/>.
+
+
+>>>>>>> 238c340ff1f8051b5e1cd9a5ccd948b1c4981349

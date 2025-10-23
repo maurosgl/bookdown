@@ -1,1 +1,13 @@
+fig:nice-fig
+tab:nice-tab
+la-selección-del-dataset-se-debe-al-carácter-temporal-y-a-la-granularidad-de-los-datos-lo-que-facilita-hallar-tendencias-y-estacionalidades-en-los-precios-emplear-datos-históricos-para-predecir-precios-futuros-así-como-detectar-patrones-inusuales-o-anomalías-en-los-datos.-otro-valor-importante-que-puede-lograrse-a-través-del-análisis-del-conjunto-de-datos-es-el-desarrollo-de-estrategias-de-precios-basadas-en-los-patrones-hallados.
+prerequisites
 intro
+literature
+cargue-de-datos
+cargue-de-datos-1
+análisis-exploratorio-de-datos-eda
+análisis-univariado
+análisis-bivariado
+análisis-de-series-de-tiempo
+filtrar-3-items
