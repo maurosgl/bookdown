@@ -1,0 +1,9 @@
+intro
+eda-y-análisis-de-series-de-tiempo
+cargue-de-datos
+cargue-de-datos-1
+análisis-exploratorio-de-datos-eda
+análisis-univariado
+análisis-bivariado
+análisis-de-series-de-tiempo
+filtrar-3-items
