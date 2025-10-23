@@ -31,7 +31,7 @@
   
   
 
-<link rel="next" href="prerequisites.html"/>
+<link rel="next" href="eda-y-análisis-de-series-de-tiempo.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -123,29 +123,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 </style>
-<style type="text/css">
-/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}
-</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -163,18 +140,16 @@ div.csl-indent {
 <li><a href="./">A Minimal Book Example</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> La selección del dataset se debe al carácter temporal y a la granularidad de los datos, lo que facilita hallar tendencias y estacionalidades en los precios, emplear datos históricos para predecir precios futuros, así como detectar patrones inusuales o anomalías en los datos. Otro valor importante que puede lograrse a través del análisis del conjunto de datos es el desarrollo de estrategias de precios basadas en los patrones hallados.</a></li>
-<li class="chapter" data-level="2" data-path="prerequisites.html"><a href="prerequisites.html"><i class="fa fa-check"></i><b>2</b> Prerequisites</a></li>
-<li class="chapter" data-level="3" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>3</b> Introduction</a></li>
-<li class="chapter" data-level="4" data-path="literature.html"><a href="literature.html"><i class="fa fa-check"></i><b>4</b> Literature</a>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introducción</a></li>
+<li class="chapter" data-level="2" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html"><i class="fa fa-check"></i><b>2</b> EDA y Análisis de Series de tiempo</a>
 <ul>
-<li class="chapter" data-level="4.0.1" data-path="literature.html"><a href="literature.html#cargue-de-datos"><i class="fa fa-check"></i><b>4.0.1</b> <strong>Cargue de Datos</strong></a></li>
-<li class="chapter" data-level="4.0.2" data-path="literature.html"><a href="literature.html#cargue-de-datos-1"><i class="fa fa-check"></i><b>4.0.2</b> <strong>Cargue de datos</strong></a></li>
-<li class="chapter" data-level="4.0.3" data-path="literature.html"><a href="literature.html#análisis-exploratorio-de-datos-eda"><i class="fa fa-check"></i><b>4.0.3</b> <strong>Análisis Exploratorio de Datos (EDA)</strong></a></li>
-<li class="chapter" data-level="4.0.4" data-path="literature.html"><a href="literature.html#análisis-univariado"><i class="fa fa-check"></i><b>4.0.4</b> <strong>análisis Univariado</strong></a></li>
-<li class="chapter" data-level="4.0.5" data-path="literature.html"><a href="literature.html#análisis-bivariado"><i class="fa fa-check"></i><b>4.0.5</b> <strong>Análisis Bivariado</strong></a></li>
-<li class="chapter" data-level="4.0.6" data-path="literature.html"><a href="literature.html#análisis-de-series-de-tiempo"><i class="fa fa-check"></i><b>4.0.6</b> <strong>Análisis de Series de Tiempo</strong></a></li>
-<li class="chapter" data-level="4.0.7" data-path="literature.html"><a href="literature.html#filtrar-3-items"><i class="fa fa-check"></i><b>4.0.7</b> Filtrar 3 items</a></li>
+<li class="chapter" data-level="2.0.1" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#cargue-de-datos"><i class="fa fa-check"></i><b>2.0.1</b> <strong>Cargue de Datos</strong></a></li>
+<li class="chapter" data-level="2.0.2" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#cargue-de-datos-1"><i class="fa fa-check"></i><b>2.0.2</b> <strong>Cargue de datos</strong></a></li>
+<li class="chapter" data-level="2.0.3" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#análisis-exploratorio-de-datos-eda"><i class="fa fa-check"></i><b>2.0.3</b> <strong>Análisis Exploratorio de Datos (EDA)</strong></a></li>
+<li class="chapter" data-level="2.0.4" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#análisis-univariado"><i class="fa fa-check"></i><b>2.0.4</b> <strong>análisis Univariado</strong></a></li>
+<li class="chapter" data-level="2.0.5" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#análisis-bivariado"><i class="fa fa-check"></i><b>2.0.5</b> <strong>Análisis Bivariado</strong></a></li>
+<li class="chapter" data-level="2.0.6" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#análisis-de-series-de-tiempo"><i class="fa fa-check"></i><b>2.0.6</b> <strong>Análisis de Series de Tiempo</strong></a></li>
+<li class="chapter" data-level="2.0.7" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#filtrar-3-items"><i class="fa fa-check"></i><b>2.0.7</b> Filtrar 3 items</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -201,8 +176,21 @@ div.csl-indent {
 <p class="author"><em>Grupo 2</em></p>
 <p class="date"><em>2025-10-22</em></p>
 </div>
-<div id="la-selección-del-dataset-se-debe-al-carácter-temporal-y-a-la-granularidad-de-los-datos-lo-que-facilita-hallar-tendencias-y-estacionalidades-en-los-precios-emplear-datos-históricos-para-predecir-precios-futuros-así-como-detectar-patrones-inusuales-o-anomalías-en-los-datos.-otro-valor-importante-que-puede-lograrse-a-través-del-análisis-del-conjunto-de-datos-es-el-desarrollo-de-estrategias-de-precios-basadas-en-los-patrones-hallados." class="section level1 hasAnchor" number="1">
-<h1><span class="header-section-number">Capítulo 1</span> La selección del dataset se debe al carácter temporal y a la granularidad de los datos, lo que facilita hallar tendencias y estacionalidades en los precios, emplear datos históricos para predecir precios futuros, así como detectar patrones inusuales o anomalías en los datos. Otro valor importante que puede lograrse a través del análisis del conjunto de datos es el desarrollo de estrategias de precios basadas en los patrones hallados.<a href="index.html#la-selección-del-dataset-se-debe-al-carácter-temporal-y-a-la-granularidad-de-los-datos-lo-que-facilita-hallar-tendencias-y-estacionalidades-en-los-precios-emplear-datos-históricos-para-predecir-precios-futuros-así-como-detectar-patrones-inusuales-o-anomalías-en-los-datos.-otro-valor-importante-que-puede-lograrse-a-través-del-análisis-del-conjunto-de-datos-es-el-desarrollo-de-estrategias-de-precios-basadas-en-los-patrones-hallados." class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="intro" class="section level1 hasAnchor" number="1">
+<h1><span class="header-section-number">Capítulo 1</span> Introducción<a href="index.html#intro" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p><strong>Time Series Price Vegetables and Fruits</strong>
+El conjunto de datos “Time Series Price Vegetables and Fruits” contiene información oficial sobre los precios diarios de las principales frutas y verduras en Nepal entre 2013 y 2021 de una fuente oficial del gobierno (Kalimati), compilada en un repositorio público Kaggle.</p>
+<ul>
+<li><strong>Commodity:</strong> Nombre de las frutas o vegetales</li>
+<li><strong>Date:</strong> Fecha en formato año - mes – día</li>
+<li><strong>Unit:</strong> Unidad de medida (Kg)</li>
+<li><strong>Minimum:</strong> Precio mínimo registrado de venta del día</li>
+<li><strong>Maximum:</strong> Precio máximo registrado de venta del día</li>
+<li><strong>Average:</strong> Precio promedio de venta del día</li>
+</ul>
+<p>Analizar y predecir el precio de productos agrícolas es fundamental para poder tomar decisiones informadas, asignar los recursos de una manera óptima y contribuir al crecimiento económico del agro. Por la dinámica de los precios en frutas y verduras, que se encuentra condicionada por temporadas de cosecha, factores climáticos y la relación entre oferta y demanda, resulta complejo proyectar precios de manera certera. Con modelos tradicionales de análisis, captar patrones puede ser difícil; sin embargo, esta limitación puede superarse mediante técnicas de <em>machine learning</em> aplicadas a series de tiempo.</p>
+<p>La selección del dataset se debe al carácter temporal y a la granularidad de los datos, lo que facilita hallar tendencias y estacionalidades en los precios, emplear datos históricos para predecir precios futuros, así como detectar patrones inusuales o anomalías en los datos. Otro valor importante que puede lograrse a través del análisis del conjunto de datos es el desarrollo de estrategias de precios basadas en los patrones hallados.</p>
+
 </div>
             </section>
 
@@ -210,7 +198,7 @@ div.csl-indent {
         </div>
       </div>
 
-<a href="prerequisites.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="eda-y-análisis-de-series-de-tiempo.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -264,20 +252,6 @@ gitbook.start({
 });
 </script>
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    var src = "true";
-    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:")
-      if (/^https?:/.test(src))
-        src = src.replace(/^https?:/, '');
-    script.src = src;
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 </body>
 
 </html>

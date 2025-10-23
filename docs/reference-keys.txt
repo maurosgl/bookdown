@@ -1,7 +1,5 @@
-fig:nice-fig
-tab:nice-tab
 intro
-literature
+eda-y-análisis-de-series-de-tiempo
 cargue-de-datos
 cargue-de-datos-1
 análisis-exploratorio-de-datos-eda
