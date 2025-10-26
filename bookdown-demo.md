@@ -1,12 +1,46 @@
+---
+title: "Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal"
+author: "Grupo 2"
+date: "2025-10-26"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+github-repo: rstudio/bookdown-demo
+description: "Análisis y predicción de precios de frutas y verduras en Nepal usando técnicas de series de tiempo y machine learning."
+---
+
+# Introducción {#intro}
+
+**Time Series Price Vegetables and Fruits**
+El conjunto de datos “Time Series Price Vegetables and Fruits” contiene información oficial sobre los precios diarios de las principales frutas y verduras en Nepal entre 2013 y 2021 de una fuente oficial del gobierno (Kalimati), compilada en un repositorio público Kaggle.
+
+* **Commodity:** Nombre de las frutas o vegetales
+* **Date:** Fecha en formato año - mes – día
+* **Unit:** Unidad de medida (Kg)
+* **Minimum:** Precio mínimo registrado de venta del día
+* **Maximum:** Precio máximo registrado de venta del día
+* **Average:** Precio promedio de venta del día
+
+
+Analizar y predecir el precio de productos agrícolas es fundamental para poder tomar decisiones informadas, asignar los recursos de una manera óptima y contribuir al crecimiento económico del agro. Por la dinámica de los precios en frutas y verduras, que se encuentra condicionada por temporadas de cosecha, factores climáticos y la relación entre oferta y demanda, resulta complejo proyectar precios de manera certera. Con modelos tradicionales de análisis, captar patrones puede ser difícil; sin embargo, esta limitación puede superarse mediante técnicas de *machine learning* aplicadas a series de tiempo.
+
+La selección del dataset se debe al carácter temporal y a la granularidad de los datos, lo que facilita hallar tendencias y estacionalidades en los precios, emplear datos históricos para predecir precios futuros, así como detectar patrones inusuales o anomalías en los datos. Otro valor importante que puede lograrse a través del análisis del conjunto de datos es el desarrollo de estrategias de precios basadas en los patrones hallados.
+
+
+
+<!--chapter:end:index.Rmd-->
+
 # EDA y Análisis de Series de tiempo
 
 ### **Cargue de Datos**
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(message = FALSE, warning = FALSE)
-```
 
-```{r}
+
+
+``` r
 # Librerias (base originales + necesarias)
 
 library(readr)
@@ -18,17 +52,17 @@ library(tseries)
 library(here)    # rutas reproducibles
 library(tidyr)   # regularizar fechas (complete)
 library(slider)  # promedios moviles
-
 ```
 
 Realizaremos nuestro analisis con un conjunto de datos de precios agrícolas proveniente del mercado de Kalimati (Nepal). Este dataset incluye información diaria sobre productos agrícolas, sus precios mínimos, máximos y promedio. A partir de estos datos se realizará un análisis exploratorio y un estudio de comportamiento temporal de los precios.
 
-```{r}
-csv_file <- "C:/Users/Steba/OneDrive/Escritorio/kalimati_tarkari_dataset (2).csv"
 
+``` r
+csv_file <- "C:/Users/Steba/OneDrive/Escritorio/kalimati_tarkari_dataset (2).csv"
 ```
 
-```{r}
+
+``` r
 # Leer datos
 
 data_raw <- readr::read_csv(csv_file, show_col_types = FALSE)
@@ -75,41 +109,99 @@ Average   = as.numeric(.data[[col_avg]])
 # Chequeos basicos
 
 stopifnot(inherits(data$Date, "Date"))
-
 ```
 
 ### **Primera Visualización de los datos**
-```{r}
+
+``` r
 # Vista previa y estructura
 
 head(data)
-str(data)
-summary(data)
+```
 
+```
+## # A tibble: 6 × 6
+##   Commodity           Date       Unit  Minimum Maximum Average
+##   <chr>               <date>     <chr>   <dbl>   <dbl>   <dbl>
+## 1 Tomato Big(Nepali)  2013-06-16 <NA>       35      40    37.5
+## 2 Tomato Small(Local) 2013-06-16 <NA>       26      32    29  
+## 3 Potato Red          2013-06-16 <NA>       20      21    20.5
+## 4 Potato White        2013-06-16 <NA>       15      16    15.5
+## 5 Onion Dry (Indian)  2013-06-16 <NA>       28      30    29  
+## 6 Carrot(Local)       2013-06-16 <NA>       30      35    32.5
+```
+
+``` r
+str(data)
+```
+
+```
+## tibble [197,161 × 6] (S3: tbl_df/tbl/data.frame)
+##  $ Commodity: chr [1:197161] "Tomato Big(Nepali)" "Tomato Small(Local)" "Potato Red" "Potato White" ...
+##  $ Date     : Date[1:197161], format: "2013-06-16" "2013-06-16" ...
+##  $ Unit     : chr [1:197161] NA NA NA NA ...
+##  $ Minimum  : num [1:197161] 35 26 20 15 28 30 6 30 35 25 ...
+##  $ Maximum  : num [1:197161] 40 32 21 16 30 35 10 35 40 30 ...
+##  $ Average  : num [1:197161] 37.5 29 20.5 15.5 29 32.5 8 32.5 37.5 27.5 ...
+```
+
+``` r
+summary(data)
+```
+
+```
+##   Commodity              Date                Unit              Minimum       
+##  Length:197161      Min.   :2013-06-16   Length:197161      Min.   :   1.00  
+##  Class :character   1st Qu.:2015-08-24   Class :character   1st Qu.:  40.00  
+##  Mode  :character   Median :2017-08-03   Mode  :character   Median :  60.00  
+##                     Mean   :2017-08-09                      Mean   :  85.42  
+##                     3rd Qu.:2019-08-27                      3rd Qu.: 100.00  
+##                     Max.   :2021-05-13                      Max.   :1800.00  
+##     Maximum           Average       
+##  Min.   :   6.00   Min.   :   5.00  
+##  1st Qu.:  45.00   1st Qu.:  42.50  
+##  Median :  70.00   Median :  65.00  
+##  Mean   :  94.16   Mean   :  89.79  
+##  3rd Qu.: 110.00   3rd Qu.: 105.00  
+##  Max.   :2000.00   Max.   :1900.00
 ```
 
 ### **Datos faltantes y duplicados**
 
-```{r}
+
+``` r
 # NAs y duplicados generales
 
 sum(is.na(data))
-sum(duplicated(data))
+```
 
+```
+## [1] 197161
+```
+
+``` r
+sum(duplicated(data))
+```
+
+```
+## [1] 0
 ```
 
 ### **Análisis Univariado**
-```{r}
+
+``` r
 #analisis univariado
 
 ggplot(data, aes(x = Average)) +
 geom_histogram(binwidth = 5, fill = "blue", color = "black", alpha = 0.7) +
 labs(title = "Distribucion de Precios Promedio", x = "Precio Promedio", y = "Frecuencia") +
 theme_minimal()
-
 ```
 
-```{r}
+<img src="02-literature_files/figure-html/unnamed-chunk-6-1.png" width="672" />
+
+
+``` r
 data %>%
 summarise(
 Mean = mean(Average, na.rm = TRUE),
@@ -118,30 +210,43 @@ SD = sd(Average, na.rm = TRUE),
 Min = min(Average, na.rm = TRUE),
 Max = max(Average, na.rm = TRUE)
 )
+```
 
+```
+## # A tibble: 1 × 5
+##    Mean Median    SD   Min   Max
+##   <dbl>  <dbl> <dbl> <dbl> <dbl>
+## 1  89.8     65  79.6     5  1900
 ```
 
 ### **Análisis Bivariado**
 
-```{r}
+
+``` r
 #analisis bivariado
 
 ggplot(data, aes(x = Minimum, y = Maximum)) +
 geom_point(alpha = 0.5) +
 labs(title = "Relacion entre Precio Minimo y Maximo", x = "Precio Minimo", y = "Precio Maximo") +
 theme_minimal()
-
 ```
 
-### **Correlación de los datos**
-```{r}
-cor(data$Minimum, data$Maximum, use = "complete.obs")
+<img src="02-literature_files/figure-html/unnamed-chunk-8-1.png" width="672" />
 
+### **Correlación de los datos**
+
+``` r
+cor(data$Minimum, data$Maximum, use = "complete.obs")
+```
+
+```
+## [1] 0.9950614
 ```
 
 ## **Analisis de series de tiempo**
 
-```{r}
+
+``` r
 if ("Potato Red" %in% unique(data$Commodity)) {
 target_item <- "Potato Red"
 } else {
@@ -152,11 +257,15 @@ pull(Commodity)
 }
 
 target_item
+```
 
+```
+## [1] "Potato Red"
 ```
 
 
-```{r}
+
+``` r
 # Filtrar y regularizar serie diaria
 
 potatored <- data %>%
@@ -175,28 +284,30 @@ start = c(lubridate::year(min(potatored$Date, na.rm = TRUE)),
 lubridate::yday(min(potatored$Date, na.rm = TRUE))),
 frequency = 365
 )
-
 ```
 
 ### **Serie basica y ACF**
 
-```{r}
+
+``` r
 autoplot(pot_ts) +
 labs(title = "Serie de tiempo: precio promedio", y = "Precio promedio") +
 theme_minimal()
-
 ```
 
-```{r}
+<img src="02-literature_files/figure-html/unnamed-chunk-12-1.png" width="672" />
+
+
+``` r
 ggAcf(pot_ts) + labs(title = "ACF del precio promedio (diario)")
-
 ```
+
+<img src="02-literature_files/figure-html/unnamed-chunk-13-1.png" width="672" />
 
 ### **Promedios moviles (evidencia de suavizado)**
 
-```{r}
 
-
+``` r
 pot_ma <- potatored %>%
   mutate(
     ma7  = slide_dbl(Average, mean, .before = 6,  .complete = TRUE),
@@ -210,13 +321,14 @@ ggplot(pot_ma, aes(Date, Average)) +
   labs(title = "Serie y promedios moviles (7 y 30 dias)",
        x = "Fecha", y = "Precio promedio") +
   theme_minimal()
-
-
 ```
+
+<img src="02-literature_files/figure-html/unnamed-chunk-14-1.png" width="672" />
 
 ### **Rezagos (lags) y dependencia temporal**
 
-```{r}
+
+``` r
 pot_lags <- potatored %>%
   mutate(
     lag1  = dplyr::lag(Average, 1),
@@ -230,31 +342,45 @@ ggplot(pot_lags, aes(lag1, Average)) +
   geom_smooth(method = "lm", se = FALSE, linewidth = 0.7) +
   theme_minimal() +
   labs(title = "Scatter rezago 1 (y_t vs y_{t-1})", x = "y_{t-1}", y = "y_t")
+```
 
+<img src="02-literature_files/figure-html/unnamed-chunk-15-1.png" width="672" />
+
+``` r
 # Scatter y_t vs y_{t-7}
 ggplot(pot_lags, aes(lag7, Average)) +
   geom_point(alpha = 0.3) +
   geom_smooth(method = "lm", se = FALSE, linewidth = 0.7) +
   theme_minimal() +
   labs(title = "Scatter rezago 7 (aprox. semanal)", x = "y_{t-7}", y = "y_t")
+```
 
+<img src="02-literature_files/figure-html/unnamed-chunk-15-2.png" width="672" />
 
-
+``` r
 # ACF/PACF (serie regularizada)
 
 ggAcf(pot_ts)  + labs(title = "ACF precio promedio (diario)")
-ggPacf(pot_ts) + labs(title = "PACF precio promedio (diario)")
-
 ```
+
+<img src="02-literature_files/figure-html/unnamed-chunk-15-3.png" width="672" />
+
+``` r
+ggPacf(pot_ts) + labs(title = "PACF precio promedio (diario)")
+```
+
+<img src="02-literature_files/figure-html/unnamed-chunk-15-4.png" width="672" />
 
 
 ### **Estacionalidad (descomposicion STL)**
 
-```{r}
+
+``` r
 fit_stl <- stl(na.interp(pot_ts), s.window = "periodic", robust = TRUE)
 autoplot(fit_stl) + labs(title = "STL precio promedio")
-
 ```
+
+<img src="02-literature_files/figure-html/unnamed-chunk-16-1.png" width="672" />
 El análisis de la serie temporal del precio promedio diario de Potato Red permitió evidenciar comportamientos consistentes con los fenómenos propios de los productos agrícolas de consumo masivo.
 En primer lugar, los gráficos de tendencia y promedios móviles muestran que los precios presentan fluctuaciones periódicas pero con una ligera tendencia creciente en el largo plazo. El promedio móvil de 7 días suaviza las variaciones diarias y deja entrever ciclos semanales asociados a la oferta en el mercado, mientras que el promedio de 30 días resalta un patrón más estructural que apunta a incrementos graduales, posiblemente relacionados con factores estacionales como la disponibilidad de cosecha o la variación de costos logísticos.
 
@@ -273,7 +399,8 @@ El patrón identificado sugiere que los precios pueden modelarse de forma confia
 En esta segunda parte se busca analizar si la serie de tiempo seleccionada (Potato Red) cumple con el supuesto de estacionariedad. Una serie estacionaria es aquella cuya media y varianza permanecen constantes en el tiempo.
 En caso de que no sea estacionaria, se aplicarán procedimientos de diferenciación # o transformación para estabilizar la tendencia y la variabilidad.
 
-```{r}
+
+``` r
 # Usaremos una version "limpia" de la serie via interpolacion lineal base R, partimos de 'potatored' (data.frame terminado) y/o de 'pot_ts' (ts original)
 
 y <- as.numeric(pot_ts)
@@ -290,48 +417,82 @@ pot_ts_clean <- ts(
   start = start(pot_ts),
   frequency = frequency(pot_ts)
 )
-
-
 ```
 
 
 
 ### **Verificación de estacionariedad (ADF Test)**
 
-```{r}
+
+``` r
 # Prueba de raíz unitaria de Dickey-Fuller aumentada
 
 adf_result <- adf.test(pot_ts_clean)
 adf_result
+```
 
 ```
-```{r}
+## 
+## 	Augmented Dickey-Fuller Test
+## 
+## data:  pot_ts_clean
+## Dickey-Fuller = -3.0587, Lag order = 14, p-value = 0.1301
+## alternative hypothesis: stationary
+```
+
+``` r
 # al tener en el ADF inicial: p = 0.1301 → se concluye que es no estacionaria al nive, por lo cual procedemos con transformacion y diferenciacion en escalones
 
 
 # Serie base a usar en esta etapa y verificamos que no tenga na ni valores negativos
 y0 <- pot_ts_clean 
 sum(is.na(y0))
-all(y0>0)
+```
 
 ```
-```{r}
+## [1] 0
+```
 
+``` r
+all(y0>0)
+```
+
+```
+## [1] TRUE
+```
+
+``` r
 y_log <- log(y0)
 range(y0, na.rm = TRUE); range(y_log, na.rm = TRUE)  # solo para verificar el cambio de escala
+```
+
+```
+## [1]  15.0 113.5
+```
+
+```
+## [1] 2.708050 4.731803
+```
+
+``` r
 adf_log <- adf.test(y_log)
 adf_log$p.value
+```
 
-
+```
+## [1] 0.1322035
 ```
 La transformación logarítmica ayudó a homogeneizar la variabilidad, pero no eliminó la tendencia ni la dependencia temporal. La serie transformada sigue teniendo raíz unitaria, por lo que pasamos a una diferenciacion de primer orden (d=1) sobre la serie logaritmica y volvemos a probar estacionariedad.
 
-```{r}
 
-
+``` r
 y_diff1 <- diff(y_log, differences = 1)
 adf_diff1 <- tseries::adf.test(na.omit(y_diff1))
 adf_diff1$p.value
+```
+
+```
+## [1] 0.01
 ```
 con este resultado podemos concluir que:
 
@@ -349,3 +510,6 @@ Luego de aplicar la transformación logarítmica, la serie mantuvo la misma tend
 Este resultado implica que la tendencia determinista fue eliminada mediante la primera diferencia, estabilizando la media a lo largo del tiempo. Por otro lado, la transformación logarítmica permitió controlar la heterocedasticidad, de modo que las fluctuaciones de la serie ahora son de magnitud comparable. La combinación de ambos pasos —logaritmo y diferencia de primer orden— produce una serie adecuada para modelar mediante métodos lineales, como los modelos ARIMA o SARIMA.
 
 Visualmente, la serie diferenciada oscila alrededor de cero y las funciones de autocorrelación (ACF y PACF) se estabilizan rápidamente, lo que refuerza la evidencia de estacionariedad.
+
+<!--chapter:end:02-literature.Rmd-->
+
