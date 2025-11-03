@@ -2,11 +2,10 @@
 
 Este análisis aborda el pronóstico de los precios del "Potato Red" del mercado de Kalimati. Inicia con la carga, limpieza y un análisis exploratorio (EDA) para identificar tendencias y estacionalidad. Dada la alta frecuencia de los datos diarios, la serie se agrega a un formato semanal (frecuencia 52) para permitir un modelado estable. Posteriormente, se comparan varios métodos de suavizamiento exponencial (SES, Holt, Holt-Winters Aditivo y Multiplicativo) en conjuntos de entrenamiento y prueba. Finalmente, se selecciona el modelo Holt-Winters Multiplicativo, basado en su precisión (RMSE/MAPE), para generar un pronóstico validado a 52 semanas.
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(message = FALSE, warning = FALSE)
-```
 
-```{r}
+
+
+``` r
 # Librerias (base originales + necesarias)
 
 library(readr)
@@ -18,17 +17,17 @@ library(tseries)
 library(here)    # rutas reproducibles
 library(tidyr)   # regularizar fechas (complete)
 library(slider)  # promedios moviles
-
 ```
 
 Realizaremos nuestro analisis con un conjunto de datos de precios agrícolas proveniente del mercado de Kalimati (Nepal). Este dataset incluye información diaria sobre productos agrícolas, sus precios mínimos, máximos y promedio. A partir de estos datos se realizará un análisis exploratorio y un estudio de comportamiento temporal de los precios.
 
-```{r}
-csv_file <- "C:/Users/Steba/OneDrive/Escritorio/kalimati_tarkari_dataset (2).csv"
 
+``` r
+csv_file <- "C:/Users/Steba/OneDrive/Escritorio/kalimati_tarkari_dataset (2).csv"
 ```
 
-```{r}
+
+``` r
 # Leer datos
 
 data_raw <- readr::read_csv(csv_file, show_col_types = FALSE)
@@ -75,7 +74,6 @@ Average   = as.numeric(.data[[col_avg]])
 # Chequeos basicos
 
 stopifnot(inherits(data$Date, "Date"))
-
 ```
 
 
@@ -85,7 +83,8 @@ stopifnot(inherits(data$Date, "Date"))
 
 Se selecciona el producto a analizar. El código prioriza "Potato Red", pero si no existe, selecciona el producto con más observaciones mediante (count(Commodity, sort = TRUE))
 
-```{r}
+
+``` r
 if ("Potato Red" %in% unique(data$Commodity)) {
 target_item <- "Potato Red"
 } else {
@@ -96,12 +95,16 @@ pull(Commodity)
 }
 
 target_item
+```
 
+```
+## [1] "Potato Red"
 ```
 
 Una vez se cuenta con el dataset filtrado para el item "Potato Red", mediante broupby y summarise se asegura que sólo exista un precio promedio por día evitando conflictos con entreadas duplicadas. Mediante complete() además se regulariza la serie temporal, insertando filas con NA para los días faltantes en el rango de fechas. Además se cponstruye la Serie de tiempos diaria para evaluar el comportamiento inicialmente.
 
-```{r}
+
+``` r
 # Filtrar y regularizar serie diaria
 
 potatored <- data %>%
@@ -120,7 +123,6 @@ start = c(lubridate::year(min(potatored$Date, na.rm = TRUE)),
 lubridate::yday(min(potatored$Date, na.rm = TRUE))),
 frequency = 365
 )
-
 ```
 
 ### **Serie basica y ACF**
@@ -128,25 +130,28 @@ frequency = 365
 A continuación mediante autoplot se observa la tenedencia y la estacionalidad anual.
 
 
-```{r}
+
+``` r
 autoplot(pot_ts) +
 labs(title = "Serie de tiempo: precio promedio", y = "Precio promedio") +
 theme_minimal()
-
 ```
 
-```{r}
+<img src="03-method_files/figure-html/unnamed-chunk-6-1.png" width="672" />
+
+
+``` r
 ggAcf(pot_ts) + labs(title = "ACF del precio promedio (diario)")
-
 ```
+
+<img src="03-method_files/figure-html/unnamed-chunk-7-1.png" width="672" />
 La función de autocorrelación (ACF) confirma esta dependencia temporal, con correlaciones significativas en los primeros rezagos que luego disminuyen de forma progresiva. Esto demuestra que la serie no sigue un comportamiento completamente aleatorio, sino que existen patrones repetitivos en el tiempo.
 
 
 ### **Promedios moviles (evidencia de suavizado)**
 
-```{r}
 
-
+``` r
 pot_ma <- potatored %>%
   mutate(
     ma7  = slide_dbl(Average, mean, .before = 6,  .complete = TRUE),
@@ -160,15 +165,16 @@ ggplot(pot_ma, aes(Date, Average)) +
   labs(title = "Serie y promedios moviles (7 y 30 dias)",
        x = "Fecha", y = "Precio promedio") +
   theme_minimal()
-
-
 ```
+
+<img src="03-method_files/figure-html/unnamed-chunk-8-1.png" width="672" />
 Los gráficos de tendencia y promedios móviles muestran que los precios presentan fluctuaciones periódicas pero con una ligera tendencia creciente en el largo plazo. El promedio móvil de 7 días suaviza las variaciones diarias y deja entrever ciclos semanales asociados a la oferta en el mercado, mientras que el promedio de 30 días resalta un patrón más estructural que apunta a incrementos graduales, posiblemente relacionados con factores estacionales como la disponibilidad de cosecha o la variación de costos logísticos.
 
 
 ### **Rezagos (lags) y dependencia temporal**
 
-```{r}
+
+``` r
 pot_lags <- potatored %>%
   mutate(
     lag1  = dplyr::lag(Average, 1),
@@ -182,33 +188,47 @@ ggplot(pot_lags, aes(lag1, Average)) +
   geom_smooth(method = "lm", se = FALSE, linewidth = 0.7) +
   theme_minimal() +
   labs(title = "Scatter rezago 1 (y_t vs y_{t-1})", x = "y_{t-1}", y = "y_t")
+```
 
+<img src="03-method_files/figure-html/unnamed-chunk-9-1.png" width="672" />
+
+``` r
 # Scatter y_t vs y_{t-7}
 ggplot(pot_lags, aes(lag7, Average)) +
   geom_point(alpha = 0.3) +
   geom_smooth(method = "lm", se = FALSE, linewidth = 0.7) +
   theme_minimal() +
   labs(title = "Scatter rezago 7 (aprox. semanal)", x = "y_{t-7}", y = "y_t")
+```
 
+<img src="03-method_files/figure-html/unnamed-chunk-9-2.png" width="672" />
 
-
+``` r
 # ACF/PACF (serie regularizada)
 
 ggAcf(pot_ts)  + labs(title = "ACF precio promedio (diario)")
-ggPacf(pot_ts) + labs(title = "PACF precio promedio (diario)")
-
 ```
+
+<img src="03-method_files/figure-html/unnamed-chunk-9-3.png" width="672" />
+
+``` r
+ggPacf(pot_ts) + labs(title = "PACF precio promedio (diario)")
+```
+
+<img src="03-method_files/figure-html/unnamed-chunk-9-4.png" width="672" />
 
 
 El estudio de rezagos (lag 1, lag 7 y lag 30) refuerza esta observación: las gráficas de dispersión muestran una clara autocorrelación positiva, especialmente para rezagos cortos, indicando que los precios actuales dependen directamente de los valores recientes. Este comportamiento sugiere persistencia temporal: cuando los precios aumentan o disminuyen, tienden a mantener esa dirección durante varios días, lo cual es característico de mercados donde la información y las condiciones de oferta no cambian abruptamente.
 
 ### **Estacionalidad (descomposicion STL)**
 
-```{r}
+
+``` r
 fit_stl <- stl(na.interp(pot_ts), s.window = "periodic", robust = TRUE)
 autoplot(fit_stl) + labs(title = "STL precio promedio")
-
 ```
+
+<img src="03-method_files/figure-html/unnamed-chunk-10-1.png" width="672" />
 La descomposición STL separó la serie en sus componentes de tendencia, estacionalidad y residuo. Los resultados muestran una estacionalidad marcada con ciclos anuales definidos: los precios tienden a elevarse en ciertas épocas del año y disminuir en otras, reflejando los periodos de cosecha y escasez. La tendencia general es estable con una leve inclinación al alza, mientras que los residuos mantienen una magnitud baja y no presentan patrones visibles, lo que indica que gran parte de la variabilidad del precio está explicada por la tendencia y la estacionalidad, sin presencia de choques exógenos significativos.
 
 
@@ -223,8 +243,8 @@ El patrón identificado sugiere que los precios pueden modelarse de forma confia
 En esta segunda parte se busca analizar si la serie de tiempo seleccionada (Potato Red) cumple con el supuesto de estacionariedad. Una serie estacionaria es aquella cuya media y varianza permanecen constantes en el tiempo.
 En caso de que no sea estacionaria, se aplicarán procedimientos de diferenciación # o transformación para estabilizar la tendencia y la variabilidad.
 
-```{r}
 
+``` r
 y <- as.numeric(pot_ts)
 
 if (anyNA(y)) {
@@ -239,52 +259,86 @@ pot_ts_clean <- ts(
   start = start(pot_ts),
   frequency = frequency(pot_ts)
 )
-
-
 ```
 
 
 
 ### **Verificación de estacionariedad (ADF Test)**
 
-```{r}
+
+``` r
 # Prueba de raíz unitaria de Dickey-Fuller
 
 adf_result <- adf.test(pot_ts_clean)
 adf_result
+```
 
+```
+## 
+## 	Augmented Dickey-Fuller Test
+## 
+## data:  pot_ts_clean
+## Dickey-Fuller = -3.0587, Lag order = 14, p-value = 0.1301
+## alternative hypothesis: stationary
 ```
 
 El p-valor es 0.13. Como p > 0.05, no podemos rechazar la H_0. Esto confirma estadísticamente lo que vimos en el ACF: la serie no es estacionaria y necesita ser diferenciada.
 
 
-```{r}
+
+``` r
 # Serie base a usar en esta etapa y verificamos que no tenga na ni valores negativos
 y0 <- pot_ts_clean 
 sum(is.na(y0))
-all(y0>0)
+```
 
 ```
-```{r}
+## [1] 0
+```
 
+``` r
+all(y0>0)
+```
+
+```
+## [1] TRUE
+```
+
+``` r
 y_log <- log(y0)
 range(y0, na.rm = TRUE); range(y_log, na.rm = TRUE)  # solo para verificar el cambio de escala
+```
+
+```
+## [1]  15.0 113.5
+```
+
+```
+## [1] 2.708050 4.731803
+```
+
+``` r
 adf_log <- adf.test(y_log)
 adf_log$p.value
+```
 
-
+```
+## [1] 0.1322035
 ```
 
 Se aplica una transformación logarítmica. Esto no corrige la tendencia, sino que ayuda a estabilizar la varianza. Es común en series de precios donde las fluctuaciones crecen a medida que el precio sube. Como era de esperar, la serie logarítmica sigue siendo no estacionaria (p=0.13).
 
 La transformación logarítmica ayudó a homogeneizar la variabilidad, pero no eliminó la tendencia ni la dependencia temporal. La serie transformada sigue teniendo raíz unitaria, por lo que pasamos a una diferenciacion de primer orden (d=1) sobre la serie logaritmica y volvemos a probar estacionariedad.
 
-```{r}
 
-
+``` r
 y_diff1 <- diff(y_log, differences = 1)
 adf_diff1 <- tseries::adf.test(na.omit(y_diff1))
 adf_diff1$p.value
+```
+
+```
+## [1] 0.01
 ```
 
 Se aplica una primera diferencia a la serie logarítmica, buscando eliminar la tendencia. Tras realizar la prueba adf nuevamente, es posible determinar que el p-valor es 0.01. Como p < 0.05, rechazamos la H_0. Concluimos que la serie transformada es estacionaria.
@@ -300,16 +354,25 @@ Visualmente, la serie diferenciada oscila alrededor de cero y las funciones de a
 
 ## **Suavizamiento y Holt-Winters sobre la variable tiempo**
 
-```{r}
+
+``` r
 y_hw <- na.interp(pot_ts) 
 freq <- frequency(y_hw)   
 length(y_hw); freq
 ```
+
+```
+## [1] 2889
+```
+
+```
+## [1] 365
+```
 ### **Particion de entrenamiento /prueba**
 
 
-```{r}
 
+``` r
 h_test <- min(365, floor(length(y_hw)*0.2))  # 1 año o ~20% si no alcanza
 n <- length(y_hw)
 y_train <- window(y_hw, end = time(y_hw)[n - h_test])
@@ -322,12 +385,15 @@ autoplot(y_hw) +
   theme_minimal()
 ```
 
+<img src="03-method_files/figure-html/unnamed-chunk-17-1.png" width="672" />
+
 Se prepara la validación del modelo. La serie se divide en y_train y y_test. Es crucial en series de tiempo usar window() y no un muestreo aleatorio, ya que el orden temporal debe preservarse.
 
 
 ### **Agregación semanal**
 
-```{r}
+
+``` r
 library(zoo)
 
 # y_hw: serie ts diaria (freq=365)
@@ -359,14 +425,16 @@ autoplot(y_w) +
   labs(title = "Serie semanal con corte train/test",
        y = "Precio promedio semanal", x = "Tiempo") +
   theme_minimal()
-
 ```
+
+<img src="03-method_files/figure-html/unnamed-chunk-18-1.png" width="672" />
 
 Modelar una estacionalidad de 365 períodos es computacionalmente inviable y estadísticamente inestable para HoltWinters o ets. Mediante la agregación de los datos a una frecuencia menor que aún capture la estacionalidad (en este caso se escogió semanal el problema de soluciona, generando una nueva ts semanal y se aplica nuevamente la división de los datos en train y test
 
 ### **Modelos de suavizamiento y Holt-Winters en serie semanal**
 
-```{r}
+
+``` r
 # Horizonte de prueba
 h <- length(y_test_w)
 
@@ -403,7 +471,68 @@ metodos_w <- c(
 )
 
 list(pars = pars_w, metodos = metodos_w)
+```
 
+```
+## $pars
+## $pars$SES
+##      alpha          l 
+##  0.9998999 20.0661412 
+## 
+## $pars$Holt
+##      alpha       beta        phi          l          b 
+##  0.9998998  0.1131366  0.8000015 19.3507661  0.7318030 
+## 
+## $pars$HW_adi
+##            a            b           s1           s2           s3           s4 
+##  39.08244375   0.07882721  -7.65617219  -5.33129937  -2.12172776  -0.60521373 
+##           s5           s6           s7           s8           s9          s10 
+##   1.67227131   3.70855086   3.86297747   4.29730738   4.70950257   5.51286110 
+##          s11          s12          s13          s14          s15          s16 
+##   6.58108183   9.34052131  11.67282675  11.56985459  10.72690049  10.62915737 
+##          s17          s18          s19          s20          s21          s22 
+##  11.56624926  14.32396189  12.96493891  12.91210622  15.60833595  19.70484488 
+##          s23          s24          s25          s26          s27          s28 
+##  18.21542017  15.04288451   8.57289145   4.41893044   3.59468994   2.26948285 
+##          s29          s30          s31          s32          s33          s34 
+##   1.41348224   1.16589200   0.07345107  -2.59161738  -5.38569070  -6.81747767 
+##          s35          s36          s37          s38          s39          s40 
+##  -8.35116126 -10.31002086 -14.36805886 -15.48013931 -13.59119371 -14.10375330 
+##          s41          s42          s43          s44          s45          s46 
+## -12.98609882 -13.91879059 -12.80762063 -12.45344901 -10.91079687  -9.50278976 
+##          s47          s48          s49          s50          s51          s52 
+##  -7.48181474  -7.63951511  -9.66359895  -9.41494901  -8.19836375  -8.36815804 
+## 
+## $pars$HW_multi
+##           a           b          s1          s2          s3          s4 
+## 40.06957603  0.07882721  0.78984647  0.86149189  0.95592829  0.99520880 
+##          s5          s6          s7          s8          s9         s10 
+##  1.06150922  1.11859277  1.10742123  1.11547832  1.13362719  1.15295252 
+##         s11         s12         s13         s14         s15         s16 
+##  1.19755872  1.28051297  1.34512974  1.33136792  1.29845693  1.29564795 
+##         s17         s18         s19         s20         s21         s22 
+##  1.31337013  1.37966490  1.36129664  1.37542631  1.45910223  1.55273805 
+##         s23         s24         s25         s26         s27         s28 
+##  1.49801968  1.41880910  1.25803359  1.12986066  1.10809063  1.06878253 
+##         s29         s30         s31         s32         s33         s34 
+##  1.05012792  1.03448499  1.00251606  0.92562241  0.84794487  0.78549769 
+##         s35         s36         s37         s38         s39         s40 
+##  0.73966473  0.68969443  0.59218461  0.55743071  0.58537805  0.58407654 
+##         s41         s42         s43         s44         s45         s46 
+##  0.61227139  0.60444293  0.63415394  0.64018299  0.67488001  0.72564177 
+##         s47         s48         s49         s50         s51         s52 
+##  0.78927007  0.78769837  0.73692250  0.74269354  0.77194581  0.76652385 
+## 
+## 
+## $metodos
+##                                         SES 
+##                                "ETS(A,N,N)" 
+##                                        Holt 
+##                               "ETS(A,Ad,N)" 
+##                                      HW_adi 
+##        "Holt-Winters aditivo (HoltWinters)" 
+##                                      HW_mul 
+## "Holt-Winters multiplicativo (HoltWinters)"
 ```
 
 Se ajustan cuatro modelos de suavizamiento exponencial al conjunto de entrenamiento semanal (y_train_w).
@@ -415,8 +544,8 @@ Se evaluán los modelos ANN más conocido como SES (Error Aditivo, sin tendencia
 
 
 Se calcula la precisión de los pronósticos de cada modelo contra los datos reales y_test_w. Se comparan las métricas de error (RMSE, MAE, MAPE) del conjunto de prueba.
-```{r}
 
+``` r
 # Calcular métricas de error para cada modelo en el conjunto de prueba
 acc_tbl <- bind_rows(
   data.frame(model = "SES",    accuracy(fc_ses_w,  y_test_w)),
@@ -427,7 +556,18 @@ acc_tbl <- bind_rows(
   select(model, RMSE, MAE, MAPE)
 
 acc_tbl
+```
 
+```
+##                   model      RMSE       MAE      MAPE
+## Training set...1    SES  2.929804  1.928708  5.748854
+## Test set...2        SES 33.778723 24.276695 34.505452
+## Training set...3   Holt  2.902352  1.901817  5.638535
+## Test set...4       Holt 34.593228 24.973105 35.456690
+## Training set...5 HW_adi  2.984060  2.102575  6.453931
+## Test set...6     HW_adi 20.668712 14.555681 20.798164
+## Training set...7 HW_mul  2.846973  1.996849  6.036061
+## Test set...8     HW_mul 18.997168 13.487363 19.577035
 ```
 
 
@@ -440,10 +580,22 @@ Esto indica que la estacionalidad es proporcional al nivel de la serie (los pico
 Se realizarán dos pruebas estadísticas al pronóstico ganador. Por una parte el Gráfico ACF de Residuos, muestra la autocorrelación de los errores del modelo. Idealmente, ningún rezago debe superar las líneas azules. Esto significaría que los errores son "ruido blanco" y que el modelo ha capturado toda la información predecible.En segundo lugar, la Prueba Ljung-Box es la prueba estadística formal para la autocorrelación de los residuos.Hipótesis Nula (H_0): Los residuos son independientes (son ruido blanco).
 
 
-```{r}
+
+``` r
 best_fc <- fc_hwm_w  # ganador: Holt-Winters multiplicativo
 checkresiduals(best_fc$model)
+```
 
+<img src="03-method_files/figure-html/unnamed-chunk-21-1.png" width="672" />
+
+```
+## 
+## 	Ljung-Box test
+## 
+## data:  Residuals from HoltWinters
+## Q* = 76.422, df = 62, p-value = 0.1029
+## 
+## Model df: 0.   Total lags used: 62
 ```
 
 Al comparar los modelos de suavizamiento, Holt y Holt-Winters, se encontró que el Holt-Winters multiplicativo obtuvo los mejores resultados en la ventana de prueba, con los menores valores de RMSE (18.99) y MAPE (19.57 %).
@@ -459,8 +611,8 @@ Por tanto, el modelo Holt-Winters multiplicativo logra capturar adecuadamente la
 
 * **Pronóstico:** Se genera el pronóstico final hacia el futuro (h = 52 semanas, un año).
 
-```{r}
 
+``` r
 # Reentrenar el modelo Holt-Winters multiplicativo con toda la serie semanal
 fit_final_hw <- HoltWinters(y_w, seasonal = "multiplicative")
 
@@ -476,7 +628,11 @@ autoplot(fc_final_hw) +
     x = "Tiempo"
   ) +
   theme_minimal()
+```
 
+<img src="03-method_files/figure-html/unnamed-chunk-22-1.png" width="672" />
+
+``` r
 # primeras filas de la tabla de pronostico
 head(data.frame(
   Semana = time(fc_final_hw$mean),
@@ -486,7 +642,20 @@ head(data.frame(
   LI_95 = round(fc_final_hw$lower[,2], 2),
   LS_95 = round(fc_final_hw$upper[,2], 2)
 ), 10)
+```
 
+```
+##      Semana Pronostico LI_80 LS_80 LI_95 LS_95
+## 1  8.961538      37.69 33.31 42.07 30.99 44.39
+## 2  8.980769      40.88 35.05 46.72 31.96 49.81
+## 3  9.000000      45.08 37.83 52.33 33.99 56.16
+## 4  9.019231      47.46 39.09 55.83 34.66 60.26
+## 5  9.038462      50.77 41.19 60.34 36.13 65.41
+## 6  9.057692      55.25 44.31 66.19 38.52 71.98
+## 7  9.076923      55.96 44.35 67.58 38.20 73.73
+## 8  9.096154      55.31 43.30 67.32 36.95 73.67
+## 9  9.115385      55.66 43.09 68.24 36.43 74.90
+## 10 9.134615      58.37 44.76 71.99 37.55 79.20
 ```
 
 ### Conclusiones

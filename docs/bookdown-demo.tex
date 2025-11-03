@@ -1,0 +1,1434 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{book}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+\usepackage{booktabs}
+\usepackage{amsthm}
+\makeatletter
+\def\thm@space@setup{%
+  \thm@preskip=8pt plus 2pt minus 4pt
+  \thm@postskip=\thm@preskip
+}
+\makeatother
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage[]{natbib}
+\bibliographystyle{apalike}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal},
+  pdfauthor={Grupo 2},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal}
+\author{Grupo 2}
+\date{2025-11-03}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{1}
+\tableofcontents
+}
+\chapter{Introducción}\label{intro}
+
+\textbf{Time Series Price Vegetables and Fruits}
+El conjunto de datos ``Time Series Price Vegetables and Fruits'' contiene información oficial sobre los precios diarios de las principales frutas y verduras en Nepal entre 2013 y 2021 de una fuente oficial del gobierno (Kalimati), compilada en un repositorio público Kaggle.
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Commodity:} Nombre de las frutas o vegetales
+\item
+  \textbf{Date:} Fecha en formato año - mes -- día
+\item
+  \textbf{Unit:} Unidad de medida (Kg)
+\item
+  \textbf{Minimum:} Precio mínimo registrado de venta del día
+\item
+  \textbf{Maximum:} Precio máximo registrado de venta del día
+\item
+  \textbf{Average:} Precio promedio de venta del día
+\end{itemize}
+
+Analizar y predecir el precio de productos agrícolas es fundamental para poder tomar decisiones informadas, asignar los recursos de una manera óptima y contribuir al crecimiento económico del agro. Por la dinámica de los precios en frutas y verduras, que se encuentra condicionada por temporadas de cosecha, factores climáticos y la relación entre oferta y demanda, resulta complejo proyectar precios de manera certera. Con modelos tradicionales de análisis, captar patrones puede ser difícil; sin embargo, esta limitación puede superarse mediante técnicas de \emph{machine learning} aplicadas a series de tiempo.
+
+La selección del dataset se debe al carácter temporal y a la granularidad de los datos, lo que facilita hallar tendencias y estacionalidades en los precios, emplear datos históricos para predecir precios futuros, así como detectar patrones inusuales o anomalías en los datos. Otro valor importante que puede lograrse a través del análisis del conjunto de datos es el desarrollo de estrategias de precios basadas en los patrones hallados.
+
+\chapter{EDA y Análisis de Series de tiempo}\label{eda-y-anuxe1lisis-de-series-de-tiempo}
+
+\subsection{\texorpdfstring{\textbf{Cargue de Datos}}{Cargue de Datos}}\label{cargue-de-datos}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Librerias (base originales + necesarias)}
+
+\FunctionTok{library}\NormalTok{(readr)}
+\FunctionTok{library}\NormalTok{(dplyr)}
+\FunctionTok{library}\NormalTok{(lubridate)}
+\FunctionTok{library}\NormalTok{(ggplot2)}
+\FunctionTok{library}\NormalTok{(forecast)}
+\FunctionTok{library}\NormalTok{(tseries)}
+\FunctionTok{library}\NormalTok{(here)    }\CommentTok{\# rutas reproducibles}
+\FunctionTok{library}\NormalTok{(tidyr)   }\CommentTok{\# regularizar fechas (complete)}
+\FunctionTok{library}\NormalTok{(slider)  }\CommentTok{\# promedios moviles}
+\end{Highlighting}
+\end{Shaded}
+
+Realizaremos nuestro analisis con un conjunto de datos de precios agrícolas proveniente del mercado de Kalimati (Nepal). Este dataset incluye información diaria sobre productos agrícolas, sus precios mínimos, máximos y promedio. A partir de estos datos se realizará un análisis exploratorio y un estudio de comportamiento temporal de los precios.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{csv\_file }\OtherTok{\textless{}{-}} \StringTok{"C:/Users/Steba/OneDrive/Escritorio/kalimati\_tarkari\_dataset (2).csv"}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Leer datos}
+
+\NormalTok{data\_raw }\OtherTok{\textless{}{-}}\NormalTok{ readr}\SpecialCharTok{::}\FunctionTok{read\_csv}\NormalTok{(csv\_file, }\AttributeTok{show\_col\_types =} \ConstantTok{FALSE}\NormalTok{)}
+
+\CommentTok{\# Estandarizar nombres a snake para facilitar mapeo}
+
+\NormalTok{nms }\OtherTok{\textless{}{-}} \FunctionTok{tolower}\NormalTok{(}\FunctionTok{gsub}\NormalTok{(}\StringTok{"[\^{}a{-}zA{-}Z0{-}9]+"}\NormalTok{, }\StringTok{"\_"}\NormalTok{, }\FunctionTok{names}\NormalTok{(data\_raw)))}
+
+\CommentTok{\# Intentar mapear columnas canonicas (Commodity / Date / Minimum / Maximum / Average)}
+
+\NormalTok{df }\OtherTok{\textless{}{-}}\NormalTok{ data\_raw}
+\FunctionTok{names}\NormalTok{(df) }\OtherTok{\textless{}{-}}\NormalTok{ nms}
+
+\CommentTok{\# Mapeo flexible (case{-}insensitive)}
+
+\NormalTok{pick\_first }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(cands) \{}
+\NormalTok{hit }\OtherTok{\textless{}{-}} \FunctionTok{intersect}\NormalTok{(cands, }\FunctionTok{names}\NormalTok{(df))}
+\ControlFlowTok{if}\NormalTok{ (}\FunctionTok{length}\NormalTok{(hit) }\SpecialCharTok{==} \DecValTok{0}\NormalTok{) }\FunctionTok{return}\NormalTok{(}\ConstantTok{NA\_character\_}\NormalTok{) }\ControlFlowTok{else} \FunctionTok{return}\NormalTok{(hit[}\DecValTok{1}\NormalTok{])}
+\NormalTok{\}}
+
+\NormalTok{col\_commodity }\OtherTok{\textless{}{-}} \FunctionTok{pick\_first}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"commodity"}\NormalTok{,}\StringTok{"item"}\NormalTok{,}\StringTok{"product"}\NormalTok{,}\StringTok{"variety"}\NormalTok{,}\StringTok{"name"}\NormalTok{))}
+\NormalTok{col\_date      }\OtherTok{\textless{}{-}} \FunctionTok{pick\_first}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"date"}\NormalTok{,}\StringTok{"fecha"}\NormalTok{,}\StringTok{"day"}\NormalTok{))}
+\NormalTok{col\_min       }\OtherTok{\textless{}{-}} \FunctionTok{pick\_first}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"minimum"}\NormalTok{,}\StringTok{"min"}\NormalTok{,}\StringTok{"min\_price"}\NormalTok{,}\StringTok{"price\_min"}\NormalTok{))}
+\NormalTok{col\_max       }\OtherTok{\textless{}{-}} \FunctionTok{pick\_first}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"maximum"}\NormalTok{,}\StringTok{"max"}\NormalTok{,}\StringTok{"max\_price"}\NormalTok{,}\StringTok{"price\_max"}\NormalTok{))}
+\NormalTok{col\_avg       }\OtherTok{\textless{}{-}} \FunctionTok{pick\_first}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"average"}\NormalTok{,}\StringTok{"avg"}\NormalTok{,}\StringTok{"avg\_price"}\NormalTok{,}\StringTok{"price\_avg"}\NormalTok{,}\StringTok{"mean\_price"}\NormalTok{))}
+
+\NormalTok{req }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(col\_commodity, col\_date, col\_min, col\_max, col\_avg)}
+
+\ControlFlowTok{if}\NormalTok{ (}\FunctionTok{any}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(req))) \{}
+\FunctionTok{stop}\NormalTok{(}\StringTok{"No fue posible mapear columnas clave (commodity/date/min/max/average). Revisa nombres del CSV: "}\NormalTok{,}
+\FunctionTok{paste}\NormalTok{(}\FunctionTok{names}\NormalTok{(df), }\AttributeTok{collapse =} \StringTok{", "}\NormalTok{))}
+\NormalTok{\}}
+
+\NormalTok{data }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{transmute}\NormalTok{(}
+\AttributeTok{Commodity =}\NormalTok{ .data[[col\_commodity]],}
+\AttributeTok{Date      =} \FunctionTok{as.Date}\NormalTok{(.data[[col\_date]]),}
+\AttributeTok{Unit      =} \ConstantTok{NA\_character\_}\NormalTok{,                 }\CommentTok{\# si no existe, queda NA (no se usa en el analisis)}
+\AttributeTok{Minimum   =} \FunctionTok{as.numeric}\NormalTok{(.data[[col\_min]]),}
+\AttributeTok{Maximum   =} \FunctionTok{as.numeric}\NormalTok{(.data[[col\_max]]),}
+\AttributeTok{Average   =} \FunctionTok{as.numeric}\NormalTok{(.data[[col\_avg]])}
+\NormalTok{)}
+
+\CommentTok{\# Chequeos basicos}
+
+\FunctionTok{stopifnot}\NormalTok{(}\FunctionTok{inherits}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{Date, }\StringTok{"Date"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{\texorpdfstring{\textbf{Primera Visualización de los datos}}{Primera Visualización de los datos}}\label{primera-visualizaciuxf3n-de-los-datos}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Vista previa y estructura}
+
+\FunctionTok{head}\NormalTok{(data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 6 x 6
+##   Commodity           Date       Unit  Minimum Maximum Average
+##   <chr>               <date>     <chr>   <dbl>   <dbl>   <dbl>
+## 1 Tomato Big(Nepali)  2013-06-16 <NA>       35      40    37.5
+## 2 Tomato Small(Local) 2013-06-16 <NA>       26      32    29  
+## 3 Potato Red          2013-06-16 <NA>       20      21    20.5
+## 4 Potato White        2013-06-16 <NA>       15      16    15.5
+## 5 Onion Dry (Indian)  2013-06-16 <NA>       28      30    29  
+## 6 Carrot(Local)       2013-06-16 <NA>       30      35    32.5
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{str}\NormalTok{(data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## tibble [197,161 x 6] (S3: tbl_df/tbl/data.frame)
+##  $ Commodity: chr [1:197161] "Tomato Big(Nepali)" "Tomato Small(Local)" "Potato Red" "Potato White" ...
+##  $ Date     : Date[1:197161], format: "2013-06-16" "2013-06-16" ...
+##  $ Unit     : chr [1:197161] NA NA NA NA ...
+##  $ Minimum  : num [1:197161] 35 26 20 15 28 30 6 30 35 25 ...
+##  $ Maximum  : num [1:197161] 40 32 21 16 30 35 10 35 40 30 ...
+##  $ Average  : num [1:197161] 37.5 29 20.5 15.5 29 32.5 8 32.5 37.5 27.5 ...
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   Commodity              Date                Unit              Minimum       
+##  Length:197161      Min.   :2013-06-16   Length:197161      Min.   :   1.00  
+##  Class :character   1st Qu.:2015-08-24   Class :character   1st Qu.:  40.00  
+##  Mode  :character   Median :2017-08-03   Mode  :character   Median :  60.00  
+##                     Mean   :2017-08-09                      Mean   :  85.42  
+##                     3rd Qu.:2019-08-27                      3rd Qu.: 100.00  
+##                     Max.   :2021-05-13                      Max.   :1800.00  
+##     Maximum           Average       
+##  Min.   :   6.00   Min.   :   5.00  
+##  1st Qu.:  45.00   1st Qu.:  42.50  
+##  Median :  70.00   Median :  65.00  
+##  Mean   :  94.16   Mean   :  89.79  
+##  3rd Qu.: 110.00   3rd Qu.: 105.00  
+##  Max.   :2000.00   Max.   :1900.00
+\end{verbatim}
+
+\subsection{\texorpdfstring{\textbf{Datos faltantes y duplicados}}{Datos faltantes y duplicados}}\label{datos-faltantes-y-duplicados}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# NAs y duplicados generales}
+
+\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(data))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 197161
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sum}\NormalTok{(}\FunctionTok{duplicated}\NormalTok{(data))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0
+\end{verbatim}
+
+\subsection{\texorpdfstring{\textbf{Análisis Univariado}}{Análisis Univariado}}\label{anuxe1lisis-univariado}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#analisis univariado}
+
+\FunctionTok{ggplot}\NormalTok{(data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Average)) }\SpecialCharTok{+}
+\FunctionTok{geom\_histogram}\NormalTok{(}\AttributeTok{binwidth =} \DecValTok{5}\NormalTok{, }\AttributeTok{fill =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{color =} \StringTok{"black"}\NormalTok{, }\AttributeTok{alpha =} \FloatTok{0.7}\NormalTok{) }\SpecialCharTok{+}
+\FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Distribucion de Precios Promedio"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Precio Promedio"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Frecuencia"}\NormalTok{) }\SpecialCharTok{+}
+\FunctionTok{theme\_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{02-literature_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{summarise}\NormalTok{(}
+\AttributeTok{Mean =} \FunctionTok{mean}\NormalTok{(Average, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+\AttributeTok{Median =} \FunctionTok{median}\NormalTok{(Average, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+\AttributeTok{SD =} \FunctionTok{sd}\NormalTok{(Average, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+\AttributeTok{Min =} \FunctionTok{min}\NormalTok{(Average, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+\AttributeTok{Max =} \FunctionTok{max}\NormalTok{(Average, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 5
+##    Mean Median    SD   Min   Max
+##   <dbl>  <dbl> <dbl> <dbl> <dbl>
+## 1  89.8     65  79.6     5  1900
+\end{verbatim}
+
+\subsection{\texorpdfstring{\textbf{Análisis Bivariado}}{Análisis Bivariado}}\label{anuxe1lisis-bivariado}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#analisis bivariado}
+
+\FunctionTok{ggplot}\NormalTok{(data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Minimum, }\AttributeTok{y =}\NormalTok{ Maximum)) }\SpecialCharTok{+}
+\FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+\FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Relacion entre Precio Minimo y Maximo"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Precio Minimo"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Precio Maximo"}\NormalTok{) }\SpecialCharTok{+}
+\FunctionTok{theme\_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{02-literature_files/figure-latex/unnamed-chunk-8-1.pdf}
+
+\subsection{\texorpdfstring{\textbf{Correlación de los datos}}{Correlación de los datos}}\label{correlaciuxf3n-de-los-datos}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cor}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{Minimum, data}\SpecialCharTok{$}\NormalTok{Maximum, }\AttributeTok{use =} \StringTok{"complete.obs"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9950614
+\end{verbatim}
+
+\section{\texorpdfstring{\textbf{Analisis de series de tiempo}}{Analisis de series de tiempo}}\label{analisis-de-series-de-tiempo}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{if}\NormalTok{ (}\StringTok{"Potato Red"} \SpecialCharTok{\%in\%} \FunctionTok{unique}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{Commodity)) \{}
+\NormalTok{target\_item }\OtherTok{\textless{}{-}} \StringTok{"Potato Red"}
+\NormalTok{\} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{target\_item }\OtherTok{\textless{}{-}}\NormalTok{ data }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{count}\NormalTok{(Commodity, }\AttributeTok{sort =} \ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{slice}\NormalTok{(}\DecValTok{1}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{pull}\NormalTok{(Commodity)}
+\NormalTok{\}}
+
+\NormalTok{target\_item}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Potato Red"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Filtrar y regularizar serie diaria}
+
+\NormalTok{potatored }\OtherTok{\textless{}{-}}\NormalTok{ data }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{filter}\NormalTok{(Commodity }\SpecialCharTok{==}\NormalTok{ target\_item) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{select}\NormalTok{(Date, Average) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{group\_by}\NormalTok{(Date) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{summarise}\NormalTok{(}\AttributeTok{Average =} \FunctionTok{mean}\NormalTok{(Average), }\AttributeTok{.groups =} \StringTok{"drop"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{complete}\NormalTok{(}\AttributeTok{Date =} \FunctionTok{seq}\NormalTok{(}\FunctionTok{min}\NormalTok{(Date, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{), }\FunctionTok{max}\NormalTok{(Date, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{), }\AttributeTok{by =} \StringTok{"day"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{arrange}\NormalTok{(Date)}
+
+\CommentTok{\# Construir objeto ts (diario, 365)}
+
+\NormalTok{pot\_ts }\OtherTok{\textless{}{-}} \FunctionTok{ts}\NormalTok{(}
+\NormalTok{potatored}\SpecialCharTok{$}\NormalTok{Average,}
+\AttributeTok{start =} \FunctionTok{c}\NormalTok{(lubridate}\SpecialCharTok{::}\FunctionTok{year}\NormalTok{(}\FunctionTok{min}\NormalTok{(potatored}\SpecialCharTok{$}\NormalTok{Date, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)),}
+\NormalTok{lubridate}\SpecialCharTok{::}\FunctionTok{yday}\NormalTok{(}\FunctionTok{min}\NormalTok{(potatored}\SpecialCharTok{$}\NormalTok{Date, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{))),}
+\AttributeTok{frequency =} \DecValTok{365}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{\texorpdfstring{\textbf{Serie basica y ACF}}{Serie basica y ACF}}\label{serie-basica-y-acf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{autoplot}\NormalTok{(pot\_ts) }\SpecialCharTok{+}
+\FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Serie de tiempo: precio promedio"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Precio promedio"}\NormalTok{) }\SpecialCharTok{+}
+\FunctionTok{theme\_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{02-literature_files/figure-latex/unnamed-chunk-12-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggAcf}\NormalTok{(pot\_ts) }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"ACF del precio promedio (diario)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{02-literature_files/figure-latex/unnamed-chunk-13-1.pdf}
+
+\subsection{\texorpdfstring{\textbf{Promedios moviles (evidencia de suavizado)}}{Promedios moviles (evidencia de suavizado)}}\label{promedios-moviles-evidencia-de-suavizado}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pot\_ma }\OtherTok{\textless{}{-}}\NormalTok{ potatored }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{ma7  =} \FunctionTok{slide\_dbl}\NormalTok{(Average, mean, }\AttributeTok{.before =} \DecValTok{6}\NormalTok{,  }\AttributeTok{.complete =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{ma30 =} \FunctionTok{slide\_dbl}\NormalTok{(Average, mean, }\AttributeTok{.before =} \DecValTok{29}\NormalTok{, }\AttributeTok{.complete =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  )}
+
+\FunctionTok{ggplot}\NormalTok{(pot\_ma, }\FunctionTok{aes}\NormalTok{(Date, Average)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{linewidth =} \FloatTok{0.5}\NormalTok{, }\AttributeTok{alpha =} \FloatTok{0.6}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ ma7),  }\AttributeTok{linewidth =} \FloatTok{0.8}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ ma30), }\AttributeTok{linewidth =} \FloatTok{0.9}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Serie y promedios moviles (7 y 30 dias)"}\NormalTok{,}
+       \AttributeTok{x =} \StringTok{"Fecha"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Precio promedio"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{02-literature_files/figure-latex/unnamed-chunk-14-1.pdf}
+
+\subsection{\texorpdfstring{\textbf{Rezagos (lags) y dependencia temporal}}{Rezagos (lags) y dependencia temporal}}\label{rezagos-lags-y-dependencia-temporal}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pot\_lags }\OtherTok{\textless{}{-}}\NormalTok{ potatored }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{lag1  =}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{lag}\NormalTok{(Average, }\DecValTok{1}\NormalTok{),}
+    \AttributeTok{lag7  =}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{lag}\NormalTok{(Average, }\DecValTok{7}\NormalTok{),}
+    \AttributeTok{lag30 =}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{lag}\NormalTok{(Average, }\DecValTok{30}\NormalTok{)}
+\NormalTok{  )}
+
+\CommentTok{\# Scatter y\_t vs y\_\{t{-}1\}}
+\FunctionTok{ggplot}\NormalTok{(pot\_lags, }\FunctionTok{aes}\NormalTok{(lag1, Average)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{method =} \StringTok{"lm"}\NormalTok{, }\AttributeTok{se =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{linewidth =} \FloatTok{0.7}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Scatter rezago 1 (y\_t vs y\_\{t{-}1\})"}\NormalTok{, }\AttributeTok{x =} \StringTok{"y\_\{t{-}1\}"}\NormalTok{, }\AttributeTok{y =} \StringTok{"y\_t"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{02-literature_files/figure-latex/unnamed-chunk-15-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Scatter y\_t vs y\_\{t{-}7\}}
+\FunctionTok{ggplot}\NormalTok{(pot\_lags, }\FunctionTok{aes}\NormalTok{(lag7, Average)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{method =} \StringTok{"lm"}\NormalTok{, }\AttributeTok{se =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{linewidth =} \FloatTok{0.7}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Scatter rezago 7 (aprox. semanal)"}\NormalTok{, }\AttributeTok{x =} \StringTok{"y\_\{t{-}7\}"}\NormalTok{, }\AttributeTok{y =} \StringTok{"y\_t"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{02-literature_files/figure-latex/unnamed-chunk-15-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# ACF/PACF (serie regularizada)}
+
+\FunctionTok{ggAcf}\NormalTok{(pot\_ts)  }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"ACF precio promedio (diario)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{02-literature_files/figure-latex/unnamed-chunk-15-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggPacf}\NormalTok{(pot\_ts) }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"PACF precio promedio (diario)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{02-literature_files/figure-latex/unnamed-chunk-15-4.pdf}
+
+\subsection{\texorpdfstring{\textbf{Estacionalidad (descomposicion STL)}}{Estacionalidad (descomposicion STL)}}\label{estacionalidad-descomposicion-stl}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fit\_stl }\OtherTok{\textless{}{-}} \FunctionTok{stl}\NormalTok{(}\FunctionTok{na.interp}\NormalTok{(pot\_ts), }\AttributeTok{s.window =} \StringTok{"periodic"}\NormalTok{, }\AttributeTok{robust =} \ConstantTok{TRUE}\NormalTok{)}
+\FunctionTok{autoplot}\NormalTok{(fit\_stl) }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"STL precio promedio"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{02-literature_files/figure-latex/unnamed-chunk-16-1.pdf}
+El análisis de la serie temporal del precio promedio diario de Potato Red permitió evidenciar comportamientos consistentes con los fenómenos propios de los productos agrícolas de consumo masivo.
+En primer lugar, los gráficos de tendencia y promedios móviles muestran que los precios presentan fluctuaciones periódicas pero con una ligera tendencia creciente en el largo plazo. El promedio móvil de 7 días suaviza las variaciones diarias y deja entrever ciclos semanales asociados a la oferta en el mercado, mientras que el promedio de 30 días resalta un patrón más estructural que apunta a incrementos graduales, posiblemente relacionados con factores estacionales como la disponibilidad de cosecha o la variación de costos logísticos.
+
+El estudio de rezagos (lag 1, lag 7 y lag 30) refuerza esta observación: las gráficas de dispersión muestran una clara autocorrelación positiva, especialmente para rezagos cortos, indicando que los precios actuales dependen directamente de los valores recientes. Este comportamiento sugiere persistencia temporal: cuando los precios aumentan o disminuyen, tienden a mantener esa dirección durante varios días, lo cual es característico de mercados donde la información y las condiciones de oferta no cambian abruptamente.
+
+La función de autocorrelación (ACF) confirma esta dependencia temporal, con correlaciones significativas en los primeros rezagos que luego disminuyen de forma progresiva. Esto demuestra que la serie no sigue un comportamiento completamente aleatorio, sino que existen patrones repetitivos en el tiempo.
+
+La descomposición STL separó la serie en sus componentes de tendencia, estacionalidad y residuo. Los resultados muestran una estacionalidad marcada con ciclos anuales definidos: los precios tienden a elevarse en ciertas épocas del año y disminuir en otras, reflejando los periodos de cosecha y escasez. La tendencia general es estable con una leve inclinación al alza, mientras que los residuos mantienen una magnitud baja y no presentan patrones visibles, lo que indica que gran parte de la variabilidad del precio está explicada por la tendencia y la estacionalidad, sin presencia de choques exógenos significativos.
+
+En conjunto, estos hallazgos evidencian que la serie del precio promedio de Potato Red posee un comportamiento no estacionario, con una tendencia creciente y estacionalidad recurrente, pero sin irregularidades fuertes.
+El patrón identificado sugiere que los precios pueden modelarse de forma confiable mediante técnicas de suavizado exponencial o modelos ARIMA estacionales, una vez que se realicen las transformaciones necesarias para estabilizar la media y la varianza. En términos prácticos, los resultados reflejan que el mercado analizado responde a ciclos previsibles, lo cual facilita la planificación de precios, abastecimiento y estrategias de comercialización.
+
+\subsection{\texorpdfstring{\textbf{Estacionariedad y diferenciación}}{Estacionariedad y diferenciación}}\label{estacionariedad-y-diferenciaciuxf3n}
+
+\textbf{Introducción}
+En esta segunda parte se busca analizar si la serie de tiempo seleccionada (Potato Red) cumple con el supuesto de estacionariedad. Una serie estacionaria es aquella cuya media y varianza permanecen constantes en el tiempo.
+En caso de que no sea estacionaria, se aplicarán procedimientos de diferenciación \# o transformación para estabilizar la tendencia y la variabilidad.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Usaremos una version "limpia" de la serie via interpolacion lineal base R, partimos de \textquotesingle{}potatored\textquotesingle{} (data.frame terminado) y/o de \textquotesingle{}pot\_ts\textquotesingle{} (ts original)}
+
+\NormalTok{y }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(pot\_ts)}
+
+\ControlFlowTok{if}\NormalTok{ (}\FunctionTok{anyNA}\NormalTok{(y)) \{}
+\NormalTok{  idx\_ok }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(y))}
+\NormalTok{  y\_interp }\OtherTok{\textless{}{-}} \FunctionTok{approx}\NormalTok{(}\AttributeTok{x =}\NormalTok{ idx\_ok, }\AttributeTok{y =}\NormalTok{ y[idx\_ok], }\AttributeTok{xout =} \FunctionTok{seq\_along}\NormalTok{(y))}\SpecialCharTok{$}\NormalTok{y}
+\NormalTok{\} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{  y\_interp }\OtherTok{\textless{}{-}}\NormalTok{ y\}}
+
+
+\NormalTok{pot\_ts\_clean }\OtherTok{\textless{}{-}} \FunctionTok{ts}\NormalTok{(}
+\NormalTok{  y\_interp,}
+  \AttributeTok{start =} \FunctionTok{start}\NormalTok{(pot\_ts),}
+  \AttributeTok{frequency =} \FunctionTok{frequency}\NormalTok{(pot\_ts)}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{\texorpdfstring{\textbf{Verificación de estacionariedad (ADF Test)}}{Verificación de estacionariedad (ADF Test)}}\label{verificaciuxf3n-de-estacionariedad-adf-test}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Prueba de raíz unitaria de Dickey{-}Fuller aumentada}
+
+\NormalTok{adf\_result }\OtherTok{\textless{}{-}} \FunctionTok{adf.test}\NormalTok{(pot\_ts\_clean)}
+\NormalTok{adf\_result}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Augmented Dickey-Fuller Test
+## 
+## data:  pot_ts_clean
+## Dickey-Fuller = -3.0587, Lag order = 14, p-value = 0.1301
+## alternative hypothesis: stationary
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# al tener en el ADF inicial: p = 0.1301 → se concluye que es no estacionaria al nive, por lo cual procedemos con transformacion y diferenciacion en escalones}
+
+
+\CommentTok{\# Serie base a usar en esta etapa y verificamos que no tenga na ni valores negativos}
+\NormalTok{y0 }\OtherTok{\textless{}{-}}\NormalTok{ pot\_ts\_clean }
+\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(y0))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{all}\NormalTok{(y0}\SpecialCharTok{\textgreater{}}\DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y\_log }\OtherTok{\textless{}{-}} \FunctionTok{log}\NormalTok{(y0)}
+\FunctionTok{range}\NormalTok{(y0, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{); }\FunctionTok{range}\NormalTok{(y\_log, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)  }\CommentTok{\# solo para verificar el cambio de escala}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  15.0 113.5
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 2.708050 4.731803
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{adf\_log }\OtherTok{\textless{}{-}} \FunctionTok{adf.test}\NormalTok{(y\_log)}
+\NormalTok{adf\_log}\SpecialCharTok{$}\NormalTok{p.value}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.1322035
+\end{verbatim}
+
+La transformación logarítmica ayudó a homogeneizar la variabilidad, pero no eliminó la tendencia ni la dependencia temporal. La serie transformada sigue teniendo raíz unitaria, por lo que pasamos a una diferenciacion de primer orden (d=1) sobre la serie logaritmica y volvemos a probar estacionariedad.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y\_diff1 }\OtherTok{\textless{}{-}} \FunctionTok{diff}\NormalTok{(y\_log, }\AttributeTok{differences =} \DecValTok{1}\NormalTok{)}
+\NormalTok{adf\_diff1 }\OtherTok{\textless{}{-}}\NormalTok{ tseries}\SpecialCharTok{::}\FunctionTok{adf.test}\NormalTok{(}\FunctionTok{na.omit}\NormalTok{(y\_diff1))}
+\NormalTok{adf\_diff1}\SpecialCharTok{$}\NormalTok{p.value}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.01
+\end{verbatim}
+
+con este resultado podemos concluir que:
+
+\begin{itemize}
+\item
+  La serie original no era estacionaria (p = 0.1301).
+\item
+  La serie logarítmica tampoco lo fue (p = 0.1322), aunque esa transformación ayudó a estabilizar la varianza
+\item
+  Al aplicar una diferencia de primer orden sobre la serie logarítmica, la prueba ADF arrojó p = 0.01, es decir \textless{} 0.05, por lo tanto sí es estacionaria.
+\end{itemize}
+
+\subsection{\texorpdfstring{\textbf{Interpretacion}}{Interpretacion}}\label{interpretacion}
+
+Luego de aplicar la transformación logarítmica, la serie mantuvo la misma tendencia general, por lo que no se logró estacionariedad. Sin embargo, al diferenciarla una vez (d = 1), la prueba de Dickey--Fuller aumentada mostró un p-valor de 0.01, lo que indica que se rechaza la hipótesis nula de raíz unitaria. En consecuencia, la serie diferenciada es estacionaria.
+
+Este resultado implica que la tendencia determinista fue eliminada mediante la primera diferencia, estabilizando la media a lo largo del tiempo. Por otro lado, la transformación logarítmica permitió controlar la heterocedasticidad, de modo que las fluctuaciones de la serie ahora son de magnitud comparable. La combinación de ambos pasos ---logaritmo y diferencia de primer orden--- produce una serie adecuada para modelar mediante métodos lineales, como los modelos ARIMA o SARIMA.
+
+Visualmente, la serie diferenciada oscila alrededor de cero y las funciones de autocorrelación (ACF y PACF) se estabilizan rápidamente, lo que refuerza la evidencia de estacionariedad.
+
+\chapter{\texorpdfstring{\textbf{Pronóstico de Demanda HoltWinters}}{Pronóstico de Demanda HoltWinters}}\label{pronuxf3stico-de-demanda-holtwinters}
+
+Este análisis aborda el pronóstico de los precios del ``Potato Red'' del mercado de Kalimati. Inicia con la carga, limpieza y un análisis exploratorio (EDA) para identificar tendencias y estacionalidad. Dada la alta frecuencia de los datos diarios, la serie se agrega a un formato semanal (frecuencia 52) para permitir un modelado estable. Posteriormente, se comparan varios métodos de suavizamiento exponencial (SES, Holt, Holt-Winters Aditivo y Multiplicativo) en conjuntos de entrenamiento y prueba. Finalmente, se selecciona el modelo Holt-Winters Multiplicativo, basado en su precisión (RMSE/MAPE), para generar un pronóstico validado a 52 semanas.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Librerias (base originales + necesarias)}
+
+\FunctionTok{library}\NormalTok{(readr)}
+\FunctionTok{library}\NormalTok{(dplyr)}
+\FunctionTok{library}\NormalTok{(lubridate)}
+\FunctionTok{library}\NormalTok{(ggplot2)}
+\FunctionTok{library}\NormalTok{(forecast)}
+\FunctionTok{library}\NormalTok{(tseries)}
+\FunctionTok{library}\NormalTok{(here)    }\CommentTok{\# rutas reproducibles}
+\FunctionTok{library}\NormalTok{(tidyr)   }\CommentTok{\# regularizar fechas (complete)}
+\FunctionTok{library}\NormalTok{(slider)  }\CommentTok{\# promedios moviles}
+\end{Highlighting}
+\end{Shaded}
+
+Realizaremos nuestro analisis con un conjunto de datos de precios agrícolas proveniente del mercado de Kalimati (Nepal). Este dataset incluye información diaria sobre productos agrícolas, sus precios mínimos, máximos y promedio. A partir de estos datos se realizará un análisis exploratorio y un estudio de comportamiento temporal de los precios.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{csv\_file }\OtherTok{\textless{}{-}} \StringTok{"C:/Users/Steba/OneDrive/Escritorio/kalimati\_tarkari\_dataset (2).csv"}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Leer datos}
+
+\NormalTok{data\_raw }\OtherTok{\textless{}{-}}\NormalTok{ readr}\SpecialCharTok{::}\FunctionTok{read\_csv}\NormalTok{(csv\_file, }\AttributeTok{show\_col\_types =} \ConstantTok{FALSE}\NormalTok{)}
+
+\CommentTok{\# Estandarizar nombres a snake para facilitar mapeo}
+
+\NormalTok{nms }\OtherTok{\textless{}{-}} \FunctionTok{tolower}\NormalTok{(}\FunctionTok{gsub}\NormalTok{(}\StringTok{"[\^{}a{-}zA{-}Z0{-}9]+"}\NormalTok{, }\StringTok{"\_"}\NormalTok{, }\FunctionTok{names}\NormalTok{(data\_raw)))}
+
+\CommentTok{\# Intentar mapear columnas canonicas (Commodity / Date / Minimum / Maximum / Average)}
+
+\NormalTok{df }\OtherTok{\textless{}{-}}\NormalTok{ data\_raw}
+\FunctionTok{names}\NormalTok{(df) }\OtherTok{\textless{}{-}}\NormalTok{ nms}
+
+\CommentTok{\# Mapeo flexible (case{-}insensitive)}
+
+\NormalTok{pick\_first }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(cands) \{}
+\NormalTok{hit }\OtherTok{\textless{}{-}} \FunctionTok{intersect}\NormalTok{(cands, }\FunctionTok{names}\NormalTok{(df))}
+\ControlFlowTok{if}\NormalTok{ (}\FunctionTok{length}\NormalTok{(hit) }\SpecialCharTok{==} \DecValTok{0}\NormalTok{) }\FunctionTok{return}\NormalTok{(}\ConstantTok{NA\_character\_}\NormalTok{) }\ControlFlowTok{else} \FunctionTok{return}\NormalTok{(hit[}\DecValTok{1}\NormalTok{])}
+\NormalTok{\}}
+
+\NormalTok{col\_commodity }\OtherTok{\textless{}{-}} \FunctionTok{pick\_first}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"commodity"}\NormalTok{,}\StringTok{"item"}\NormalTok{,}\StringTok{"product"}\NormalTok{,}\StringTok{"variety"}\NormalTok{,}\StringTok{"name"}\NormalTok{))}
+\NormalTok{col\_date      }\OtherTok{\textless{}{-}} \FunctionTok{pick\_first}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"date"}\NormalTok{,}\StringTok{"fecha"}\NormalTok{,}\StringTok{"day"}\NormalTok{))}
+\NormalTok{col\_min       }\OtherTok{\textless{}{-}} \FunctionTok{pick\_first}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"minimum"}\NormalTok{,}\StringTok{"min"}\NormalTok{,}\StringTok{"min\_price"}\NormalTok{,}\StringTok{"price\_min"}\NormalTok{))}
+\NormalTok{col\_max       }\OtherTok{\textless{}{-}} \FunctionTok{pick\_first}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"maximum"}\NormalTok{,}\StringTok{"max"}\NormalTok{,}\StringTok{"max\_price"}\NormalTok{,}\StringTok{"price\_max"}\NormalTok{))}
+\NormalTok{col\_avg       }\OtherTok{\textless{}{-}} \FunctionTok{pick\_first}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"average"}\NormalTok{,}\StringTok{"avg"}\NormalTok{,}\StringTok{"avg\_price"}\NormalTok{,}\StringTok{"price\_avg"}\NormalTok{,}\StringTok{"mean\_price"}\NormalTok{))}
+
+\NormalTok{req }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(col\_commodity, col\_date, col\_min, col\_max, col\_avg)}
+
+\ControlFlowTok{if}\NormalTok{ (}\FunctionTok{any}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(req))) \{}
+\FunctionTok{stop}\NormalTok{(}\StringTok{"No fue posible mapear columnas clave (commodity/date/min/max/average). Revisa nombres del CSV: "}\NormalTok{,}
+\FunctionTok{paste}\NormalTok{(}\FunctionTok{names}\NormalTok{(df), }\AttributeTok{collapse =} \StringTok{", "}\NormalTok{))}
+\NormalTok{\}}
+
+\NormalTok{data }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{transmute}\NormalTok{(}
+\AttributeTok{Commodity =}\NormalTok{ .data[[col\_commodity]],}
+\AttributeTok{Date      =} \FunctionTok{as.Date}\NormalTok{(.data[[col\_date]]),}
+\AttributeTok{Unit      =} \ConstantTok{NA\_character\_}\NormalTok{,                 }\CommentTok{\# si no existe, queda NA (no se usa en el analisis)}
+\AttributeTok{Minimum   =} \FunctionTok{as.numeric}\NormalTok{(.data[[col\_min]]),}
+\AttributeTok{Maximum   =} \FunctionTok{as.numeric}\NormalTok{(.data[[col\_max]]),}
+\AttributeTok{Average   =} \FunctionTok{as.numeric}\NormalTok{(.data[[col\_avg]])}
+\NormalTok{)}
+
+\CommentTok{\# Chequeos basicos}
+
+\FunctionTok{stopifnot}\NormalTok{(}\FunctionTok{inherits}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{Date, }\StringTok{"Date"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\section{\texorpdfstring{\textbf{Analisis de series de tiempo}}{Analisis de series de tiempo}}\label{analisis-de-series-de-tiempo-1}
+
+\subsection{\texorpdfstring{\textbf{Selección del item objetivo}}{Selección del item objetivo}}\label{selecciuxf3n-del-item-objetivo}
+
+Se selecciona el producto a analizar. El código prioriza ``Potato Red'', pero si no existe, selecciona el producto con más observaciones mediante (count(Commodity, sort = TRUE))
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{if}\NormalTok{ (}\StringTok{"Potato Red"} \SpecialCharTok{\%in\%} \FunctionTok{unique}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{Commodity)) \{}
+\NormalTok{target\_item }\OtherTok{\textless{}{-}} \StringTok{"Potato Red"}
+\NormalTok{\} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{target\_item }\OtherTok{\textless{}{-}}\NormalTok{ data }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{count}\NormalTok{(Commodity, }\AttributeTok{sort =} \ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{slice}\NormalTok{(}\DecValTok{1}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{pull}\NormalTok{(Commodity)}
+\NormalTok{\}}
+
+\NormalTok{target\_item}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Potato Red"
+\end{verbatim}
+
+Una vez se cuenta con el dataset filtrado para el item ``Potato Red'', mediante broupby y summarise se asegura que sólo exista un precio promedio por día evitando conflictos con entreadas duplicadas. Mediante complete() además se regulariza la serie temporal, insertando filas con NA para los días faltantes en el rango de fechas. Además se cponstruye la Serie de tiempos diaria para evaluar el comportamiento inicialmente.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Filtrar y regularizar serie diaria}
+
+\NormalTok{potatored }\OtherTok{\textless{}{-}}\NormalTok{ data }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{filter}\NormalTok{(Commodity }\SpecialCharTok{==}\NormalTok{ target\_item) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{select}\NormalTok{(Date, Average) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{group\_by}\NormalTok{(Date) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{summarise}\NormalTok{(}\AttributeTok{Average =} \FunctionTok{mean}\NormalTok{(Average), }\AttributeTok{.groups =} \StringTok{"drop"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{complete}\NormalTok{(}\AttributeTok{Date =} \FunctionTok{seq}\NormalTok{(}\FunctionTok{min}\NormalTok{(Date, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{), }\FunctionTok{max}\NormalTok{(Date, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{), }\AttributeTok{by =} \StringTok{"day"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{arrange}\NormalTok{(Date)}
+
+\CommentTok{\# Construir objeto ts (diario, 365)}
+
+\NormalTok{pot\_ts }\OtherTok{\textless{}{-}} \FunctionTok{ts}\NormalTok{(}
+\NormalTok{potatored}\SpecialCharTok{$}\NormalTok{Average,}
+\AttributeTok{start =} \FunctionTok{c}\NormalTok{(lubridate}\SpecialCharTok{::}\FunctionTok{year}\NormalTok{(}\FunctionTok{min}\NormalTok{(potatored}\SpecialCharTok{$}\NormalTok{Date, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)),}
+\NormalTok{lubridate}\SpecialCharTok{::}\FunctionTok{yday}\NormalTok{(}\FunctionTok{min}\NormalTok{(potatored}\SpecialCharTok{$}\NormalTok{Date, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{))),}
+\AttributeTok{frequency =} \DecValTok{365}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{\texorpdfstring{\textbf{Serie basica y ACF}}{Serie basica y ACF}}\label{serie-basica-y-acf-1}
+
+A continuación mediante autoplot se observa la tenedencia y la estacionalidad anual.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{autoplot}\NormalTok{(pot\_ts) }\SpecialCharTok{+}
+\FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Serie de tiempo: precio promedio"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Precio promedio"}\NormalTok{) }\SpecialCharTok{+}
+\FunctionTok{theme\_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{03-method_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggAcf}\NormalTok{(pot\_ts) }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"ACF del precio promedio (diario)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{03-method_files/figure-latex/unnamed-chunk-7-1.pdf}
+La función de autocorrelación (ACF) confirma esta dependencia temporal, con correlaciones significativas en los primeros rezagos que luego disminuyen de forma progresiva. Esto demuestra que la serie no sigue un comportamiento completamente aleatorio, sino que existen patrones repetitivos en el tiempo.
+
+\subsection{\texorpdfstring{\textbf{Promedios moviles (evidencia de suavizado)}}{Promedios moviles (evidencia de suavizado)}}\label{promedios-moviles-evidencia-de-suavizado-1}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pot\_ma }\OtherTok{\textless{}{-}}\NormalTok{ potatored }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{ma7  =} \FunctionTok{slide\_dbl}\NormalTok{(Average, mean, }\AttributeTok{.before =} \DecValTok{6}\NormalTok{,  }\AttributeTok{.complete =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{ma30 =} \FunctionTok{slide\_dbl}\NormalTok{(Average, mean, }\AttributeTok{.before =} \DecValTok{29}\NormalTok{, }\AttributeTok{.complete =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  )}
+
+\FunctionTok{ggplot}\NormalTok{(pot\_ma, }\FunctionTok{aes}\NormalTok{(Date, Average)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{linewidth =} \FloatTok{0.5}\NormalTok{, }\AttributeTok{alpha =} \FloatTok{0.6}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ ma7),  }\AttributeTok{linewidth =} \FloatTok{0.8}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ ma30), }\AttributeTok{linewidth =} \FloatTok{0.9}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Serie y promedios moviles (7 y 30 dias)"}\NormalTok{,}
+       \AttributeTok{x =} \StringTok{"Fecha"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Precio promedio"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{03-method_files/figure-latex/unnamed-chunk-8-1.pdf}
+Los gráficos de tendencia y promedios móviles muestran que los precios presentan fluctuaciones periódicas pero con una ligera tendencia creciente en el largo plazo. El promedio móvil de 7 días suaviza las variaciones diarias y deja entrever ciclos semanales asociados a la oferta en el mercado, mientras que el promedio de 30 días resalta un patrón más estructural que apunta a incrementos graduales, posiblemente relacionados con factores estacionales como la disponibilidad de cosecha o la variación de costos logísticos.
+
+\subsection{\texorpdfstring{\textbf{Rezagos (lags) y dependencia temporal}}{Rezagos (lags) y dependencia temporal}}\label{rezagos-lags-y-dependencia-temporal-1}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pot\_lags }\OtherTok{\textless{}{-}}\NormalTok{ potatored }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{lag1  =}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{lag}\NormalTok{(Average, }\DecValTok{1}\NormalTok{),}
+    \AttributeTok{lag7  =}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{lag}\NormalTok{(Average, }\DecValTok{7}\NormalTok{),}
+    \AttributeTok{lag30 =}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{lag}\NormalTok{(Average, }\DecValTok{30}\NormalTok{)}
+\NormalTok{  )}
+
+\CommentTok{\# Scatter y\_t vs y\_\{t{-}1\}}
+\FunctionTok{ggplot}\NormalTok{(pot\_lags, }\FunctionTok{aes}\NormalTok{(lag1, Average)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{method =} \StringTok{"lm"}\NormalTok{, }\AttributeTok{se =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{linewidth =} \FloatTok{0.7}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Scatter rezago 1 (y\_t vs y\_\{t{-}1\})"}\NormalTok{, }\AttributeTok{x =} \StringTok{"y\_\{t{-}1\}"}\NormalTok{, }\AttributeTok{y =} \StringTok{"y\_t"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{03-method_files/figure-latex/unnamed-chunk-9-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Scatter y\_t vs y\_\{t{-}7\}}
+\FunctionTok{ggplot}\NormalTok{(pot\_lags, }\FunctionTok{aes}\NormalTok{(lag7, Average)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{method =} \StringTok{"lm"}\NormalTok{, }\AttributeTok{se =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{linewidth =} \FloatTok{0.7}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Scatter rezago 7 (aprox. semanal)"}\NormalTok{, }\AttributeTok{x =} \StringTok{"y\_\{t{-}7\}"}\NormalTok{, }\AttributeTok{y =} \StringTok{"y\_t"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{03-method_files/figure-latex/unnamed-chunk-9-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# ACF/PACF (serie regularizada)}
+
+\FunctionTok{ggAcf}\NormalTok{(pot\_ts)  }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"ACF precio promedio (diario)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{03-method_files/figure-latex/unnamed-chunk-9-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggPacf}\NormalTok{(pot\_ts) }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"PACF precio promedio (diario)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{03-method_files/figure-latex/unnamed-chunk-9-4.pdf}
+
+El estudio de rezagos (lag 1, lag 7 y lag 30) refuerza esta observación: las gráficas de dispersión muestran una clara autocorrelación positiva, especialmente para rezagos cortos, indicando que los precios actuales dependen directamente de los valores recientes. Este comportamiento sugiere persistencia temporal: cuando los precios aumentan o disminuyen, tienden a mantener esa dirección durante varios días, lo cual es característico de mercados donde la información y las condiciones de oferta no cambian abruptamente.
+
+\subsection{\texorpdfstring{\textbf{Estacionalidad (descomposicion STL)}}{Estacionalidad (descomposicion STL)}}\label{estacionalidad-descomposicion-stl-1}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fit\_stl }\OtherTok{\textless{}{-}} \FunctionTok{stl}\NormalTok{(}\FunctionTok{na.interp}\NormalTok{(pot\_ts), }\AttributeTok{s.window =} \StringTok{"periodic"}\NormalTok{, }\AttributeTok{robust =} \ConstantTok{TRUE}\NormalTok{)}
+\FunctionTok{autoplot}\NormalTok{(fit\_stl) }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"STL precio promedio"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{03-method_files/figure-latex/unnamed-chunk-10-1.pdf}
+La descomposición STL separó la serie en sus componentes de tendencia, estacionalidad y residuo. Los resultados muestran una estacionalidad marcada con ciclos anuales definidos: los precios tienden a elevarse en ciertas épocas del año y disminuir en otras, reflejando los periodos de cosecha y escasez. La tendencia general es estable con una leve inclinación al alza, mientras que los residuos mantienen una magnitud baja y no presentan patrones visibles, lo que indica que gran parte de la variabilidad del precio está explicada por la tendencia y la estacionalidad, sin presencia de choques exógenos significativos.
+
+\subsection{\texorpdfstring{\textbf{Análisis Conglomerado}}{Análisis Conglomerado}}\label{anuxe1lisis-conglomerado}
+
+En conjunto, estos hallazgos evidencian que la serie del precio promedio de Potato Red posee un comportamiento no estacionario, con una tendencia creciente y estacionalidad recurrente, pero sin irregularidades fuertes.
+El patrón identificado sugiere que los precios pueden modelarse de forma confiable mediante técnicas de suavizado exponencial o modelos ARIMA estacionales, una vez que se realicen las transformaciones necesarias para estabilizar la media y la varianza. En términos prácticos, los resultados reflejan que el mercado analizado responde a ciclos previsibles, lo cual facilita la planificación de precios, abastecimiento y estrategias de comercialización.
+
+\section{\texorpdfstring{\textbf{Estacionariedad y diferenciación}}{Estacionariedad y diferenciación}}\label{estacionariedad-y-diferenciaciuxf3n-1}
+
+En esta segunda parte se busca analizar si la serie de tiempo seleccionada (Potato Red) cumple con el supuesto de estacionariedad. Una serie estacionaria es aquella cuya media y varianza permanecen constantes en el tiempo.
+En caso de que no sea estacionaria, se aplicarán procedimientos de diferenciación \# o transformación para estabilizar la tendencia y la variabilidad.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(pot\_ts)}
+
+\ControlFlowTok{if}\NormalTok{ (}\FunctionTok{anyNA}\NormalTok{(y)) \{}
+\NormalTok{  idx\_ok }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(y))}
+\NormalTok{  y\_interp }\OtherTok{\textless{}{-}} \FunctionTok{approx}\NormalTok{(}\AttributeTok{x =}\NormalTok{ idx\_ok, }\AttributeTok{y =}\NormalTok{ y[idx\_ok], }\AttributeTok{xout =} \FunctionTok{seq\_along}\NormalTok{(y))}\SpecialCharTok{$}\NormalTok{y}
+\NormalTok{\} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{  y\_interp }\OtherTok{\textless{}{-}}\NormalTok{ y\}}
+
+
+\NormalTok{pot\_ts\_clean }\OtherTok{\textless{}{-}} \FunctionTok{ts}\NormalTok{(}
+\NormalTok{  y\_interp,}
+  \AttributeTok{start =} \FunctionTok{start}\NormalTok{(pot\_ts),}
+  \AttributeTok{frequency =} \FunctionTok{frequency}\NormalTok{(pot\_ts)}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{\texorpdfstring{\textbf{Verificación de estacionariedad (ADF Test)}}{Verificación de estacionariedad (ADF Test)}}\label{verificaciuxf3n-de-estacionariedad-adf-test-1}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Prueba de raíz unitaria de Dickey{-}Fuller}
+
+\NormalTok{adf\_result }\OtherTok{\textless{}{-}} \FunctionTok{adf.test}\NormalTok{(pot\_ts\_clean)}
+\NormalTok{adf\_result}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Augmented Dickey-Fuller Test
+## 
+## data:  pot_ts_clean
+## Dickey-Fuller = -3.0587, Lag order = 14, p-value = 0.1301
+## alternative hypothesis: stationary
+\end{verbatim}
+
+El p-valor es 0.13. Como p \textgreater{} 0.05, no podemos rechazar la H\_0. Esto confirma estadísticamente lo que vimos en el ACF: la serie no es estacionaria y necesita ser diferenciada.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Serie base a usar en esta etapa y verificamos que no tenga na ni valores negativos}
+\NormalTok{y0 }\OtherTok{\textless{}{-}}\NormalTok{ pot\_ts\_clean }
+\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(y0))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{all}\NormalTok{(y0}\SpecialCharTok{\textgreater{}}\DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y\_log }\OtherTok{\textless{}{-}} \FunctionTok{log}\NormalTok{(y0)}
+\FunctionTok{range}\NormalTok{(y0, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{); }\FunctionTok{range}\NormalTok{(y\_log, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)  }\CommentTok{\# solo para verificar el cambio de escala}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  15.0 113.5
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 2.708050 4.731803
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{adf\_log }\OtherTok{\textless{}{-}} \FunctionTok{adf.test}\NormalTok{(y\_log)}
+\NormalTok{adf\_log}\SpecialCharTok{$}\NormalTok{p.value}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.1322035
+\end{verbatim}
+
+Se aplica una transformación logarítmica. Esto no corrige la tendencia, sino que ayuda a estabilizar la varianza. Es común en series de precios donde las fluctuaciones crecen a medida que el precio sube. Como era de esperar, la serie logarítmica sigue siendo no estacionaria (p=0.13).
+
+La transformación logarítmica ayudó a homogeneizar la variabilidad, pero no eliminó la tendencia ni la dependencia temporal. La serie transformada sigue teniendo raíz unitaria, por lo que pasamos a una diferenciacion de primer orden (d=1) sobre la serie logaritmica y volvemos a probar estacionariedad.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y\_diff1 }\OtherTok{\textless{}{-}} \FunctionTok{diff}\NormalTok{(y\_log, }\AttributeTok{differences =} \DecValTok{1}\NormalTok{)}
+\NormalTok{adf\_diff1 }\OtherTok{\textless{}{-}}\NormalTok{ tseries}\SpecialCharTok{::}\FunctionTok{adf.test}\NormalTok{(}\FunctionTok{na.omit}\NormalTok{(y\_diff1))}
+\NormalTok{adf\_diff1}\SpecialCharTok{$}\NormalTok{p.value}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.01
+\end{verbatim}
+
+Se aplica una primera diferencia a la serie logarítmica, buscando eliminar la tendencia. Tras realizar la prueba adf nuevamente, es posible determinar que el p-valor es 0.01. Como p \textless{} 0.05, rechazamos la H\_0. Concluimos que la serie transformada es estacionaria.
+
+\subsection{\texorpdfstring{\textbf{Interpretacion}}{Interpretacion}}\label{interpretacion-1}
+
+Luego de aplicar la transformación logarítmica, la serie mantuvo la misma tendencia general, por lo que no se logró estacionariedad. Sin embargo, al diferenciarla una vez (d = 1), la prueba de Dickey--Fuller aumentada mostró un p-valor de 0.01, lo que indica que se rechaza la hipótesis nula de raíz unitaria. En consecuencia, la serie diferenciada es estacionaria.
+
+Este resultado implica que la tendencia determinista fue eliminada mediante la primera diferencia, estabilizando la media a lo largo del tiempo. Por otro lado, la transformación logarítmica permitió controlar la heterocedasticidad, de modo que las fluctuaciones de la serie ahora son de magnitud comparable. La combinación de ambos pasos ---logaritmo y diferencia de primer orden--- produce una serie adecuada para modelar mediante métodos lineales, como los modelos ARIMA o SARIMA.
+
+Visualmente, la serie diferenciada oscila alrededor de cero y las funciones de autocorrelación (ACF y PACF) se estabilizan rápidamente, lo que refuerza la evidencia de estacionariedad.
+
+\section{\texorpdfstring{\textbf{Suavizamiento y Holt-Winters sobre la variable tiempo}}{Suavizamiento y Holt-Winters sobre la variable tiempo}}\label{suavizamiento-y-holt-winters-sobre-la-variable-tiempo}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y\_hw }\OtherTok{\textless{}{-}} \FunctionTok{na.interp}\NormalTok{(pot\_ts) }
+\NormalTok{freq }\OtherTok{\textless{}{-}} \FunctionTok{frequency}\NormalTok{(y\_hw)   }
+\FunctionTok{length}\NormalTok{(y\_hw); freq}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2889
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 365
+\end{verbatim}
+
+\subsection{\texorpdfstring{\textbf{Particion de entrenamiento /prueba}}{Particion de entrenamiento /prueba}}\label{particion-de-entrenamiento-prueba}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{h\_test }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(}\DecValTok{365}\NormalTok{, }\FunctionTok{floor}\NormalTok{(}\FunctionTok{length}\NormalTok{(y\_hw)}\SpecialCharTok{*}\FloatTok{0.2}\NormalTok{))  }\CommentTok{\# 1 año o \textasciitilde{}20\% si no alcanza}
+\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(y\_hw)}
+\NormalTok{y\_train }\OtherTok{\textless{}{-}} \FunctionTok{window}\NormalTok{(y\_hw, }\AttributeTok{end =} \FunctionTok{time}\NormalTok{(y\_hw)[n }\SpecialCharTok{{-}}\NormalTok{ h\_test])}
+\NormalTok{y\_test  }\OtherTok{\textless{}{-}} \FunctionTok{window}\NormalTok{(y\_hw, }\AttributeTok{start =} \FunctionTok{time}\NormalTok{(y\_hw)[n }\SpecialCharTok{{-}}\NormalTok{ h\_test }\SpecialCharTok{+} \DecValTok{1}\NormalTok{])}
+
+\FunctionTok{autoplot}\NormalTok{(y\_hw) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{time}\NormalTok{(y\_hw)[n }\SpecialCharTok{{-}}\NormalTok{ h\_test }\SpecialCharTok{+} \DecValTok{1}\NormalTok{], }\AttributeTok{linetype =} \DecValTok{2}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Serie completa con corte train/test"}\NormalTok{,}
+       \AttributeTok{y =} \StringTok{"Precio promedio"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Tiempo"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{03-method_files/figure-latex/unnamed-chunk-17-1.pdf}
+
+Se prepara la validación del modelo. La serie se divide en y\_train y y\_test. Es crucial en series de tiempo usar window() y no un muestreo aleatorio, ya que el orden temporal debe preservarse.
+
+\subsection{\texorpdfstring{\textbf{Agregación semanal}}{Agregación semanal}}\label{agregaciuxf3n-semanal}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(zoo)}
+
+\CommentTok{\# y\_hw: serie ts diaria (freq=365)}
+\FunctionTok{stopifnot}\NormalTok{(}\FunctionTok{frequency}\NormalTok{(y\_hw) }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{365}\NormalTok{, }\DecValTok{366}\NormalTok{))}
+
+\CommentTok{\#secuencia de fechas real para la ts diaria}
+\NormalTok{tsp\_hw }\OtherTok{\textless{}{-}} \FunctionTok{tsp}\NormalTok{(y\_hw)                     }\CommentTok{\# c(start, end, freq)}
+\NormalTok{start\_year }\OtherTok{\textless{}{-}} \FunctionTok{floor}\NormalTok{(tsp\_hw[}\DecValTok{1}\NormalTok{])}
+\NormalTok{start\_frac }\OtherTok{\textless{}{-}}\NormalTok{ tsp\_hw[}\DecValTok{1}\NormalTok{] }\SpecialCharTok{{-}}\NormalTok{ start\_year}
+\NormalTok{start\_date }\OtherTok{\textless{}{-}} \FunctionTok{as.Date}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(start\_year, }\StringTok{"{-}01{-}01"}\NormalTok{)) }\SpecialCharTok{+} \FunctionTok{round}\NormalTok{(start\_frac }\SpecialCharTok{*} \FloatTok{365.25}\NormalTok{)}
+
+\NormalTok{fechas\_all }\OtherTok{\textless{}{-}} \FunctionTok{seq.Date}\NormalTok{(}\AttributeTok{from =}\NormalTok{ start\_date, }\AttributeTok{by =} \StringTok{"day"}\NormalTok{, }\AttributeTok{length.out =} \FunctionTok{length}\NormalTok{(y\_hw))}
+\NormalTok{z\_all }\OtherTok{\textless{}{-}} \FunctionTok{zoo}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(y\_hw), fechas\_all)}
+
+\CommentTok{\#Agregar por semana calendario}
+\NormalTok{z\_week }\OtherTok{\textless{}{-}} \FunctionTok{aggregate}\NormalTok{(z\_all, }\FunctionTok{as.Date}\NormalTok{(}\FunctionTok{cut}\NormalTok{(}\FunctionTok{index}\NormalTok{(z\_all), }\StringTok{"week"}\NormalTok{)), mean, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+
+\CommentTok{\#Convertimos a ts semanal (freq = 52)}
+\NormalTok{y\_w }\OtherTok{\textless{}{-}} \FunctionTok{ts}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(z\_week), }\AttributeTok{frequency =} \DecValTok{52}\NormalTok{)}
+
+\CommentTok{\#Split train/test semanal}
+\NormalTok{h\_test\_w }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(}\DecValTok{52}\NormalTok{, }\FunctionTok{floor}\NormalTok{(}\FunctionTok{length}\NormalTok{(y\_w) }\SpecialCharTok{*} \FloatTok{0.2}\NormalTok{))}
+\NormalTok{n\_w }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(y\_w)}
+\NormalTok{y\_train\_w }\OtherTok{\textless{}{-}} \FunctionTok{window}\NormalTok{(y\_w, }\AttributeTok{end =} \FunctionTok{time}\NormalTok{(y\_w)[n\_w }\SpecialCharTok{{-}}\NormalTok{ h\_test\_w])}
+\NormalTok{y\_test\_w  }\OtherTok{\textless{}{-}} \FunctionTok{window}\NormalTok{(y\_w, }\AttributeTok{start =} \FunctionTok{time}\NormalTok{(y\_w)[n\_w }\SpecialCharTok{{-}}\NormalTok{ h\_test\_w }\SpecialCharTok{+} \DecValTok{1}\NormalTok{])}
+
+\FunctionTok{autoplot}\NormalTok{(y\_w) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{time}\NormalTok{(y\_w)[n\_w }\SpecialCharTok{{-}}\NormalTok{ h\_test\_w }\SpecialCharTok{+} \DecValTok{1}\NormalTok{], }\AttributeTok{linetype =} \DecValTok{2}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Serie semanal con corte train/test"}\NormalTok{,}
+       \AttributeTok{y =} \StringTok{"Precio promedio semanal"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Tiempo"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{03-method_files/figure-latex/unnamed-chunk-18-1.pdf}
+
+Modelar una estacionalidad de 365 períodos es computacionalmente inviable y estadísticamente inestable para HoltWinters o ets. Mediante la agregación de los datos a una frecuencia menor que aún capture la estacionalidad (en este caso se escogió semanal el problema de soluciona, generando una nueva ts semanal y se aplica nuevamente la división de los datos en train y test
+
+\subsection{\texorpdfstring{\textbf{Modelos de suavizamiento y Holt-Winters en serie semanal}}{Modelos de suavizamiento y Holt-Winters en serie semanal}}\label{modelos-de-suavizamiento-y-holt-winters-en-serie-semanal}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Horizonte de prueba}
+\NormalTok{h }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(y\_test\_w)}
+
+\CommentTok{\# Modelos de suavizamiento base}
+\CommentTok{\# Suavizamiento exponencial simple (SES)}
+\NormalTok{fit\_ses\_w }\OtherTok{\textless{}{-}} \FunctionTok{ets}\NormalTok{(y\_train\_w, }\AttributeTok{model =} \StringTok{"ANN"}\NormalTok{)}
+\NormalTok{fc\_ses\_w  }\OtherTok{\textless{}{-}} \FunctionTok{forecast}\NormalTok{(fit\_ses\_w, }\AttributeTok{h =}\NormalTok{ h)}
+
+\CommentTok{\# Holt: tendencia aditiva}
+\NormalTok{fit\_holt\_w }\OtherTok{\textless{}{-}} \FunctionTok{ets}\NormalTok{(y\_train\_w, }\AttributeTok{model =} \StringTok{"AAN"}\NormalTok{)}
+\NormalTok{fc\_holt\_w  }\OtherTok{\textless{}{-}} \FunctionTok{forecast}\NormalTok{(fit\_holt\_w, }\AttributeTok{h =}\NormalTok{ h)}
+
+\CommentTok{\# Holt{-}Winters con función base stats::HoltWinters}
+\NormalTok{fit\_hwa\_w }\OtherTok{\textless{}{-}} \FunctionTok{HoltWinters}\NormalTok{(y\_train\_w, }\AttributeTok{seasonal =} \StringTok{"additive"}\NormalTok{)}
+\NormalTok{fit\_hwm\_w }\OtherTok{\textless{}{-}} \FunctionTok{HoltWinters}\NormalTok{(y\_train\_w, }\AttributeTok{seasonal =} \StringTok{"multiplicative"}\NormalTok{)}
+
+\CommentTok{\# Generar pronósticos a h pasos}
+\NormalTok{fc\_hwa\_w }\OtherTok{\textless{}{-}} \FunctionTok{forecast}\NormalTok{(fit\_hwa\_w, }\AttributeTok{h =}\NormalTok{ h)}
+\NormalTok{fc\_hwm\_w }\OtherTok{\textless{}{-}} \FunctionTok{forecast}\NormalTok{(fit\_hwm\_w, }\AttributeTok{h =}\NormalTok{ h)}
+
+\CommentTok{\# Resumen de parámetros de suavizamiento}
+\NormalTok{pars\_w }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}
+  \AttributeTok{SES      =}\NormalTok{ fit\_ses\_w}\SpecialCharTok{$}\NormalTok{par,}
+  \AttributeTok{Holt     =}\NormalTok{ fit\_holt\_w}\SpecialCharTok{$}\NormalTok{par,}
+  \AttributeTok{HW\_adi   =}\NormalTok{ fit\_hwa\_w}\SpecialCharTok{$}\NormalTok{coefficients,}
+  \AttributeTok{HW\_multi =}\NormalTok{ fit\_hwm\_w}\SpecialCharTok{$}\NormalTok{coefficients}
+\NormalTok{)}
+
+\NormalTok{metodos\_w }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
+  \AttributeTok{SES    =}\NormalTok{ fit\_ses\_w}\SpecialCharTok{$}\NormalTok{method,}
+  \AttributeTok{Holt   =}\NormalTok{ fit\_holt\_w}\SpecialCharTok{$}\NormalTok{method,}
+  \AttributeTok{HW\_adi =} \StringTok{"Holt{-}Winters aditivo (HoltWinters)"}\NormalTok{,}
+  \AttributeTok{HW\_mul =} \StringTok{"Holt{-}Winters multiplicativo (HoltWinters)"}
+\NormalTok{)}
+
+\FunctionTok{list}\NormalTok{(}\AttributeTok{pars =}\NormalTok{ pars\_w, }\AttributeTok{metodos =}\NormalTok{ metodos\_w)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $pars
+## $pars$SES
+##      alpha          l 
+##  0.9998999 20.0661412 
+## 
+## $pars$Holt
+##      alpha       beta        phi          l          b 
+##  0.9998998  0.1131366  0.8000015 19.3507661  0.7318030 
+## 
+## $pars$HW_adi
+##            a            b           s1           s2           s3           s4 
+##  39.08244375   0.07882721  -7.65617219  -5.33129937  -2.12172776  -0.60521373 
+##           s5           s6           s7           s8           s9          s10 
+##   1.67227131   3.70855086   3.86297747   4.29730738   4.70950257   5.51286110 
+##          s11          s12          s13          s14          s15          s16 
+##   6.58108183   9.34052131  11.67282675  11.56985459  10.72690049  10.62915737 
+##          s17          s18          s19          s20          s21          s22 
+##  11.56624926  14.32396189  12.96493891  12.91210622  15.60833595  19.70484488 
+##          s23          s24          s25          s26          s27          s28 
+##  18.21542017  15.04288451   8.57289145   4.41893044   3.59468994   2.26948285 
+##          s29          s30          s31          s32          s33          s34 
+##   1.41348224   1.16589200   0.07345107  -2.59161738  -5.38569070  -6.81747767 
+##          s35          s36          s37          s38          s39          s40 
+##  -8.35116126 -10.31002086 -14.36805886 -15.48013931 -13.59119371 -14.10375330 
+##          s41          s42          s43          s44          s45          s46 
+## -12.98609882 -13.91879059 -12.80762063 -12.45344901 -10.91079687  -9.50278976 
+##          s47          s48          s49          s50          s51          s52 
+##  -7.48181474  -7.63951511  -9.66359895  -9.41494901  -8.19836375  -8.36815804 
+## 
+## $pars$HW_multi
+##           a           b          s1          s2          s3          s4 
+## 40.06957603  0.07882721  0.78984647  0.86149189  0.95592829  0.99520880 
+##          s5          s6          s7          s8          s9         s10 
+##  1.06150922  1.11859277  1.10742123  1.11547832  1.13362719  1.15295252 
+##         s11         s12         s13         s14         s15         s16 
+##  1.19755872  1.28051297  1.34512974  1.33136792  1.29845693  1.29564795 
+##         s17         s18         s19         s20         s21         s22 
+##  1.31337013  1.37966490  1.36129664  1.37542631  1.45910223  1.55273805 
+##         s23         s24         s25         s26         s27         s28 
+##  1.49801968  1.41880910  1.25803359  1.12986066  1.10809063  1.06878253 
+##         s29         s30         s31         s32         s33         s34 
+##  1.05012792  1.03448499  1.00251606  0.92562241  0.84794487  0.78549769 
+##         s35         s36         s37         s38         s39         s40 
+##  0.73966473  0.68969443  0.59218461  0.55743071  0.58537805  0.58407654 
+##         s41         s42         s43         s44         s45         s46 
+##  0.61227139  0.60444293  0.63415394  0.64018299  0.67488001  0.72564177 
+##         s47         s48         s49         s50         s51         s52 
+##  0.78927007  0.78769837  0.73692250  0.74269354  0.77194581  0.76652385 
+## 
+## 
+## $metodos
+##                                         SES 
+##                                "ETS(A,N,N)" 
+##                                        Holt 
+##                               "ETS(A,Ad,N)" 
+##                                      HW_adi 
+##        "Holt-Winters aditivo (HoltWinters)" 
+##                                      HW_mul 
+## "Holt-Winters multiplicativo (HoltWinters)"
+\end{verbatim}
+
+Se ajustan cuatro modelos de suavizamiento exponencial al conjunto de entrenamiento semanal (y\_train\_w).
+
+Se evaluán los modelos ANN más conocido como SES (Error Aditivo, sin tendencia, sin estacionalidad). Por otra parte el modelo Holt es un modelo con Error Aditivo, Tendencia Aditiva y sin Estacionalidad. Y por último, el modelo HoltWinters es un modelo completo que asume que la estacionalidad es constante.
+
+\subsection{\texorpdfstring{\textbf{Comparación de precisión fuera de muestra}}{Comparación de precisión fuera de muestra}}\label{comparaciuxf3n-de-precisiuxf3n-fuera-de-muestra}
+
+Se calcula la precisión de los pronósticos de cada modelo contra los datos reales y\_test\_w. Se comparan las métricas de error (RMSE, MAE, MAPE) del conjunto de prueba.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Calcular métricas de error para cada modelo en el conjunto de prueba}
+\NormalTok{acc\_tbl }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(}
+  \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{model =} \StringTok{"SES"}\NormalTok{,    }\FunctionTok{accuracy}\NormalTok{(fc\_ses\_w,  y\_test\_w)),}
+  \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{model =} \StringTok{"Holt"}\NormalTok{,   }\FunctionTok{accuracy}\NormalTok{(fc\_holt\_w, y\_test\_w)),}
+  \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{model =} \StringTok{"HW\_adi"}\NormalTok{, }\FunctionTok{accuracy}\NormalTok{(fc\_hwa\_w,  y\_test\_w)),}
+  \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{model =} \StringTok{"HW\_mul"}\NormalTok{, }\FunctionTok{accuracy}\NormalTok{(fc\_hwm\_w,  y\_test\_w))}
+\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(model, RMSE, MAE, MAPE)}
+
+\NormalTok{acc\_tbl}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                   model      RMSE       MAE      MAPE
+## Training set...1    SES  2.929804  1.928708  5.748854
+## Test set...2        SES 33.778723 24.276695 34.505452
+## Training set...3   Holt  2.902352  1.901817  5.638535
+## Test set...4       Holt 34.593228 24.973105 35.456690
+## Training set...5 HW_adi  2.984060  2.102575  6.453931
+## Test set...6     HW_adi 20.668712 14.555681 20.798164
+## Training set...7 HW_mul  2.846973  1.996849  6.036061
+## Test set...8     HW_mul 18.997168 13.487363 19.577035
+\end{verbatim}
+
+El modelo Holt-Winters multiplicativo (HW\_mul) es el mejor, porque presenta los errores más bajos (RMSE y MAPE) en la ventana de prueba.
+Esto indica que la estacionalidad es proporcional al nivel de la serie (los picos crecen cuando el nivel general sube), lo cual es consistente con lo que se veia en el grafico.
+
+\subsection{\texorpdfstring{\textbf{Diagnostico de residuos}}{Diagnostico de residuos}}\label{diagnostico-de-residuos}
+
+Se realizarán dos pruebas estadísticas al pronóstico ganador. Por una parte el Gráfico ACF de Residuos, muestra la autocorrelación de los errores del modelo. Idealmente, ningún rezago debe superar las líneas azules. Esto significaría que los errores son ``ruido blanco'' y que el modelo ha capturado toda la información predecible.En segundo lugar, la Prueba Ljung-Box es la prueba estadística formal para la autocorrelación de los residuos.Hipótesis Nula (H\_0): Los residuos son independientes (son ruido blanco).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{best\_fc }\OtherTok{\textless{}{-}}\NormalTok{ fc\_hwm\_w  }\CommentTok{\# ganador: Holt{-}Winters multiplicativo}
+\FunctionTok{checkresiduals}\NormalTok{(best\_fc}\SpecialCharTok{$}\NormalTok{model)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{03-method_files/figure-latex/unnamed-chunk-21-1.pdf}
+
+\begin{verbatim}
+## 
+##  Ljung-Box test
+## 
+## data:  Residuals from HoltWinters
+## Q* = 76.422, df = 62, p-value = 0.1029
+## 
+## Model df: 0.   Total lags used: 62
+\end{verbatim}
+
+Al comparar los modelos de suavizamiento, Holt y Holt-Winters, se encontró que el Holt-Winters multiplicativo obtuvo los mejores resultados en la ventana de prueba, con los menores valores de RMSE (18.99) y MAPE (19.57 \%).
+Esto indica que la serie presenta una estacionalidad proporcional al nivel, es decir, las fluctuaciones son más amplias cuando los valores son altos.
+
+El análisis de residuos respalda la adecuación del modelo: el p-valor = 0.1029 del test de Ljung-Box confirma que no existe autocorrelación significativa (residuos ≈ ruido blanco).
+Por tanto, el modelo Holt-Winters multiplicativo logra capturar adecuadamente la tendencia y la estacionalidad de la serie semanal del precio promedio del Potato Red.
+
+\subsection{\texorpdfstring{\textbf{Pronostico final}}{Pronostico final}}\label{pronostico-final}
+
+\begin{itemize}
+\item
+  \textbf{Reentrenamiento:} Ahora que hemos probado que el modelo HW Multiplicativo es el mejor, lo reentrenamos usando todos los datos semanales (y\_w), no solo el conjunto de entrenamiento. Esto le da al modelo la mayor cantidad de información posible para estimar los parámetros finales.
+\item
+  \textbf{Pronóstico:} Se genera el pronóstico final hacia el futuro (h = 52 semanas, un año).
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Reentrenar el modelo Holt{-}Winters multiplicativo con toda la serie semanal}
+\NormalTok{fit\_final\_hw }\OtherTok{\textless{}{-}} \FunctionTok{HoltWinters}\NormalTok{(y\_w, }\AttributeTok{seasonal =} \StringTok{"multiplicative"}\NormalTok{)}
+
+\CommentTok{\# pronóstico a 52 semanas (≈ 1 año)}
+\NormalTok{h\_future }\OtherTok{\textless{}{-}} \DecValTok{52}
+\NormalTok{fc\_final\_hw }\OtherTok{\textless{}{-}} \FunctionTok{forecast}\NormalTok{(fit\_final\_hw, }\AttributeTok{h =}\NormalTok{ h\_future)}
+
+\CommentTok{\# Visualizacion del pronóstico final}
+\FunctionTok{autoplot}\NormalTok{(fc\_final\_hw) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Pronostico final Holt{-}Winters multiplicativo (52 semanas)"}\NormalTok{,}
+    \AttributeTok{y =} \StringTok{"Precio promedio semanal"}\NormalTok{,}
+    \AttributeTok{x =} \StringTok{"Tiempo"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{03-method_files/figure-latex/unnamed-chunk-22-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# primeras filas de la tabla de pronostico}
+\FunctionTok{head}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}
+  \AttributeTok{Semana =} \FunctionTok{time}\NormalTok{(fc\_final\_hw}\SpecialCharTok{$}\NormalTok{mean),}
+  \AttributeTok{Pronostico =} \FunctionTok{round}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(fc\_final\_hw}\SpecialCharTok{$}\NormalTok{mean), }\DecValTok{2}\NormalTok{),}
+  \AttributeTok{LI\_80 =} \FunctionTok{round}\NormalTok{(fc\_final\_hw}\SpecialCharTok{$}\NormalTok{lower[,}\DecValTok{1}\NormalTok{], }\DecValTok{2}\NormalTok{),}
+  \AttributeTok{LS\_80 =} \FunctionTok{round}\NormalTok{(fc\_final\_hw}\SpecialCharTok{$}\NormalTok{upper[,}\DecValTok{1}\NormalTok{], }\DecValTok{2}\NormalTok{),}
+  \AttributeTok{LI\_95 =} \FunctionTok{round}\NormalTok{(fc\_final\_hw}\SpecialCharTok{$}\NormalTok{lower[,}\DecValTok{2}\NormalTok{], }\DecValTok{2}\NormalTok{),}
+  \AttributeTok{LS\_95 =} \FunctionTok{round}\NormalTok{(fc\_final\_hw}\SpecialCharTok{$}\NormalTok{upper[,}\DecValTok{2}\NormalTok{], }\DecValTok{2}\NormalTok{)}
+\NormalTok{), }\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      Semana Pronostico LI_80 LS_80 LI_95 LS_95
+## 1  8.961538      37.69 33.31 42.07 30.99 44.39
+## 2  8.980769      40.88 35.05 46.72 31.96 49.81
+## 3  9.000000      45.08 37.83 52.33 33.99 56.16
+## 4  9.019231      47.46 39.09 55.83 34.66 60.26
+## 5  9.038462      50.77 41.19 60.34 36.13 65.41
+## 6  9.057692      55.25 44.31 66.19 38.52 71.98
+## 7  9.076923      55.96 44.35 67.58 38.20 73.73
+## 8  9.096154      55.31 43.30 67.32 36.95 73.67
+## 9  9.115385      55.66 43.09 68.24 36.43 74.90
+## 10 9.134615      58.37 44.76 71.99 37.55 79.20
+\end{verbatim}
+
+\subsection{Conclusiones}\label{conclusiones}
+
+Tras evaluar diferentes métodos de suavizamiento exponencial, se determinó que el modelo Holt-Winters multiplicativo fue el que presentó el mejor desempeño predictivo, con los menores errores (RMSE = 18.99 y MAPE = 19.6 \%) en la ventana de prueba.
+
+Este resultado confirma que la serie presenta estacionalidad proporcional al nivel, es decir, cuando el precio promedio del Potato Red aumenta, las fluctuaciones también lo hacen en la misma proporción.
+
+Los residuos del modelo no mostraron autocorrelación significativa (p-valor = 0.1029), por lo que se concluye que el modelo explica adecuadamente la estructura temporal.
+
+Con la serie completa y el modelo reentrenado, el pronóstico a 52 semanas muestra una tendencia oscilante con picos regulares y amplitud similar a la observada históricamente.
+Las bandas de confianza (80 \% y 95 \%) reflejan un nivel de incertidumbre moderado, lo que otorga confianza en las estimaciones.
+
+En conjunto, el método Holt-Winters multiplicativo demuestra ser una herramienta sólida y confiable para proyectar el comportamiento estacional del precio semanal del Potato Red.
+
+\section{\texorpdfstring{\textbf{Desarrollo metodológico y justificación de decisiones}}{Desarrollo metodológico y justificación de decisiones}}\label{desarrollo-metodoluxf3gico-y-justificaciuxf3n-de-decisiones}
+
+El proceso de aplicación del modelo de \textbf{Holt-Winters} a la serie de tiempo del \emph{precio promedio del Potato Red} implicó diversos ajustes metodológicos debido a las características particulares de los datos.\\
+La variable de estudio correspondía a una \textbf{serie diaria} con una extensión superior a 2800 observaciones y frecuencia anual de 365. Si bien esta cantidad de datos representaba una fuente valiosa de información, también generó \textbf{limitaciones computacionales} al momento de ajustar modelos estacionales como \textbf{ets(model = ``AAA'')} o \textbf{hw(seasonal = ``additive'')}, debido a que la función \textbf{ets()`} no está optimizada para manejar estacionalidades tan largas.
+
+Durante los primeros intentos, el software arrojó el error \emph{``Frequency too high''} o se quedaba ejecutando indefinidamente. Esto motivó una revisión del enfoque, identificando que la \textbf{estacionalidad de interés} no necesariamente se presentaba de manera diaria, sino más bien \textbf{en ciclos semanales o mensuales}, propios de los precios agrícolas.
+
+\subsection{Ajuste de la frecuencia temporal}\label{ajuste-de-la-frecuencia-temporal}
+
+Como solución, se decidió \textbf{agregar la serie a frecuencia semanal}, calculando el promedio de los precios diarios.\\
+Esta decisión permitió conservar la forma cíclica de la serie (picos y valles regulares) y, al mismo tiempo, \textbf{reducir la frecuencia de 365 a 52}, lo cual hizo posible aplicar modelos estacionales de forma estable y con un tiempo de cómputo razonable.\\
+En la práctica, esto significó reconstruir la serie con una frecuencia semanal (\textbf{frequency = 52}), evitando la sobrecarga que impedía el ajuste de Holt-Winters en la versión original.
+
+\subsection{Modelos aplicados}\label{modelos-aplicados}
+
+Una vez ajustada la frecuencia, se implementaron cuatro modelos de suavizamiento:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Suavizamiento exponencial simple (SES)} -- Captura únicamente el nivel de la serie.\\
+\item
+  \textbf{Método de Holt} -- Incorpora tendencia aditiva.\\
+\item
+  \textbf{Holt-Winters aditivo} -- Considera tendencia y estacionalidad de amplitud constante.\\
+\item
+  \textbf{Holt-Winters multiplicativo} -- Considera estacionalidad proporcional al nivel.
+\end{enumerate}
+
+Debido a los errores recurrentes con \textbf{ets()} y \textbf{hw()}, se optó finalmente por la función \textbf{\texttt{stats::HoltWinters()}}, que permite ajustar modelos estacionales de manera más estable con series largas o de alta frecuencia.
+
+\subsection{Validación del modelo}\label{validaciuxf3n-del-modelo}
+
+La serie semanal se dividió en un conjunto de \textbf{entrenamiento (80\%)} y otro de \textbf{prueba (20\%)}, correspondiente aproximadamente a un año de observaciones.\\
+Con esta división, se evaluó el desempeño predictivo de cada modelo mediante métricas como \textbf{RMSE}, \textbf{MAE} y \textbf{MAPE}.
+
+Los resultados mostraron que el \textbf{modelo Holt-Winters multiplicativo} presentó el mejor desempeño (RMSE = 18.99, MAPE = 19.6\%), superando a las versiones aditiva, Holt y SES.\\
+Esto indica que la estacionalidad es \textbf{proporcional al nivel} de la serie: cuando los precios son altos, las fluctuaciones semanales también lo son.
+
+\subsection{Diagnóstico de residuos}\label{diagnuxf3stico-de-residuos}
+
+Para validar el ajuste, se analizaron los residuos del modelo Holt-Winters multiplicativo.\\
+El test de \textbf{Ljung-Box (p-valor = 0.1029)} indicó ausencia de autocorrelación significativa, lo cual demuestra que el modelo logra capturar adecuadamente la tendencia y la estacionalidad de los datos.\\
+Además, el gráfico ACF de los residuos no mostró patrones sistemáticos, confirmando que el error se comporta como \textbf{ruido blanco}.
+
+\subsection{Pronóstico final}\label{pronuxf3stico-final}
+
+Con base en el modelo seleccionado, se reentrenó la serie completa y se realizó un \textbf{pronóstico a 52 semanas} (equivalente a un año).\\
+El resultado mostró una evolución oscilante, con picos estacionales regulares y una amplitud coherente con los patrones históricos observados.\\
+Las bandas de confianza del 80\% y 95\% se mantuvieron en rangos moderados, reflejando un nivel de incertidumbre aceptable.
+
+\subsection{Conclusión integradora}\label{conclusiuxf3n-integradora}
+
+En síntesis, el desarrollo de este modelo implicó un proceso iterativo de ajuste y validación.\\
+Se comprobó que aplicar Holt-Winters directamente sobre la serie diaria era impracticable por su frecuencia alta, por lo que fue necesario \textbf{agregar la serie a frecuencia semanal} para estabilizar el modelo.\\
+Este cambio permitió aplicar el método de forma exitosa y obtener resultados coherentes, concluyendo que el \textbf{modelo Holt-Winters multiplicativo} es una herramienta sólida para pronosticar el comportamiento estacional del precio del \emph{Potato Red}, combinando buena precisión y consistencia temporal.
+
+  \bibliography{book.bib,packages.bib}
+
+\end{document}

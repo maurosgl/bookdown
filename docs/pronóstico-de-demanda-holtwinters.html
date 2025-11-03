@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Capítulo 3 Pronóstico de Demanda HoltWinters | Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal</title>
+<meta name="author" content="Grupo 2">
+<meta name="description" content="Este análisis aborda el pronóstico de los precios del “Potato Red” del mercado de Kalimati. Inicia con la carga, limpieza y un análisis exploratorio (EDA) para identificar tendencias y...">
+<meta name="generator" content="bookdown 0.45 with bs4_book()">
+<meta property="og:title" content="Capítulo 3 Pronóstico de Demanda HoltWinters | Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal">
+<meta property="og:type" content="book">
+<meta property="og:description" content="Este análisis aborda el pronóstico de los precios del “Potato Red” del mercado de Kalimati. Inicia con la carga, limpieza y un análisis exploratorio (EDA) para identificar tendencias y...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Capítulo 3 Pronóstico de Demanda HoltWinters | Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal">
+<meta name="twitter:description" content="Este análisis aborda el pronóstico de los precios del “Potato Red” del mercado de Kalimati. Inicia con la carga, limpieza y un análisis exploratorio (EDA) para identificar tendencias y...">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.8.0/transition.js"></script><script src="libs/bs3compat-0.8.0/tabs.js"></script><script src="libs/bs3compat-0.8.0/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html"><span class="header-section-number">1</span> Introducción</a></li>
+<li><a class="" href="eda-y-an%C3%A1lisis-de-series-de-tiempo.html"><span class="header-section-number">2</span> EDA y Análisis de Series de tiempo</a></li>
+<li><a class="active" href="pron%C3%B3stico-de-demanda-holtwinters.html"><span class="header-section-number">3</span> Pronóstico de Demanda HoltWinters</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="pronóstico-de-demanda-holtwinters" class="section level1" number="3">
+<h1>
+<span class="header-section-number">Capítulo 3</span> <strong>Pronóstico de Demanda HoltWinters</strong><a class="anchor" aria-label="anchor" href="#pron%C3%B3stico-de-demanda-holtwinters"><i class="fas fa-link"></i></a>
+</h1>
+<p>Este análisis aborda el pronóstico de los precios del “Potato Red” del mercado de Kalimati. Inicia con la carga, limpieza y un análisis exploratorio (EDA) para identificar tendencias y estacionalidad. Dada la alta frecuencia de los datos diarios, la serie se agrega a un formato semanal (frecuencia 52) para permitir un modelado estable. Posteriormente, se comparan varios métodos de suavizamiento exponencial (SES, Holt, Holt-Winters Aditivo y Multiplicativo) en conjuntos de entrenamiento y prueba. Finalmente, se selecciona el modelo Holt-Winters Multiplicativo, basado en su precisión (RMSE/MAPE), para generar un pronóstico validado a 52 semanas.</p>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Librerias (base originales + necesarias)</span></span>
+<span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://readr.tidyverse.org">readr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://lubridate.tidyverse.org">lubridate</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://pkg.robjhyndman.com/forecast/">forecast</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">tseries</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://here.r-lib.org/">here</a></span><span class="op">)</span>    <span class="co"># rutas reproducibles</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span>   <span class="co"># regularizar fechas (complete)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/slider">slider</a></span><span class="op">)</span>  <span class="co"># promedios moviles</span></span></code></pre></div>
+<p>Realizaremos nuestro analisis con un conjunto de datos de precios agrícolas proveniente del mercado de Kalimati (Nepal). Este dataset incluye información diaria sobre productos agrícolas, sus precios mínimos, máximos y promedio. A partir de estos datos se realizará un análisis exploratorio y un estudio de comportamiento temporal de los precios.</p>
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">csv_file</span> <span class="op">&lt;-</span> <span class="st">"C:/Users/Steba/OneDrive/Escritorio/kalimati_tarkari_dataset (2).csv"</span></span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Leer datos</span></span>
+<span></span>
+<span><span class="va">data_raw</span> <span class="op">&lt;-</span> <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span><span class="va">csv_file</span>, show_col_types <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Estandarizar nombres a snake para facilitar mapeo</span></span>
+<span></span>
+<span><span class="va">nms</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/chartr.html">tolower</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html">gsub</a></span><span class="op">(</span><span class="st">"[^a-zA-Z0-9]+"</span>, <span class="st">"_"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">data_raw</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Intentar mapear columnas canonicas (Commodity / Date / Minimum / Maximum / Average)</span></span>
+<span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">data_raw</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">nms</span></span>
+<span></span>
+<span><span class="co"># Mapeo flexible (case-insensitive)</span></span>
+<span></span>
+<span><span class="va">pick_first</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">cands</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="va">hit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html">intersect</a></span><span class="op">(</span><span class="va">cands</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">hit</span><span class="op">)</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span> <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="cn">NA_character_</span><span class="op">)</span> <span class="kw">else</span> <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">hit</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">col_commodity</span> <span class="op">&lt;-</span> <span class="fu">pick_first</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"commodity"</span>,<span class="st">"item"</span>,<span class="st">"product"</span>,<span class="st">"variety"</span>,<span class="st">"name"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">col_date</span>      <span class="op">&lt;-</span> <span class="fu">pick_first</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"date"</span>,<span class="st">"fecha"</span>,<span class="st">"day"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">col_min</span>       <span class="op">&lt;-</span> <span class="fu">pick_first</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"minimum"</span>,<span class="st">"min"</span>,<span class="st">"min_price"</span>,<span class="st">"price_min"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">col_max</span>       <span class="op">&lt;-</span> <span class="fu">pick_first</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"maximum"</span>,<span class="st">"max"</span>,<span class="st">"max_price"</span>,<span class="st">"price_max"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">col_avg</span>       <span class="op">&lt;-</span> <span class="fu">pick_first</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"average"</span>,<span class="st">"avg"</span>,<span class="st">"avg_price"</span>,<span class="st">"price_avg"</span>,<span class="st">"mean_price"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">col_commodity</span>, <span class="va">col_date</span>, <span class="va">col_min</span>, <span class="va">col_max</span>, <span class="va">col_avg</span><span class="op">)</span></span>
+<span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">req</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/stop.html">stop</a></span><span class="op">(</span><span class="st">"No fue posible mapear columnas clave (commodity/date/min/max/average). Revisa nombres del CSV: "</span>,</span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span>, collapse <span class="op">=</span> <span class="st">", "</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/transmute.html">transmute</a></span><span class="op">(</span></span>
+<span>Commodity <span class="op">=</span> <span class="va">.data</span><span class="op">[[</span><span class="va">col_commodity</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>Date      <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="va">.data</span><span class="op">[[</span><span class="va">col_date</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>Unit      <span class="op">=</span> <span class="cn">NA_character_</span>,                 <span class="co"># si no existe, queda NA (no se usa en el analisis)</span></span>
+<span>Minimum   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">.data</span><span class="op">[[</span><span class="va">col_min</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>Maximum   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">.data</span><span class="op">[[</span><span class="va">col_max</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>Average   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">.data</span><span class="op">[[</span><span class="va">col_avg</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Chequeos basicos</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/class.html">inherits</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">Date</span>, <span class="st">"Date"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div id="analisis-de-series-de-tiempo-1" class="section level2" number="3.1">
+<h2>
+<span class="header-section-number">3.1</span> <strong>Analisis de series de tiempo</strong><a class="anchor" aria-label="anchor" href="#analisis-de-series-de-tiempo-1"><i class="fas fa-link"></i></a>
+</h2>
+<div id="selección-del-item-objetivo" class="section level3" number="3.1.1">
+<h3>
+<span class="header-section-number">3.1.1</span> <strong>Selección del item objetivo</strong><a class="anchor" aria-label="anchor" href="#selecci%C3%B3n-del-item-objetivo"><i class="fas fa-link"></i></a>
+</h3>
+<p>Se selecciona el producto a analizar. El código prioriza “Potato Red”, pero si no existe, selecciona el producto con más observaciones mediante (count(Commodity, sort = TRUE))</p>
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="st">"Potato Red"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">Commodity</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="va">target_item</span> <span class="op">&lt;-</span> <span class="st">"Potato Red"</span></span>
+<span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span><span class="va">target_item</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">Commodity</span>, sort <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">Commodity</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">target_item</span></span></code></pre></div>
+<pre><code>## [1] "Potato Red"</code></pre>
+<p>Una vez se cuenta con el dataset filtrado para el item “Potato Red”, mediante broupby y summarise se asegura que sólo exista un precio promedio por día evitando conflictos con entreadas duplicadas. Mediante complete() además se regulariza la serie temporal, insertando filas con NA para los días faltantes en el rango de fechas. Además se cponstruye la Serie de tiempos diaria para evaluar el comportamiento inicialmente.</p>
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Filtrar y regularizar serie diaria</span></span>
+<span></span>
+<span><span class="va">potatored</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Commodity</span> <span class="op">==</span> <span class="va">target_item</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Date</span>, <span class="va">Average</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">Date</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>Average <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">Average</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/complete.html">complete</a></span><span class="op">(</span>Date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">Date</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">Date</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, by <span class="op">=</span> <span class="st">"day"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">Date</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Construir objeto ts (diario, 365)</span></span>
+<span></span>
+<span><span class="va">pot_ts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/ts.html">ts</a></span><span class="op">(</span></span>
+<span><span class="va">potatored</span><span class="op">$</span><span class="va">Average</span>,</span>
+<span>start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/year.html">year</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">potatored</span><span class="op">$</span><span class="va">Date</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,</span>
+<span><span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/day.html">yday</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">potatored</span><span class="op">$</span><span class="va">Date</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>frequency <span class="op">=</span> <span class="fl">365</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+<div id="serie-basica-y-acf-1" class="section level3" number="3.1.2">
+<h3>
+<span class="header-section-number">3.1.2</span> <strong>Serie basica y ACF</strong><a class="anchor" aria-label="anchor" href="#serie-basica-y-acf-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>A continuación mediante autoplot se observa la tenedencia y la estacionalidad anual.</p>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html">autoplot</a></span><span class="op">(</span><span class="va">pot_ts</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Serie de tiempo: precio promedio"</span>, y <span class="op">=</span> <span class="st">"Precio promedio"</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="03-method_files/figure-html/unnamed-chunk-6-1.png" width="672"></div>
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://pkg.robjhyndman.com/forecast/reference/autoplot.acf.html">ggAcf</a></span><span class="op">(</span><span class="va">pot_ts</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"ACF del precio promedio (diario)"</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure">
+<img src="03-method_files/figure-html/unnamed-chunk-7-1.png" width="672">
+La función de autocorrelación (ACF) confirma esta dependencia temporal, con correlaciones significativas en los primeros rezagos que luego disminuyen de forma progresiva. Esto demuestra que la serie no sigue un comportamiento completamente aleatorio, sino que existen patrones repetitivos en el tiempo.</div>
+</div>
+<div id="promedios-moviles-evidencia-de-suavizado-1" class="section level3" number="3.1.3">
+<h3>
+<span class="header-section-number">3.1.3</span> <strong>Promedios moviles (evidencia de suavizado)</strong><a class="anchor" aria-label="anchor" href="#promedios-moviles-evidencia-de-suavizado-1"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pot_ma</span> <span class="op">&lt;-</span> <span class="va">potatored</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>    ma7  <span class="op">=</span> <span class="fu"><a href="https://slider.r-lib.org/reference/slide.html">slide_dbl</a></span><span class="op">(</span><span class="va">Average</span>, <span class="va">mean</span>, .before <span class="op">=</span> <span class="fl">6</span>,  .complete <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    ma30 <span class="op">=</span> <span class="fu"><a href="https://slider.r-lib.org/reference/slide.html">slide_dbl</a></span><span class="op">(</span><span class="va">Average</span>, <span class="va">mean</span>, .before <span class="op">=</span> <span class="fl">29</span>, .complete <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">pot_ma</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">Date</span>, <span class="va">Average</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">0.5</span>, alpha <span class="op">=</span> <span class="fl">0.6</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">ma7</span><span class="op">)</span>,  linewidth <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">ma30</span><span class="op">)</span>, linewidth <span class="op">=</span> <span class="fl">0.9</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Serie y promedios moviles (7 y 30 dias)"</span>,</span>
+<span>       x <span class="op">=</span> <span class="st">"Fecha"</span>, y <span class="op">=</span> <span class="st">"Precio promedio"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure">
+<img src="03-method_files/figure-html/unnamed-chunk-8-1.png" width="672">
+Los gráficos de tendencia y promedios móviles muestran que los precios presentan fluctuaciones periódicas pero con una ligera tendencia creciente en el largo plazo. El promedio móvil de 7 días suaviza las variaciones diarias y deja entrever ciclos semanales asociados a la oferta en el mercado, mientras que el promedio de 30 días resalta un patrón más estructural que apunta a incrementos graduales, posiblemente relacionados con factores estacionales como la disponibilidad de cosecha o la variación de costos logísticos.</div>
+</div>
+<div id="rezagos-lags-y-dependencia-temporal-1" class="section level3" number="3.1.4">
+<h3>
+<span class="header-section-number">3.1.4</span> <strong>Rezagos (lags) y dependencia temporal</strong><a class="anchor" aria-label="anchor" href="#rezagos-lags-y-dependencia-temporal-1"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pot_lags</span> <span class="op">&lt;-</span> <span class="va">potatored</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>    lag1  <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html">lag</a></span><span class="op">(</span><span class="va">Average</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>    lag7  <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html">lag</a></span><span class="op">(</span><span class="va">Average</span>, <span class="fl">7</span><span class="op">)</span>,</span>
+<span>    lag30 <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html">lag</a></span><span class="op">(</span><span class="va">Average</span>, <span class="fl">30</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Scatter y_t vs y_{t-1}</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">pot_lags</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">lag1</span>, <span class="va">Average</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"lm"</span>, se <span class="op">=</span> <span class="cn">FALSE</span>, linewidth <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Scatter rezago 1 (y_t vs y_{t-1})"</span>, x <span class="op">=</span> <span class="st">"y_{t-1}"</span>, y <span class="op">=</span> <span class="st">"y_t"</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="03-method_files/figure-html/unnamed-chunk-9-1.png" width="672"></div>
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Scatter y_t vs y_{t-7}</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">pot_lags</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">lag7</span>, <span class="va">Average</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"lm"</span>, se <span class="op">=</span> <span class="cn">FALSE</span>, linewidth <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Scatter rezago 7 (aprox. semanal)"</span>, x <span class="op">=</span> <span class="st">"y_{t-7}"</span>, y <span class="op">=</span> <span class="st">"y_t"</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="03-method_files/figure-html/unnamed-chunk-9-2.png" width="672"></div>
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># ACF/PACF (serie regularizada)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://pkg.robjhyndman.com/forecast/reference/autoplot.acf.html">ggAcf</a></span><span class="op">(</span><span class="va">pot_ts</span><span class="op">)</span>  <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"ACF precio promedio (diario)"</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="03-method_files/figure-html/unnamed-chunk-9-3.png" width="672"></div>
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://pkg.robjhyndman.com/forecast/reference/autoplot.acf.html">ggPacf</a></span><span class="op">(</span><span class="va">pot_ts</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"PACF precio promedio (diario)"</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="03-method_files/figure-html/unnamed-chunk-9-4.png" width="672"></div>
+<p>El estudio de rezagos (lag 1, lag 7 y lag 30) refuerza esta observación: las gráficas de dispersión muestran una clara autocorrelación positiva, especialmente para rezagos cortos, indicando que los precios actuales dependen directamente de los valores recientes. Este comportamiento sugiere persistencia temporal: cuando los precios aumentan o disminuyen, tienden a mantener esa dirección durante varios días, lo cual es característico de mercados donde la información y las condiciones de oferta no cambian abruptamente.</p>
+</div>
+<div id="estacionalidad-descomposicion-stl-1" class="section level3" number="3.1.5">
+<h3>
+<span class="header-section-number">3.1.5</span> <strong>Estacionalidad (descomposicion STL)</strong><a class="anchor" aria-label="anchor" href="#estacionalidad-descomposicion-stl-1"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fit_stl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/stl.html">stl</a></span><span class="op">(</span><span class="fu"><a href="https://pkg.robjhyndman.com/forecast/reference/na.interp.html">na.interp</a></span><span class="op">(</span><span class="va">pot_ts</span><span class="op">)</span>, s.window <span class="op">=</span> <span class="st">"periodic"</span>, robust <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html">autoplot</a></span><span class="op">(</span><span class="va">fit_stl</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"STL precio promedio"</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure">
+<img src="03-method_files/figure-html/unnamed-chunk-10-1.png" width="672">
+La descomposición STL separó la serie en sus componentes de tendencia, estacionalidad y residuo. Los resultados muestran una estacionalidad marcada con ciclos anuales definidos: los precios tienden a elevarse en ciertas épocas del año y disminuir en otras, reflejando los periodos de cosecha y escasez. La tendencia general es estable con una leve inclinación al alza, mientras que los residuos mantienen una magnitud baja y no presentan patrones visibles, lo que indica que gran parte de la variabilidad del precio está explicada por la tendencia y la estacionalidad, sin presencia de choques exógenos significativos.</div>
+</div>
+<div id="análisis-conglomerado" class="section level3" number="3.1.6">
+<h3>
+<span class="header-section-number">3.1.6</span> <strong>Análisis Conglomerado</strong><a class="anchor" aria-label="anchor" href="#an%C3%A1lisis-conglomerado"><i class="fas fa-link"></i></a>
+</h3>
+<p>En conjunto, estos hallazgos evidencian que la serie del precio promedio de Potato Red posee un comportamiento no estacionario, con una tendencia creciente y estacionalidad recurrente, pero sin irregularidades fuertes.
+El patrón identificado sugiere que los precios pueden modelarse de forma confiable mediante técnicas de suavizado exponencial o modelos ARIMA estacionales, una vez que se realicen las transformaciones necesarias para estabilizar la media y la varianza. En términos prácticos, los resultados reflejan que el mercado analizado responde a ciclos previsibles, lo cual facilita la planificación de precios, abastecimiento y estrategias de comercialización.</p>
+</div>
+</div>
+<div id="estacionariedad-y-diferenciación-1" class="section level2" number="3.2">
+<h2>
+<span class="header-section-number">3.2</span> <strong>Estacionariedad y diferenciación</strong><a class="anchor" aria-label="anchor" href="#estacionariedad-y-diferenciaci%C3%B3n-1"><i class="fas fa-link"></i></a>
+</h2>
+<p>En esta segunda parte se busca analizar si la serie de tiempo seleccionada (Potato Red) cumple con el supuesto de estacionariedad. Una serie estacionaria es aquella cuya media y varianza permanecen constantes en el tiempo.
+En caso de que no sea estacionaria, se aplicarán procedimientos de diferenciación # o transformación para estabilizar la tendencia y la variabilidad.</p>
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">pot_ts</span><span class="op">)</span></span>
+<span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">anyNA</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">idx_ok</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">y_interp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/approxfun.html">approx</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">idx_ok</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">[</span><span class="va">idx_ok</span><span class="op">]</span>, xout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_along</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">y</span></span>
+<span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>  <span class="va">y_interp</span> <span class="op">&lt;-</span> <span class="va">y</span><span class="op">}</span></span>
+<span></span>
+<span></span>
+<span><span class="va">pot_ts_clean</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/ts.html">ts</a></span><span class="op">(</span></span>
+<span>  <span class="va">y_interp</span>,</span>
+<span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/start.html">start</a></span><span class="op">(</span><span class="va">pot_ts</span><span class="op">)</span>,</span>
+<span>  frequency <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/time.html">frequency</a></span><span class="op">(</span><span class="va">pot_ts</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<div id="verificación-de-estacionariedad-adf-test-1" class="section level3" number="3.2.1">
+<h3>
+<span class="header-section-number">3.2.1</span> <strong>Verificación de estacionariedad (ADF Test)</strong><a class="anchor" aria-label="anchor" href="#verificaci%C3%B3n-de-estacionariedad-adf-test-1"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Prueba de raíz unitaria de Dickey-Fuller</span></span>
+<span></span>
+<span><span class="va">adf_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tseries/man/adf.test.html">adf.test</a></span><span class="op">(</span><span class="va">pot_ts_clean</span><span class="op">)</span></span>
+<span><span class="va">adf_result</span></span></code></pre></div>
+<pre><code>## 
+##  Augmented Dickey-Fuller Test
+## 
+## data:  pot_ts_clean
+## Dickey-Fuller = -3.0587, Lag order = 14, p-value = 0.1301
+## alternative hypothesis: stationary</code></pre>
+<p>El p-valor es 0.13. Como p &gt; 0.05, no podemos rechazar la H_0. Esto confirma estadísticamente lo que vimos en el ACF: la serie no es estacionaria y necesita ser diferenciada.</p>
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Serie base a usar en esta etapa y verificamos que no tenga na ni valores negativos</span></span>
+<span><span class="va">y0</span> <span class="op">&lt;-</span> <span class="va">pot_ts_clean</span> </span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">y0</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] 0</code></pre>
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/all.html">all</a></span><span class="op">(</span><span class="va">y0</span><span class="op">&gt;</span><span class="fl">0</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">y_log</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">y0</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/range.html">range</a></span><span class="op">(</span><span class="va">y0</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/range.html">range</a></span><span class="op">(</span><span class="va">y_log</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>  <span class="co"># solo para verificar el cambio de escala</span></span></code></pre></div>
+<pre><code>## [1]  15.0 113.5</code></pre>
+<pre><code>## [1] 2.708050 4.731803</code></pre>
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">adf_log</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tseries/man/adf.test.html">adf.test</a></span><span class="op">(</span><span class="va">y_log</span><span class="op">)</span></span>
+<span><span class="va">adf_log</span><span class="op">$</span><span class="va">p.value</span></span></code></pre></div>
+<pre><code>## [1] 0.1322035</code></pre>
+<p>Se aplica una transformación logarítmica. Esto no corrige la tendencia, sino que ayuda a estabilizar la varianza. Es común en series de precios donde las fluctuaciones crecen a medida que el precio sube. Como era de esperar, la serie logarítmica sigue siendo no estacionaria (p=0.13).</p>
+<p>La transformación logarítmica ayudó a homogeneizar la variabilidad, pero no eliminó la tendencia ni la dependencia temporal. La serie transformada sigue teniendo raíz unitaria, por lo que pasamos a una diferenciacion de primer orden (d=1) sobre la serie logaritmica y volvemos a probar estacionariedad.</p>
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">y_diff1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diff.html">diff</a></span><span class="op">(</span><span class="va">y_log</span>, differences <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">adf_diff1</span> <span class="op">&lt;-</span> <span class="fu">tseries</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tseries/man/adf.test.html">adf.test</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span><span class="op">(</span><span class="va">y_diff1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">adf_diff1</span><span class="op">$</span><span class="va">p.value</span></span></code></pre></div>
+<pre><code>## [1] 0.01</code></pre>
+<p>Se aplica una primera diferencia a la serie logarítmica, buscando eliminar la tendencia. Tras realizar la prueba adf nuevamente, es posible determinar que el p-valor es 0.01. Como p &lt; 0.05, rechazamos la H_0. Concluimos que la serie transformada es estacionaria.</p>
+</div>
+<div id="interpretacion-1" class="section level3" number="3.2.2">
+<h3>
+<span class="header-section-number">3.2.2</span> <strong>Interpretacion</strong><a class="anchor" aria-label="anchor" href="#interpretacion-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>Luego de aplicar la transformación logarítmica, la serie mantuvo la misma tendencia general, por lo que no se logró estacionariedad. Sin embargo, al diferenciarla una vez (d = 1), la prueba de Dickey–Fuller aumentada mostró un p-valor de 0.01, lo que indica que se rechaza la hipótesis nula de raíz unitaria. En consecuencia, la serie diferenciada es estacionaria.</p>
+<p>Este resultado implica que la tendencia determinista fue eliminada mediante la primera diferencia, estabilizando la media a lo largo del tiempo. Por otro lado, la transformación logarítmica permitió controlar la heterocedasticidad, de modo que las fluctuaciones de la serie ahora son de magnitud comparable. La combinación de ambos pasos —logaritmo y diferencia de primer orden— produce una serie adecuada para modelar mediante métodos lineales, como los modelos ARIMA o SARIMA.</p>
+<p>Visualmente, la serie diferenciada oscila alrededor de cero y las funciones de autocorrelación (ACF y PACF) se estabilizan rápidamente, lo que refuerza la evidencia de estacionariedad.</p>
+</div>
+</div>
+<div id="suavizamiento-y-holt-winters-sobre-la-variable-tiempo" class="section level2" number="3.3">
+<h2>
+<span class="header-section-number">3.3</span> <strong>Suavizamiento y Holt-Winters sobre la variable tiempo</strong><a class="anchor" aria-label="anchor" href="#suavizamiento-y-holt-winters-sobre-la-variable-tiempo"><i class="fas fa-link"></i></a>
+</h2>
+<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">y_hw</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://pkg.robjhyndman.com/forecast/reference/na.interp.html">na.interp</a></span><span class="op">(</span><span class="va">pot_ts</span><span class="op">)</span> </span>
+<span><span class="va">freq</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/time.html">frequency</a></span><span class="op">(</span><span class="va">y_hw</span><span class="op">)</span>   </span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">y_hw</span><span class="op">)</span>; <span class="va">freq</span></span></code></pre></div>
+<pre><code>## [1] 2889</code></pre>
+<pre><code>## [1] 365</code></pre>
+<div id="particion-de-entrenamiento-prueba" class="section level3" number="3.3.1">
+<h3>
+<span class="header-section-number">3.3.1</span> <strong>Particion de entrenamiento /prueba</strong><a class="anchor" aria-label="anchor" href="#particion-de-entrenamiento-prueba"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">h_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="fl">365</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">floor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">y_hw</span><span class="op">)</span><span class="op">*</span><span class="fl">0.2</span><span class="op">)</span><span class="op">)</span>  <span class="co"># 1 año o ~20% si no alcanza</span></span>
+<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">y_hw</span><span class="op">)</span></span>
+<span><span class="va">y_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/window.html">window</a></span><span class="op">(</span><span class="va">y_hw</span>, end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/time.html">time</a></span><span class="op">(</span><span class="va">y_hw</span><span class="op">)</span><span class="op">[</span><span class="va">n</span> <span class="op">-</span> <span class="va">h_test</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">y_test</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/window.html">window</a></span><span class="op">(</span><span class="va">y_hw</span>, start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/time.html">time</a></span><span class="op">(</span><span class="va">y_hw</span><span class="op">)</span><span class="op">[</span><span class="va">n</span> <span class="op">-</span> <span class="va">h_test</span> <span class="op">+</span> <span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html">autoplot</a></span><span class="op">(</span><span class="va">y_hw</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_vline</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/time.html">time</a></span><span class="op">(</span><span class="va">y_hw</span><span class="op">)</span><span class="op">[</span><span class="va">n</span> <span class="op">-</span> <span class="va">h_test</span> <span class="op">+</span> <span class="fl">1</span><span class="op">]</span>, linetype <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Serie completa con corte train/test"</span>,</span>
+<span>       y <span class="op">=</span> <span class="st">"Precio promedio"</span>, x <span class="op">=</span> <span class="st">"Tiempo"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="03-method_files/figure-html/unnamed-chunk-17-1.png" width="672"></div>
+<p>Se prepara la validación del modelo. La serie se divide en y_train y y_test. Es crucial en series de tiempo usar window() y no un muestreo aleatorio, ya que el orden temporal debe preservarse.</p>
+</div>
+<div id="agregación-semanal" class="section level3" number="3.3.2">
+<h3>
+<span class="header-section-number">3.3.2</span> <strong>Agregación semanal</strong><a class="anchor" aria-label="anchor" href="#agregaci%C3%B3n-semanal"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://zoo.R-Forge.R-project.org/">zoo</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># y_hw: serie ts diaria (freq=365)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/time.html">frequency</a></span><span class="op">(</span><span class="va">y_hw</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">365</span>, <span class="fl">366</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#secuencia de fechas real para la ts diaria</span></span>
+<span><span class="va">tsp_hw</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/tsp.html">tsp</a></span><span class="op">(</span><span class="va">y_hw</span><span class="op">)</span>                     <span class="co"># c(start, end, freq)</span></span>
+<span><span class="va">start_year</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">floor</a></span><span class="op">(</span><span class="va">tsp_hw</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">start_frac</span> <span class="op">&lt;-</span> <span class="va">tsp_hw</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">start_year</span></span>
+<span><span class="va">start_date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/zoo/man/yearmon.html">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">start_year</span>, <span class="st">"-01-01"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">start_frac</span> <span class="op">*</span> <span class="fl">365.25</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">fechas_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.Date.html">seq.Date</a></span><span class="op">(</span>from <span class="op">=</span> <span class="va">start_date</span>, by <span class="op">=</span> <span class="st">"day"</span>, length.out <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">y_hw</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">z_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/zoo/man/zoo.html">zoo</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">y_hw</span><span class="op">)</span>, <span class="va">fechas_all</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#Agregar por semana calendario</span></span>
+<span><span class="va">z_week</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html">aggregate</a></span><span class="op">(</span><span class="va">z_all</span>, <span class="fu"><a href="https://rdrr.io/pkg/zoo/man/yearmon.html">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/zoo/man/index.html">index</a></span><span class="op">(</span><span class="va">z_all</span><span class="op">)</span>, <span class="st">"week"</span><span class="op">)</span><span class="op">)</span>, <span class="va">mean</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#Convertimos a ts semanal (freq = 52)</span></span>
+<span><span class="va">y_w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/ts.html">ts</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">z_week</span><span class="op">)</span>, frequency <span class="op">=</span> <span class="fl">52</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#Split train/test semanal</span></span>
+<span><span class="va">h_test_w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="fl">52</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">floor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">y_w</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">n_w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">y_w</span><span class="op">)</span></span>
+<span><span class="va">y_train_w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/window.html">window</a></span><span class="op">(</span><span class="va">y_w</span>, end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/time.html">time</a></span><span class="op">(</span><span class="va">y_w</span><span class="op">)</span><span class="op">[</span><span class="va">n_w</span> <span class="op">-</span> <span class="va">h_test_w</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">y_test_w</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/window.html">window</a></span><span class="op">(</span><span class="va">y_w</span>, start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/time.html">time</a></span><span class="op">(</span><span class="va">y_w</span><span class="op">)</span><span class="op">[</span><span class="va">n_w</span> <span class="op">-</span> <span class="va">h_test_w</span> <span class="op">+</span> <span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html">autoplot</a></span><span class="op">(</span><span class="va">y_w</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_vline</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/time.html">time</a></span><span class="op">(</span><span class="va">y_w</span><span class="op">)</span><span class="op">[</span><span class="va">n_w</span> <span class="op">-</span> <span class="va">h_test_w</span> <span class="op">+</span> <span class="fl">1</span><span class="op">]</span>, linetype <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Serie semanal con corte train/test"</span>,</span>
+<span>       y <span class="op">=</span> <span class="st">"Precio promedio semanal"</span>, x <span class="op">=</span> <span class="st">"Tiempo"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="03-method_files/figure-html/unnamed-chunk-18-1.png" width="672"></div>
+<p>Modelar una estacionalidad de 365 períodos es computacionalmente inviable y estadísticamente inestable para HoltWinters o ets. Mediante la agregación de los datos a una frecuencia menor que aún capture la estacionalidad (en este caso se escogió semanal el problema de soluciona, generando una nueva ts semanal y se aplica nuevamente la división de los datos en train y test</p>
+</div>
+<div id="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal" class="section level3" number="3.3.3">
+<h3>
+<span class="header-section-number">3.3.3</span> <strong>Modelos de suavizamiento y Holt-Winters en serie semanal</strong><a class="anchor" aria-label="anchor" href="#modelos-de-suavizamiento-y-holt-winters-en-serie-semanal"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Horizonte de prueba</span></span>
+<span><span class="va">h</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">y_test_w</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Modelos de suavizamiento base</span></span>
+<span><span class="co"># Suavizamiento exponencial simple (SES)</span></span>
+<span><span class="va">fit_ses_w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://pkg.robjhyndman.com/forecast/reference/ets.html">ets</a></span><span class="op">(</span><span class="va">y_train_w</span>, model <span class="op">=</span> <span class="st">"ANN"</span><span class="op">)</span></span>
+<span><span class="va">fc_ses_w</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/forecast.html">forecast</a></span><span class="op">(</span><span class="va">fit_ses_w</span>, h <span class="op">=</span> <span class="va">h</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Holt: tendencia aditiva</span></span>
+<span><span class="va">fit_holt_w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://pkg.robjhyndman.com/forecast/reference/ets.html">ets</a></span><span class="op">(</span><span class="va">y_train_w</span>, model <span class="op">=</span> <span class="st">"AAN"</span><span class="op">)</span></span>
+<span><span class="va">fc_holt_w</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/forecast.html">forecast</a></span><span class="op">(</span><span class="va">fit_holt_w</span>, h <span class="op">=</span> <span class="va">h</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Holt-Winters con función base stats::HoltWinters</span></span>
+<span><span class="va">fit_hwa_w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/HoltWinters.html">HoltWinters</a></span><span class="op">(</span><span class="va">y_train_w</span>, seasonal <span class="op">=</span> <span class="st">"additive"</span><span class="op">)</span></span>
+<span><span class="va">fit_hwm_w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/HoltWinters.html">HoltWinters</a></span><span class="op">(</span><span class="va">y_train_w</span>, seasonal <span class="op">=</span> <span class="st">"multiplicative"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Generar pronósticos a h pasos</span></span>
+<span><span class="va">fc_hwa_w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/forecast.html">forecast</a></span><span class="op">(</span><span class="va">fit_hwa_w</span>, h <span class="op">=</span> <span class="va">h</span><span class="op">)</span></span>
+<span><span class="va">fc_hwm_w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/forecast.html">forecast</a></span><span class="op">(</span><span class="va">fit_hwm_w</span>, h <span class="op">=</span> <span class="va">h</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Resumen de parámetros de suavizamiento</span></span>
+<span><span class="va">pars_w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>  SES      <span class="op">=</span> <span class="va">fit_ses_w</span><span class="op">$</span><span class="va">par</span>,</span>
+<span>  Holt     <span class="op">=</span> <span class="va">fit_holt_w</span><span class="op">$</span><span class="va">par</span>,</span>
+<span>  HW_adi   <span class="op">=</span> <span class="va">fit_hwa_w</span><span class="op">$</span><span class="va">coefficients</span>,</span>
+<span>  HW_multi <span class="op">=</span> <span class="va">fit_hwm_w</span><span class="op">$</span><span class="va">coefficients</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">metodos_w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
+<span>  SES    <span class="op">=</span> <span class="va">fit_ses_w</span><span class="op">$</span><span class="va">method</span>,</span>
+<span>  Holt   <span class="op">=</span> <span class="va">fit_holt_w</span><span class="op">$</span><span class="va">method</span>,</span>
+<span>  HW_adi <span class="op">=</span> <span class="st">"Holt-Winters aditivo (HoltWinters)"</span>,</span>
+<span>  HW_mul <span class="op">=</span> <span class="st">"Holt-Winters multiplicativo (HoltWinters)"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>pars <span class="op">=</span> <span class="va">pars_w</span>, metodos <span class="op">=</span> <span class="va">metodos_w</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## $pars
+## $pars$SES
+##      alpha          l 
+##  0.9998999 20.0661412 
+## 
+## $pars$Holt
+##      alpha       beta        phi          l          b 
+##  0.9998998  0.1131366  0.8000015 19.3507661  0.7318030 
+## 
+## $pars$HW_adi
+##            a            b           s1           s2           s3           s4 
+##  39.08244375   0.07882721  -7.65617219  -5.33129937  -2.12172776  -0.60521373 
+##           s5           s6           s7           s8           s9          s10 
+##   1.67227131   3.70855086   3.86297747   4.29730738   4.70950257   5.51286110 
+##          s11          s12          s13          s14          s15          s16 
+##   6.58108183   9.34052131  11.67282675  11.56985459  10.72690049  10.62915737 
+##          s17          s18          s19          s20          s21          s22 
+##  11.56624926  14.32396189  12.96493891  12.91210622  15.60833595  19.70484488 
+##          s23          s24          s25          s26          s27          s28 
+##  18.21542017  15.04288451   8.57289145   4.41893044   3.59468994   2.26948285 
+##          s29          s30          s31          s32          s33          s34 
+##   1.41348224   1.16589200   0.07345107  -2.59161738  -5.38569070  -6.81747767 
+##          s35          s36          s37          s38          s39          s40 
+##  -8.35116126 -10.31002086 -14.36805886 -15.48013931 -13.59119371 -14.10375330 
+##          s41          s42          s43          s44          s45          s46 
+## -12.98609882 -13.91879059 -12.80762063 -12.45344901 -10.91079687  -9.50278976 
+##          s47          s48          s49          s50          s51          s52 
+##  -7.48181474  -7.63951511  -9.66359895  -9.41494901  -8.19836375  -8.36815804 
+## 
+## $pars$HW_multi
+##           a           b          s1          s2          s3          s4 
+## 40.06957603  0.07882721  0.78984647  0.86149189  0.95592829  0.99520880 
+##          s5          s6          s7          s8          s9         s10 
+##  1.06150922  1.11859277  1.10742123  1.11547832  1.13362719  1.15295252 
+##         s11         s12         s13         s14         s15         s16 
+##  1.19755872  1.28051297  1.34512974  1.33136792  1.29845693  1.29564795 
+##         s17         s18         s19         s20         s21         s22 
+##  1.31337013  1.37966490  1.36129664  1.37542631  1.45910223  1.55273805 
+##         s23         s24         s25         s26         s27         s28 
+##  1.49801968  1.41880910  1.25803359  1.12986066  1.10809063  1.06878253 
+##         s29         s30         s31         s32         s33         s34 
+##  1.05012792  1.03448499  1.00251606  0.92562241  0.84794487  0.78549769 
+##         s35         s36         s37         s38         s39         s40 
+##  0.73966473  0.68969443  0.59218461  0.55743071  0.58537805  0.58407654 
+##         s41         s42         s43         s44         s45         s46 
+##  0.61227139  0.60444293  0.63415394  0.64018299  0.67488001  0.72564177 
+##         s47         s48         s49         s50         s51         s52 
+##  0.78927007  0.78769837  0.73692250  0.74269354  0.77194581  0.76652385 
+## 
+## 
+## $metodos
+##                                         SES 
+##                                "ETS(A,N,N)" 
+##                                        Holt 
+##                               "ETS(A,Ad,N)" 
+##                                      HW_adi 
+##        "Holt-Winters aditivo (HoltWinters)" 
+##                                      HW_mul 
+## "Holt-Winters multiplicativo (HoltWinters)"</code></pre>
+<p>Se ajustan cuatro modelos de suavizamiento exponencial al conjunto de entrenamiento semanal (y_train_w).</p>
+<p>Se evaluán los modelos ANN más conocido como SES (Error Aditivo, sin tendencia, sin estacionalidad). Por otra parte el modelo Holt es un modelo con Error Aditivo, Tendencia Aditiva y sin Estacionalidad. Y por último, el modelo HoltWinters es un modelo completo que asume que la estacionalidad es constante.</p>
+</div>
+<div id="comparación-de-precisión-fuera-de-muestra" class="section level3" number="3.3.4">
+<h3>
+<span class="header-section-number">3.3.4</span> <strong>Comparación de precisión fuera de muestra</strong><a class="anchor" aria-label="anchor" href="#comparaci%C3%B3n-de-precisi%C3%B3n-fuera-de-muestra"><i class="fas fa-link"></i></a>
+</h3>
+<p>Se calcula la precisión de los pronósticos de cada modelo contra los datos reales y_test_w. Se comparan las métricas de error (RMSE, MAE, MAPE) del conjunto de prueba.</p>
+<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Calcular métricas de error para cada modelo en el conjunto de prueba</span></span>
+<span><span class="va">acc_tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html">bind_rows</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"SES"</span>,    <span class="fu"><a href="https://generics.r-lib.org/reference/accuracy.html">accuracy</a></span><span class="op">(</span><span class="va">fc_ses_w</span>,  <span class="va">y_test_w</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"Holt"</span>,   <span class="fu"><a href="https://generics.r-lib.org/reference/accuracy.html">accuracy</a></span><span class="op">(</span><span class="va">fc_holt_w</span>, <span class="va">y_test_w</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"HW_adi"</span>, <span class="fu"><a href="https://generics.r-lib.org/reference/accuracy.html">accuracy</a></span><span class="op">(</span><span class="va">fc_hwa_w</span>,  <span class="va">y_test_w</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"HW_mul"</span>, <span class="fu"><a href="https://generics.r-lib.org/reference/accuracy.html">accuracy</a></span><span class="op">(</span><span class="va">fc_hwm_w</span>,  <span class="va">y_test_w</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">model</span>, <span class="va">RMSE</span>, <span class="va">MAE</span>, <span class="va">MAPE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">acc_tbl</span></span></code></pre></div>
+<pre><code>##                   model      RMSE       MAE      MAPE
+## Training set...1    SES  2.929804  1.928708  5.748854
+## Test set...2        SES 33.778723 24.276695 34.505452
+## Training set...3   Holt  2.902352  1.901817  5.638535
+## Test set...4       Holt 34.593228 24.973105 35.456690
+## Training set...5 HW_adi  2.984060  2.102575  6.453931
+## Test set...6     HW_adi 20.668712 14.555681 20.798164
+## Training set...7 HW_mul  2.846973  1.996849  6.036061
+## Test set...8     HW_mul 18.997168 13.487363 19.577035</code></pre>
+<p>El modelo Holt-Winters multiplicativo (HW_mul) es el mejor, porque presenta los errores más bajos (RMSE y MAPE) en la ventana de prueba.
+Esto indica que la estacionalidad es proporcional al nivel de la serie (los picos crecen cuando el nivel general sube), lo cual es consistente con lo que se veia en el grafico.</p>
+</div>
+<div id="diagnostico-de-residuos" class="section level3" number="3.3.5">
+<h3>
+<span class="header-section-number">3.3.5</span> <strong>Diagnostico de residuos</strong><a class="anchor" aria-label="anchor" href="#diagnostico-de-residuos"><i class="fas fa-link"></i></a>
+</h3>
+<p>Se realizarán dos pruebas estadísticas al pronóstico ganador. Por una parte el Gráfico ACF de Residuos, muestra la autocorrelación de los errores del modelo. Idealmente, ningún rezago debe superar las líneas azules. Esto significaría que los errores son “ruido blanco” y que el modelo ha capturado toda la información predecible.En segundo lugar, la Prueba Ljung-Box es la prueba estadística formal para la autocorrelación de los residuos.Hipótesis Nula (H_0): Los residuos son independientes (son ruido blanco).</p>
+<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">best_fc</span> <span class="op">&lt;-</span> <span class="va">fc_hwm_w</span>  <span class="co"># ganador: Holt-Winters multiplicativo</span></span>
+<span><span class="fu"><a href="https://pkg.robjhyndman.com/forecast/reference/checkresiduals.html">checkresiduals</a></span><span class="op">(</span><span class="va">best_fc</span><span class="op">$</span><span class="va">model</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="03-method_files/figure-html/unnamed-chunk-21-1.png" width="672"></div>
+<pre><code>## 
+##  Ljung-Box test
+## 
+## data:  Residuals from HoltWinters
+## Q* = 76.422, df = 62, p-value = 0.1029
+## 
+## Model df: 0.   Total lags used: 62</code></pre>
+<p>Al comparar los modelos de suavizamiento, Holt y Holt-Winters, se encontró que el Holt-Winters multiplicativo obtuvo los mejores resultados en la ventana de prueba, con los menores valores de RMSE (18.99) y MAPE (19.57 %).
+Esto indica que la serie presenta una estacionalidad proporcional al nivel, es decir, las fluctuaciones son más amplias cuando los valores son altos.</p>
+<p>El análisis de residuos respalda la adecuación del modelo: el p-valor = 0.1029 del test de Ljung-Box confirma que no existe autocorrelación significativa (residuos ≈ ruido blanco).
+Por tanto, el modelo Holt-Winters multiplicativo logra capturar adecuadamente la tendencia y la estacionalidad de la serie semanal del precio promedio del Potato Red.</p>
+</div>
+<div id="pronostico-final" class="section level3" number="3.3.6">
+<h3>
+<span class="header-section-number">3.3.6</span> <strong>Pronostico final</strong><a class="anchor" aria-label="anchor" href="#pronostico-final"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li><p><strong>Reentrenamiento:</strong> Ahora que hemos probado que el modelo HW Multiplicativo es el mejor, lo reentrenamos usando todos los datos semanales (y_w), no solo el conjunto de entrenamiento. Esto le da al modelo la mayor cantidad de información posible para estimar los parámetros finales.</p></li>
+<li><p><strong>Pronóstico:</strong> Se genera el pronóstico final hacia el futuro (h = 52 semanas, un año).</p></li>
+</ul>
+<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Reentrenar el modelo Holt-Winters multiplicativo con toda la serie semanal</span></span>
+<span><span class="va">fit_final_hw</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/HoltWinters.html">HoltWinters</a></span><span class="op">(</span><span class="va">y_w</span>, seasonal <span class="op">=</span> <span class="st">"multiplicative"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># pronóstico a 52 semanas (≈ 1 año)</span></span>
+<span><span class="va">h_future</span> <span class="op">&lt;-</span> <span class="fl">52</span></span>
+<span><span class="va">fc_final_hw</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/forecast.html">forecast</a></span><span class="op">(</span><span class="va">fit_final_hw</span>, h <span class="op">=</span> <span class="va">h_future</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Visualizacion del pronóstico final</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html">autoplot</a></span><span class="op">(</span><span class="va">fc_final_hw</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Pronostico final Holt-Winters multiplicativo (52 semanas)"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Precio promedio semanal"</span>,</span>
+<span>    x <span class="op">=</span> <span class="st">"Tiempo"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="inline-figure"><img src="03-method_files/figure-html/unnamed-chunk-22-1.png" width="672"></div>
+<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># primeras filas de la tabla de pronostico</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
+<span>  Semana <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/time.html">time</a></span><span class="op">(</span><span class="va">fc_final_hw</span><span class="op">$</span><span class="va">mean</span><span class="op">)</span>,</span>
+<span>  Pronostico <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">fc_final_hw</span><span class="op">$</span><span class="va">mean</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span>,</span>
+<span>  LI_80 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">fc_final_hw</span><span class="op">$</span><span class="va">lower</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, <span class="fl">2</span><span class="op">)</span>,</span>
+<span>  LS_80 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">fc_final_hw</span><span class="op">$</span><span class="va">upper</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, <span class="fl">2</span><span class="op">)</span>,</span>
+<span>  LI_95 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">fc_final_hw</span><span class="op">$</span><span class="va">lower</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span>, <span class="fl">2</span><span class="op">)</span>,</span>
+<span>  LS_95 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">fc_final_hw</span><span class="op">$</span><span class="va">upper</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span>, <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="op">)</span>, <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<pre><code>##      Semana Pronostico LI_80 LS_80 LI_95 LS_95
+## 1  8.961538      37.69 33.31 42.07 30.99 44.39
+## 2  8.980769      40.88 35.05 46.72 31.96 49.81
+## 3  9.000000      45.08 37.83 52.33 33.99 56.16
+## 4  9.019231      47.46 39.09 55.83 34.66 60.26
+## 5  9.038462      50.77 41.19 60.34 36.13 65.41
+## 6  9.057692      55.25 44.31 66.19 38.52 71.98
+## 7  9.076923      55.96 44.35 67.58 38.20 73.73
+## 8  9.096154      55.31 43.30 67.32 36.95 73.67
+## 9  9.115385      55.66 43.09 68.24 36.43 74.90
+## 10 9.134615      58.37 44.76 71.99 37.55 79.20</code></pre>
+</div>
+<div id="conclusiones" class="section level3" number="3.3.7">
+<h3>
+<span class="header-section-number">3.3.7</span> Conclusiones<a class="anchor" aria-label="anchor" href="#conclusiones"><i class="fas fa-link"></i></a>
+</h3>
+<p>Tras evaluar diferentes métodos de suavizamiento exponencial, se determinó que el modelo Holt-Winters multiplicativo fue el que presentó el mejor desempeño predictivo, con los menores errores (RMSE = 18.99 y MAPE = 19.6 %) en la ventana de prueba.</p>
+<p>Este resultado confirma que la serie presenta estacionalidad proporcional al nivel, es decir, cuando el precio promedio del Potato Red aumenta, las fluctuaciones también lo hacen en la misma proporción.</p>
+<p>Los residuos del modelo no mostraron autocorrelación significativa (p-valor = 0.1029), por lo que se concluye que el modelo explica adecuadamente la estructura temporal.</p>
+<p>Con la serie completa y el modelo reentrenado, el pronóstico a 52 semanas muestra una tendencia oscilante con picos regulares y amplitud similar a la observada históricamente.
+Las bandas de confianza (80 % y 95 %) reflejan un nivel de incertidumbre moderado, lo que otorga confianza en las estimaciones.</p>
+<p>En conjunto, el método Holt-Winters multiplicativo demuestra ser una herramienta sólida y confiable para proyectar el comportamiento estacional del precio semanal del Potato Red.</p>
+</div>
+</div>
+<div id="desarrollo-metodológico-y-justificación-de-decisiones" class="section level2" number="3.4">
+<h2>
+<span class="header-section-number">3.4</span> <strong>Desarrollo metodológico y justificación de decisiones</strong><a class="anchor" aria-label="anchor" href="#desarrollo-metodol%C3%B3gico-y-justificaci%C3%B3n-de-decisiones"><i class="fas fa-link"></i></a>
+</h2>
+<p>El proceso de aplicación del modelo de <strong>Holt-Winters</strong> a la serie de tiempo del <em>precio promedio del Potato Red</em> implicó diversos ajustes metodológicos debido a las características particulares de los datos.<br>
+La variable de estudio correspondía a una <strong>serie diaria</strong> con una extensión superior a 2800 observaciones y frecuencia anual de 365. Si bien esta cantidad de datos representaba una fuente valiosa de información, también generó <strong>limitaciones computacionales</strong> al momento de ajustar modelos estacionales como <strong>ets(model = “AAA”)</strong> o <strong>hw(seasonal = “additive”)</strong>, debido a que la función <strong>ets()`</strong> no está optimizada para manejar estacionalidades tan largas.</p>
+<p>Durante los primeros intentos, el software arrojó el error <em>“Frequency too high”</em> o se quedaba ejecutando indefinidamente. Esto motivó una revisión del enfoque, identificando que la <strong>estacionalidad de interés</strong> no necesariamente se presentaba de manera diaria, sino más bien <strong>en ciclos semanales o mensuales</strong>, propios de los precios agrícolas.</p>
+<div id="ajuste-de-la-frecuencia-temporal" class="section level3" number="3.4.1">
+<h3>
+<span class="header-section-number">3.4.1</span> Ajuste de la frecuencia temporal<a class="anchor" aria-label="anchor" href="#ajuste-de-la-frecuencia-temporal"><i class="fas fa-link"></i></a>
+</h3>
+<p>Como solución, se decidió <strong>agregar la serie a frecuencia semanal</strong>, calculando el promedio de los precios diarios.<br>
+Esta decisión permitió conservar la forma cíclica de la serie (picos y valles regulares) y, al mismo tiempo, <strong>reducir la frecuencia de 365 a 52</strong>, lo cual hizo posible aplicar modelos estacionales de forma estable y con un tiempo de cómputo razonable.<br>
+En la práctica, esto significó reconstruir la serie con una frecuencia semanal (<strong>frequency = 52</strong>), evitando la sobrecarga que impedía el ajuste de Holt-Winters en la versión original.</p>
+</div>
+<div id="modelos-aplicados" class="section level3" number="3.4.2">
+<h3>
+<span class="header-section-number">3.4.2</span> Modelos aplicados<a class="anchor" aria-label="anchor" href="#modelos-aplicados"><i class="fas fa-link"></i></a>
+</h3>
+<p>Una vez ajustada la frecuencia, se implementaron cuatro modelos de suavizamiento:</p>
+<ol style="list-style-type: decimal">
+<li>
+<strong>Suavizamiento exponencial simple (SES)</strong> – Captura únicamente el nivel de la serie.<br>
+</li>
+<li>
+<strong>Método de Holt</strong> – Incorpora tendencia aditiva.<br>
+</li>
+<li>
+<strong>Holt-Winters aditivo</strong> – Considera tendencia y estacionalidad de amplitud constante.<br>
+</li>
+<li>
+<strong>Holt-Winters multiplicativo</strong> – Considera estacionalidad proporcional al nivel.</li>
+</ol>
+<p>Debido a los errores recurrentes con <strong>ets()</strong> y <strong>hw()</strong>, se optó finalmente por la función <strong><code><a href="https://rdrr.io/r/stats/HoltWinters.html">stats::HoltWinters()</a></code></strong>, que permite ajustar modelos estacionales de manera más estable con series largas o de alta frecuencia.</p>
+</div>
+<div id="validación-del-modelo" class="section level3" number="3.4.3">
+<h3>
+<span class="header-section-number">3.4.3</span> Validación del modelo<a class="anchor" aria-label="anchor" href="#validaci%C3%B3n-del-modelo"><i class="fas fa-link"></i></a>
+</h3>
+<p>La serie semanal se dividió en un conjunto de <strong>entrenamiento (80%)</strong> y otro de <strong>prueba (20%)</strong>, correspondiente aproximadamente a un año de observaciones.<br>
+Con esta división, se evaluó el desempeño predictivo de cada modelo mediante métricas como <strong>RMSE</strong>, <strong>MAE</strong> y <strong>MAPE</strong>.</p>
+<p>Los resultados mostraron que el <strong>modelo Holt-Winters multiplicativo</strong> presentó el mejor desempeño (RMSE = 18.99, MAPE = 19.6%), superando a las versiones aditiva, Holt y SES.<br>
+Esto indica que la estacionalidad es <strong>proporcional al nivel</strong> de la serie: cuando los precios son altos, las fluctuaciones semanales también lo son.</p>
+</div>
+<div id="diagnóstico-de-residuos" class="section level3" number="3.4.4">
+<h3>
+<span class="header-section-number">3.4.4</span> Diagnóstico de residuos<a class="anchor" aria-label="anchor" href="#diagn%C3%B3stico-de-residuos"><i class="fas fa-link"></i></a>
+</h3>
+<p>Para validar el ajuste, se analizaron los residuos del modelo Holt-Winters multiplicativo.<br>
+El test de <strong>Ljung-Box (p-valor = 0.1029)</strong> indicó ausencia de autocorrelación significativa, lo cual demuestra que el modelo logra capturar adecuadamente la tendencia y la estacionalidad de los datos.<br>
+Además, el gráfico ACF de los residuos no mostró patrones sistemáticos, confirmando que el error se comporta como <strong>ruido blanco</strong>.</p>
+</div>
+<div id="pronóstico-final" class="section level3" number="3.4.5">
+<h3>
+<span class="header-section-number">3.4.5</span> Pronóstico final<a class="anchor" aria-label="anchor" href="#pron%C3%B3stico-final"><i class="fas fa-link"></i></a>
+</h3>
+<p>Con base en el modelo seleccionado, se reentrenó la serie completa y se realizó un <strong>pronóstico a 52 semanas</strong> (equivalente a un año).<br>
+El resultado mostró una evolución oscilante, con picos estacionales regulares y una amplitud coherente con los patrones históricos observados.<br>
+Las bandas de confianza del 80% y 95% se mantuvieron en rangos moderados, reflejando un nivel de incertidumbre aceptable.</p>
+</div>
+<div id="conclusión-integradora" class="section level3" number="3.4.6">
+<h3>
+<span class="header-section-number">3.4.6</span> Conclusión integradora<a class="anchor" aria-label="anchor" href="#conclusi%C3%B3n-integradora"><i class="fas fa-link"></i></a>
+</h3>
+<p>En síntesis, el desarrollo de este modelo implicó un proceso iterativo de ajuste y validación.<br>
+Se comprobó que aplicar Holt-Winters directamente sobre la serie diaria era impracticable por su frecuencia alta, por lo que fue necesario <strong>agregar la serie a frecuencia semanal</strong> para estabilizar el modelo.<br>
+Este cambio permitió aplicar el método de forma exitosa y obtener resultados coherentes, concluyendo que el <strong>modelo Holt-Winters multiplicativo</strong> es una herramienta sólida para pronosticar el comportamiento estacional del precio del <em>Potato Red</em>, combinando buena precisión y consistencia temporal.</p>
+
+</div>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="eda-y-an%C3%A1lisis-de-series-de-tiempo.html"><span class="header-section-number">2</span> EDA y Análisis de Series de tiempo</a></div>
+<div class="empty"></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#pron%C3%B3stico-de-demanda-holtwinters"><span class="header-section-number">3</span> Pronóstico de Demanda HoltWinters</a></li>
+<li>
+<a class="nav-link" href="#analisis-de-series-de-tiempo-1"><span class="header-section-number">3.1</span> Analisis de series de tiempo</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#selecci%C3%B3n-del-item-objetivo"><span class="header-section-number">3.1.1</span> Selección del item objetivo</a></li>
+<li><a class="nav-link" href="#serie-basica-y-acf-1"><span class="header-section-number">3.1.2</span> Serie basica y ACF</a></li>
+<li><a class="nav-link" href="#promedios-moviles-evidencia-de-suavizado-1"><span class="header-section-number">3.1.3</span> Promedios moviles (evidencia de suavizado)</a></li>
+<li><a class="nav-link" href="#rezagos-lags-y-dependencia-temporal-1"><span class="header-section-number">3.1.4</span> Rezagos (lags) y dependencia temporal</a></li>
+<li><a class="nav-link" href="#estacionalidad-descomposicion-stl-1"><span class="header-section-number">3.1.5</span> Estacionalidad (descomposicion STL)</a></li>
+<li><a class="nav-link" href="#an%C3%A1lisis-conglomerado"><span class="header-section-number">3.1.6</span> Análisis Conglomerado</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#estacionariedad-y-diferenciaci%C3%B3n-1"><span class="header-section-number">3.2</span> Estacionariedad y diferenciación</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#verificaci%C3%B3n-de-estacionariedad-adf-test-1"><span class="header-section-number">3.2.1</span> Verificación de estacionariedad (ADF Test)</a></li>
+<li><a class="nav-link" href="#interpretacion-1"><span class="header-section-number">3.2.2</span> Interpretacion</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#suavizamiento-y-holt-winters-sobre-la-variable-tiempo"><span class="header-section-number">3.3</span> Suavizamiento y Holt-Winters sobre la variable tiempo</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#particion-de-entrenamiento-prueba"><span class="header-section-number">3.3.1</span> Particion de entrenamiento /prueba</a></li>
+<li><a class="nav-link" href="#agregaci%C3%B3n-semanal"><span class="header-section-number">3.3.2</span> Agregación semanal</a></li>
+<li><a class="nav-link" href="#modelos-de-suavizamiento-y-holt-winters-en-serie-semanal"><span class="header-section-number">3.3.3</span> Modelos de suavizamiento y Holt-Winters en serie semanal</a></li>
+<li><a class="nav-link" href="#comparaci%C3%B3n-de-precisi%C3%B3n-fuera-de-muestra"><span class="header-section-number">3.3.4</span> Comparación de precisión fuera de muestra</a></li>
+<li><a class="nav-link" href="#diagnostico-de-residuos"><span class="header-section-number">3.3.5</span> Diagnostico de residuos</a></li>
+<li><a class="nav-link" href="#pronostico-final"><span class="header-section-number">3.3.6</span> Pronostico final</a></li>
+<li><a class="nav-link" href="#conclusiones"><span class="header-section-number">3.3.7</span> Conclusiones</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#desarrollo-metodol%C3%B3gico-y-justificaci%C3%B3n-de-decisiones"><span class="header-section-number">3.4</span> Desarrollo metodológico y justificación de decisiones</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#ajuste-de-la-frecuencia-temporal"><span class="header-section-number">3.4.1</span> Ajuste de la frecuencia temporal</a></li>
+<li><a class="nav-link" href="#modelos-aplicados"><span class="header-section-number">3.4.2</span> Modelos aplicados</a></li>
+<li><a class="nav-link" href="#validaci%C3%B3n-del-modelo"><span class="header-section-number">3.4.3</span> Validación del modelo</a></li>
+<li><a class="nav-link" href="#diagn%C3%B3stico-de-residuos"><span class="header-section-number">3.4.4</span> Diagnóstico de residuos</a></li>
+<li><a class="nav-link" href="#pron%C3%B3stico-final"><span class="header-section-number">3.4.5</span> Pronóstico final</a></li>
+<li><a class="nav-link" href="#conclusi%C3%B3n-integradora"><span class="header-section-number">3.4.6</span> Conclusión integradora</a></li>
+</ul>
+</li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal</strong>" was written by Grupo 2. It was last built on 2025-11-03.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>
