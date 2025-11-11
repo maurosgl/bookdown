@@ -7,7 +7,7 @@ Realizaremos nuestro analisis con un conjunto de datos de precios agrícolas pro
 csv_file <- "C:/Users/Steba/OneDrive/Escritorio/kalimati_tarkari_dataset (2).csv"
 ```
 
-## **1. Exploración inicial de datos**
+## **Exploración inicial de datos**
 
 El conjunto de datos analizado corresponde a registros diarios de precios de productos agrícolas del mercado de Kalimati (Nepal). Para el caso del producto agrícola analizado “Potato Red”, se estandarizaron nombres de variables y se mapearon columnas clave (Commodity, Date, Minimum, Maximum, Average).
 Se realizaron verificaciones de tipo y consistencia (fechas válidas, numéricos no negativos, duplicados) y un análisis descriptivo de la variable de interés (Average), complementado con gráficos de distribución.
@@ -298,7 +298,7 @@ cor(data$Minimum, data$Maximum, use = "complete.obs")
 ## [1] 0.9950614
 ```
 
-## **1.1 Analisis de series de tiempo**
+## **Analisis de series de tiempo**
 
 
 ``` r
@@ -341,7 +341,7 @@ frequency = 365
 )
 ```
 
-## **1.2 Serie basica y ACF**
+## **Serie basica y ACF**
 
 
 ``` r
@@ -395,14 +395,14 @@ ggAcf(pot_ts) + labs(title = "ACF del precio promedio (diario)")
 
 <img src="04-application_files/figure-html/unnamed-chunk-10-1.png" width="1050" />
 
-## **2. Suavizamiento temporal**
+## **Suavizamiento temporal**
 
 Con el objetivo de aclarar la señal subyacente y separar ruido de corto plazo, se aplicaron promedios móviles (MA) de 7 y 30 días sobre la serie diaria de Average. El MA(7) capturó ciclos intra-semanales asociados a dinámica de mercado y logística, mientras que el MA(30) reveló una tendencia más estructural.
 
 Interpretación. El patrón suavizado sugiere una tendencia suave al alza con episodios de fluctuación estacional. Este hallazgo justifica el uso posterior de modelos con componentes de tendencia y estacionalidad, y confirma la presencia de persistencia temporal (autocorrelación positiva en rezagos cortos), lo que anticipa buen desempeño de métodos como ARIMA/ETS.
 
 
-## **2.1 Promedios moviles (evidencia de suavizado)**
+## **Promedios moviles (evidencia de suavizado)**
 
 
 ``` r
@@ -463,7 +463,7 @@ safe_dir <- function(){
 }
 ```
 
-## **2.2 Promedios móviles (7 y 30) — Base R + PNG + include**
+## **Promedios móviles (7 y 30) — Base R + PNG + include**
 
 
 ``` r
@@ -542,7 +542,7 @@ theme(legend.position = "top")
 <img src="04-application_files/figure-html/unnamed-chunk-14-2.png" width="1050" />
 
 
-## **2.3 Serie básica (ts) — Base R + PNG + include**
+## **Serie básica (ts) — Base R + PNG + include**
 
 
 ``` r
@@ -558,7 +558,7 @@ theme_minimal(base_size = 13)
 <img src="04-application_files/figure-html/unnamed-chunk-15-1.png" width="1050" />
 
 
-## **2.4 Rezagos (lags) y dependencia temporal**
+## **Rezagos (lags) y dependencia temporal**
 
 
 ``` r
@@ -632,7 +632,7 @@ ggPacf(pot_ts) + labs(title = "PACF precio promedio (diario)")
 <img src="04-application_files/figure-html/unnamed-chunk-16-4.png" width="1050" />
 
 
-## **2.5 Estacionalidad (descomposicion STL)**
+## **Estacionalidad (descomposicion STL)**
 
 
 ``` r
@@ -791,7 +791,7 @@ Visualmente, la serie diferenciada oscila alrededor de cero y las funciones de a
 
 
 
-## **3. AJUSTE DEL MODELO ARIMA**
+## **AJUSTE DEL MODELO ARIMA**
 Para seleccionar una especificación parsimoniosa se utilizó auto.arima(), que explora combinaciones de órdenes 
 (𝑝,𝑑,𝑞)
 (p,d,q) y, cuando corresponde, 
@@ -799,14 +799,14 @@ Para seleccionar una especificación parsimoniosa se utilizó auto.arima(), que 
 (P,D,Q) estacionales, minimizando criterios de información como AIC (Akaike Information Criterion) y BIC (Bayesian Information Criterion).
 Previo al ajuste se evaluó la estacionariedad (prueba ADF), aplicando transformación logarítmica para estabilizar varianza y diferenciación de primer orden para remover tendencia cuando fue necesario.
 
-## **3.1 Criterios de selección**
+## **Criterios de selección**
 
 AIC penaliza menos la complejidad; útil para captar estructura.
 
 BIC penaliza más; favorece modelos más simples.
 Se eligió el modelo con AIC/BIC mínimos y residuos con comportamiento de ruido blanco.
 
-## **3.2 Suavizamiento y Holt-Winters sobre la variable tiempo**
+## **Suavizamiento y Holt-Winters sobre la variable tiempo**
 
 
 ``` r
@@ -1176,7 +1176,7 @@ Este cambio permitió aplicar el método de forma exitosa y obtener resultados c
 
 
 
-## **4. Ajuste e interpretación del modelo ARIMA/SARIMA - Box-Jenkins (ARIMA)**
+## **Ajuste e interpretación del modelo ARIMA/SARIMA - Box-Jenkins (ARIMA)**
 
 
 ``` r
@@ -1406,7 +1406,7 @@ AIC(fit_arima); BIC(fit_arima)
 ## [1] 11712.56
 ```
 
-## **4.1 Interpretación del modelo**
+## **Interpretación del modelo**
 
 Los parámetros estimados 
 (𝑝,𝑑,𝑞)
@@ -1418,7 +1418,7 @@ D si se incluye una componente estacional— controla la diferenciación aplicad
 
 En este contexto, los valores obtenidos evidencian una estructura temporal que combina persistencia en los precios con fluctuaciones regulares atribuibles a factores estacionales.
 
-## **4.2 Reflexión y justificación del proceso Box–Jenkins**
+## **Reflexión y justificación del proceso Box–Jenkins**
 
 En esta fase se implementó la metodología Box–Jenkins con el propósito de identificar un modelo autorregresivo e integrado de medias móviles (ARIMA) que representara adecuadamente la dinámica temporal del precio promedio semanal del Potato Red y permitiera realizar pronósticos confiables a corto y mediano plazo.
 
@@ -1428,7 +1428,7 @@ Posteriormente, se determinó la necesidad de aplicar una diferencia estacional 
 
 Este paso fue crucial para asegurar la estacionariedad de la serie antes del ajuste final de los modelos ARIMA y SARIMA, condición indispensable dentro del enfoque Box–Jenkins.
 
-## **4.3 Ajustes metodológicos y rendimiento computacional**
+## **Ajustes metodológicos y rendimiento computacional**
 
 Durante la primera ejecución de auto.arima() con búsqueda estacional completa, se observó que el proceso requería un tiempo computacional elevado, consecuencia directa de la longitud de la serie y del gran número de combinaciones posibles entre parámetros.
 
@@ -1446,7 +1446,7 @@ Se refinó el modelo, ajustando la serie logarítmica original e incorporando la
 
 Este procedimiento permitió mantener la coherencia metodológica del enfoque Box–Jenkins, optimizando la eficiencia y la reproducibilidad del proceso analítico.
 
-## **4.4 Evaluación del modelo**
+## **Evaluación del modelo**
 
 El modelo SARIMA(1,0,0)(0,1,0)[52] mostró un excelente ajuste dentro de muestra (MAPE ≈ 1.9 %) y un desempeño razonable fuera de muestra (MAPE ≈ 25.7 %).
 
@@ -1458,7 +1458,7 @@ Este hallazgo abre la posibilidad de incorporar términos adicionales —por eje
 
 Aun así, los residuos no mostraron tendencias sistemáticas ni heterocedasticidad marcada, indicando un buen ajuste general del modelo y un comportamiento próximo al ruido blanco.
 
-## **4.5 Reflexión metodológica final**
+## **Reflexión metodológica final**
 
 La aplicación del enfoque Box–Jenkins permitió equilibrar rigor estadístico y eficiencia computacional, demostrando que, incluso en series extensas con fuerte estacionalidad, es posible construir modelos parsimoniosos, interpretables y funcionales.
 
@@ -1469,7 +1469,7 @@ El modelo obtenido captura adecuadamente la tendencia y la estacionalidad del pr
 Se concluye que este tipo de modelado contribuye de manera significativa a la planificación de abastecimiento y estrategias de fijación de precios agrícolas, ofreciendo un soporte cuantitativo a la toma de decisiones.
 
 
-## **5. EVALUACIÓN DEL MODELO**
+## **EVALUACIÓN DEL MODELO**
 
 La validación se centró en tres frentes:
 
@@ -1483,7 +1483,7 @@ La validación se centró en tres frentes:
 Conclusión de evaluación. El modelo seleccionado mostró residuos compatibles con ruido blanco y valores de AIC/BIC competitivos, lo que sugiere ajuste adecuado sin sobreparametrización. En presencia de estacionalidad pronunciada, un SARIMA suele mejorar aún más AIC/BIC y diagnóstico residual.
 
 
-## **6. PRONOSTICO Y CONCLUSIONES**
+## **PRONOSTICO Y CONCLUSIONES**
 
 Con el modelo validado, se generaron pronósticos puntuales e intervalares mediante forecast() (o predict()), a un horizonte operativo (p.ej., 30 días). Los intervalos de confianza reflejan la incertidumbre asociada a la varianza del error y a la propagación en el tiempo.
 
@@ -1532,7 +1532,7 @@ fc
 
 
 
-## **7. CONCLUSIONES GENERALES FINALES**
+## **CONCLUSIONES GENERALES FINALES**
 
 1. La serie del “Potato Red” presenta no estacionariedad inicial (tendencia y estacionalidad), que se corrige con log + diferenciación.
 
