@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Capítulo 12 Desarrollo metodológico y justificación de decisiones | Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal</title>
+  <meta name="description" content="Análisis y predicción de precios de frutas y verduras en Nepal usando técnicas de series de tiempo y machine learning." />
+  <meta name="generator" content="bookdown 0.45 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Capítulo 12 Desarrollo metodológico y justificación de decisiones | Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Análisis y predicción de precios de frutas y verduras en Nepal usando técnicas de series de tiempo y machine learning." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Capítulo 12 Desarrollo metodológico y justificación de decisiones | Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal" />
+  
+  <meta name="twitter:description" content="Análisis y predicción de precios de frutas y verduras en Nepal usando técnicas de series de tiempo y machine learning." />
+  
+
+<meta name="author" content="Grupo 2" />
+
+
+<meta name="date" content="2025-11-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="conclusiones-1.html"/>
+<link rel="next" href="pronóstico-final-1.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introducción</a></li>
+<li class="chapter" data-level="2" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html"><i class="fa fa-check"></i><b>2</b> EDA y Análisis de Series de tiempo</a>
+<ul>
+<li class="chapter" data-level="2.0.1" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#cargue-de-datos"><i class="fa fa-check"></i><b>2.0.1</b> <strong>Cargue de Datos</strong></a></li>
+<li class="chapter" data-level="2.0.2" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#primera-visualización-de-los-datos"><i class="fa fa-check"></i><b>2.0.2</b> <strong>Primera Visualización de los datos</strong></a></li>
+<li class="chapter" data-level="2.0.3" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#datos-faltantes-y-duplicados"><i class="fa fa-check"></i><b>2.0.3</b> <strong>Datos faltantes y duplicados</strong></a></li>
+<li class="chapter" data-level="2.0.4" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#análisis-univariado"><i class="fa fa-check"></i><b>2.0.4</b> <strong>Análisis Univariado</strong></a></li>
+<li class="chapter" data-level="2.0.5" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#análisis-bivariado"><i class="fa fa-check"></i><b>2.0.5</b> <strong>Análisis Bivariado</strong></a></li>
+<li class="chapter" data-level="2.0.6" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#correlación-de-los-datos"><i class="fa fa-check"></i><b>2.0.6</b> <strong>Correlación de los datos</strong></a></li>
+<li class="chapter" data-level="2.1" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#analisis-de-series-de-tiempo"><i class="fa fa-check"></i><b>2.1</b> <strong>Analisis de series de tiempo</strong></a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#serie-basica-y-acf"><i class="fa fa-check"></i><b>2.1.1</b> <strong>Serie basica y ACF</strong></a></li>
+<li class="chapter" data-level="2.1.2" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#promedios-moviles-evidencia-de-suavizado"><i class="fa fa-check"></i><b>2.1.2</b> <strong>Promedios moviles (evidencia de suavizado)</strong></a></li>
+<li class="chapter" data-level="2.1.3" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#rezagos-lags-y-dependencia-temporal"><i class="fa fa-check"></i><b>2.1.3</b> <strong>Rezagos (lags) y dependencia temporal</strong></a></li>
+<li class="chapter" data-level="2.1.4" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#estacionalidad-descomposicion-stl"><i class="fa fa-check"></i><b>2.1.4</b> <strong>Estacionalidad (descomposicion STL)</strong></a></li>
+<li class="chapter" data-level="2.1.5" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#estacionariedad-y-diferenciación"><i class="fa fa-check"></i><b>2.1.5</b> <strong>Estacionariedad y diferenciación</strong></a></li>
+<li class="chapter" data-level="2.1.6" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#verificación-de-estacionariedad-adf-test"><i class="fa fa-check"></i><b>2.1.6</b> <strong>Verificación de estacionariedad (ADF Test)</strong></a></li>
+<li class="chapter" data-level="2.1.7" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#interpretacion"><i class="fa fa-check"></i><b>2.1.7</b> <strong>Interpretacion</strong></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html"><i class="fa fa-check"></i><b>3</b> <strong>Pronóstico de Demanda HoltWinters</strong></a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#analisis-de-series-de-tiempo-1"><i class="fa fa-check"></i><b>3.1</b> <strong>Analisis de series de tiempo</strong></a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#selección-del-item-objetivo"><i class="fa fa-check"></i><b>3.1.1</b> <strong>Selección del item objetivo</strong></a></li>
+<li class="chapter" data-level="3.1.2" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#serie-basica-y-acf-1"><i class="fa fa-check"></i><b>3.1.2</b> <strong>Serie basica y ACF</strong></a></li>
+<li class="chapter" data-level="3.1.3" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#promedios-moviles-evidencia-de-suavizado-1"><i class="fa fa-check"></i><b>3.1.3</b> <strong>Promedios moviles (evidencia de suavizado)</strong></a></li>
+<li class="chapter" data-level="3.1.4" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#rezagos-lags-y-dependencia-temporal-1"><i class="fa fa-check"></i><b>3.1.4</b> <strong>Rezagos (lags) y dependencia temporal</strong></a></li>
+<li class="chapter" data-level="3.1.5" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#estacionalidad-descomposicion-stl-1"><i class="fa fa-check"></i><b>3.1.5</b> <strong>Estacionalidad (descomposicion STL)</strong></a></li>
+<li class="chapter" data-level="3.1.6" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#análisis-conglomerado"><i class="fa fa-check"></i><b>3.1.6</b> <strong>Análisis Conglomerado</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#estacionariedad-y-diferenciación-1"><i class="fa fa-check"></i><b>3.2</b> <strong>Estacionariedad y diferenciación</strong></a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#verificación-de-estacionariedad-adf-test-1"><i class="fa fa-check"></i><b>3.2.1</b> <strong>Verificación de estacionariedad (ADF Test)</strong></a></li>
+<li class="chapter" data-level="3.2.2" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#interpretacion-1"><i class="fa fa-check"></i><b>3.2.2</b> <strong>Interpretacion</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#suavizamiento-y-holt-winters-sobre-la-variable-tiempo"><i class="fa fa-check"></i><b>3.3</b> <strong>Suavizamiento y Holt-Winters sobre la variable tiempo</strong></a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#particion-de-entrenamiento-prueba"><i class="fa fa-check"></i><b>3.3.1</b> <strong>Particion de entrenamiento /prueba</strong></a></li>
+<li class="chapter" data-level="3.3.2" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#agregación-semanal"><i class="fa fa-check"></i><b>3.3.2</b> <strong>Agregación semanal</strong></a></li>
+<li class="chapter" data-level="3.3.3" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#modelos-de-suavizamiento-y-holt-winters-en-serie-semanal"><i class="fa fa-check"></i><b>3.3.3</b> <strong>Modelos de suavizamiento y Holt-Winters en serie semanal</strong></a></li>
+<li class="chapter" data-level="3.3.4" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#comparación-de-precisión-fuera-de-muestra"><i class="fa fa-check"></i><b>3.3.4</b> <strong>Comparación de precisión fuera de muestra</strong></a></li>
+<li class="chapter" data-level="3.3.5" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#diagnostico-de-residuos"><i class="fa fa-check"></i><b>3.3.5</b> <strong>Diagnostico de residuos</strong></a></li>
+<li class="chapter" data-level="3.3.6" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#pronostico-final"><i class="fa fa-check"></i><b>3.3.6</b> <strong>Pronostico final</strong></a></li>
+<li class="chapter" data-level="3.3.7" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#conclusiones"><i class="fa fa-check"></i><b>3.3.7</b> Conclusiones</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#desarrollo-metodológico-y-justificación-de-decisiones"><i class="fa fa-check"></i><b>3.4</b> <strong>Desarrollo metodológico y justificación de decisiones</strong></a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#ajuste-de-la-frecuencia-temporal"><i class="fa fa-check"></i><b>3.4.1</b> Ajuste de la frecuencia temporal</a></li>
+<li class="chapter" data-level="3.4.2" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#modelos-aplicados"><i class="fa fa-check"></i><b>3.4.2</b> Modelos aplicados</a></li>
+<li class="chapter" data-level="3.4.3" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#validación-del-modelo"><i class="fa fa-check"></i><b>3.4.3</b> Validación del modelo</a></li>
+<li class="chapter" data-level="3.4.4" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#diagnóstico-de-residuos"><i class="fa fa-check"></i><b>3.4.4</b> Diagnóstico de residuos</a></li>
+<li class="chapter" data-level="3.4.5" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#pronóstico-final"><i class="fa fa-check"></i><b>3.4.5</b> Pronóstico final</a></li>
+<li class="chapter" data-level="3.4.6" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#conclusión-integradora"><i class="fa fa-check"></i><b>3.4.6</b> Conclusión integradora</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html"><i class="fa fa-check"></i><b>4</b> <strong>Modelos Estacionales en Series de Tiempo</strong></a></li>
+<li class="chapter" data-level="5" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html"><i class="fa fa-check"></i><b>5</b> <strong>1. Exploración inicial de datos</strong></a>
+<ul>
+<li class="chapter" data-level="5.0.1" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#lectura-de-datos"><i class="fa fa-check"></i><b>5.0.1</b> <strong>Lectura de datos</strong></a></li>
+<li class="chapter" data-level="5.0.2" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#transformación-inicial-de-datos"><i class="fa fa-check"></i><b>5.0.2</b> <strong>Transformación inicial de datos</strong></a></li>
+<li class="chapter" data-level="5.0.3" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#datos-nulos-y-duplicados"><i class="fa fa-check"></i><b>5.0.3</b> <strong>Datos nulos y duplicados</strong></a></li>
+<li class="chapter" data-level="5.0.4" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#análisis-univariado-1"><i class="fa fa-check"></i><b>5.0.4</b> <strong>Análisis Univariado</strong></a></li>
+<li class="chapter" data-level="5.0.5" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#análisis-bivariado-1"><i class="fa fa-check"></i><b>5.0.5</b> <strong>Análisis Bivariado</strong></a></li>
+<li class="chapter" data-level="5.1" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#analisis-de-series-de-tiempo-2"><i class="fa fa-check"></i><b>5.1</b> <strong>1.1 Analisis de series de tiempo</strong></a></li>
+<li class="chapter" data-level="5.2" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#serie-basica-y-acf-2"><i class="fa fa-check"></i><b>5.2</b> <strong>1.2 Serie basica y ACF</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="suavizamiento-temporal.html"><a href="suavizamiento-temporal.html"><i class="fa fa-check"></i><b>6</b> <strong>2. Suavizamiento temporal</strong></a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="suavizamiento-temporal.html"><a href="suavizamiento-temporal.html#promedios-moviles-evidencia-de-suavizado-2"><i class="fa fa-check"></i><b>6.1</b> <strong>2.1 Promedios moviles (evidencia de suavizado)</strong></a></li>
+<li class="chapter" data-level="6.2" data-path="suavizamiento-temporal.html"><a href="suavizamiento-temporal.html#promedios-móviles-7-y-30-base-r-png-include"><i class="fa fa-check"></i><b>6.2</b> <strong>2.2 Promedios móviles (7 y 30) — Base R + PNG + include</strong></a></li>
+<li class="chapter" data-level="6.3" data-path="suavizamiento-temporal.html"><a href="suavizamiento-temporal.html#serie-básica-ts-base-r-png-include"><i class="fa fa-check"></i><b>6.3</b> <strong>2.3 Serie básica (ts) — Base R + PNG + include</strong></a></li>
+<li class="chapter" data-level="6.4" data-path="suavizamiento-temporal.html"><a href="suavizamiento-temporal.html#rezagos-lags-y-dependencia-temporal-2"><i class="fa fa-check"></i><b>6.4</b> <strong>2.4 Rezagos (lags) y dependencia temporal</strong></a></li>
+<li class="chapter" data-level="6.5" data-path="suavizamiento-temporal.html"><a href="suavizamiento-temporal.html#estacionalidad-descomposicion-stl-2"><i class="fa fa-check"></i><b>6.5</b> <strong>2.5 Estacionalidad (descomposicion STL)</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="estacionariedad-y-diferenciación-2.html"><a href="estacionariedad-y-diferenciación-2.html"><i class="fa fa-check"></i><b>7</b> <strong>Estacionariedad y diferenciación</strong></a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="estacionariedad-y-diferenciación-2.html"><a href="estacionariedad-y-diferenciación-2.html#verificación-de-estacionariedad-adf-test-2"><i class="fa fa-check"></i><b>7.1</b> <strong>Verificación de estacionariedad (ADF Test)</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="interpretacion-2.html"><a href="interpretacion-2.html"><i class="fa fa-check"></i><b>8</b> <strong>Interpretacion</strong></a></li>
+<li class="chapter" data-level="9" data-path="ajuste-del-modelo-arima.html"><a href="ajuste-del-modelo-arima.html"><i class="fa fa-check"></i><b>9</b> <strong>3. AJUSTE DEL MODELO ARIMA</strong></a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="ajuste-del-modelo-arima.html"><a href="ajuste-del-modelo-arima.html#criterios-de-selección"><i class="fa fa-check"></i><b>9.1</b> <strong>3.1 Criterios de selección</strong></a></li>
+<li class="chapter" data-level="9.2" data-path="ajuste-del-modelo-arima.html"><a href="ajuste-del-modelo-arima.html#suavizamiento-y-holt-winters-sobre-la-variable-tiempo-1"><i class="fa fa-check"></i><b>9.2</b> <strong>3.2 Suavizamiento y Holt-Winters sobre la variable tiempo</strong></a></li>
+<li class="chapter" data-level="9.3" data-path="ajuste-del-modelo-arima.html"><a href="ajuste-del-modelo-arima.html#particion-de-entrenamiento-prueba-1"><i class="fa fa-check"></i><b>9.3</b> <strong>Particion de entrenamiento /prueba</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html"><a href="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html"><i class="fa fa-check"></i><b>10</b> <strong>Modelos de suavizamiento y Holt-Winters en serie semanal</strong></a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html"><a href="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html#comparación-de-presición-fuera-de-muestra"><i class="fa fa-check"></i><b>10.1</b> <strong>Comparación de presición fuera de muestra</strong></a></li>
+<li class="chapter" data-level="10.2" data-path="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html"><a href="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html#diagnostico-de-residuos-1"><i class="fa fa-check"></i><b>10.2</b> <strong>Diagnostico de residuos</strong></a></li>
+<li class="chapter" data-level="10.3" data-path="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html"><a href="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html#pronostico-final-1"><i class="fa fa-check"></i><b>10.3</b> <strong>Pronostico final</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="conclusiones-1.html"><a href="conclusiones-1.html"><i class="fa fa-check"></i><b>11</b> <strong>Conclusiones</strong></a></li>
+<li class="chapter" data-level="12" data-path="desarrollo-metodológico-y-justificación-de-decisiones-1.html"><a href="desarrollo-metodológico-y-justificación-de-decisiones-1.html"><i class="fa fa-check"></i><b>12</b> <strong>Desarrollo metodológico y justificación de decisiones</strong></a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="desarrollo-metodológico-y-justificación-de-decisiones-1.html"><a href="desarrollo-metodológico-y-justificación-de-decisiones-1.html#ajuste-de-la-frecuencia-temporal-1"><i class="fa fa-check"></i><b>12.1</b> <strong>Ajuste de la frecuencia temporal</strong></a></li>
+<li class="chapter" data-level="12.2" data-path="desarrollo-metodológico-y-justificación-de-decisiones-1.html"><a href="desarrollo-metodológico-y-justificación-de-decisiones-1.html#modelos-aplicados-1"><i class="fa fa-check"></i><b>12.2</b> <strong>Modelos aplicados</strong></a></li>
+<li class="chapter" data-level="12.3" data-path="desarrollo-metodológico-y-justificación-de-decisiones-1.html"><a href="desarrollo-metodológico-y-justificación-de-decisiones-1.html#validación-del-modelo-1"><i class="fa fa-check"></i><b>12.3</b> <strong>Validación del modelo</strong></a></li>
+<li class="chapter" data-level="12.4" data-path="desarrollo-metodológico-y-justificación-de-decisiones-1.html"><a href="desarrollo-metodológico-y-justificación-de-decisiones-1.html#diagnóstico-de-residuos-1"><i class="fa fa-check"></i><b>12.4</b> <strong>Diagnóstico de residuos</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="pronóstico-final-1.html"><a href="pronóstico-final-1.html"><i class="fa fa-check"></i><b>13</b> <strong>Pronóstico final</strong></a></li>
+<li class="chapter" data-level="14" data-path="conclusión-integradora-1.html"><a href="conclusión-integradora-1.html"><i class="fa fa-check"></i><b>14</b> <strong>Conclusión integradora</strong></a></li>
+<li class="chapter" data-level="15" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><i class="fa fa-check"></i><b>15</b> <strong>4. Ajuste e interpretación del modelo ARIMA/SARIMA - Box-Jenkins (ARIMA)</strong></a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#pronostico-a-h-pasos-y-metricas-rmsemaemape"><i class="fa fa-check"></i><b>15.1</b> <strong>Pronostico a h pasos y metricas RMSE/MAE/MAPE</strong></a></li>
+<li class="chapter" data-level="15.2" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#diagnostico-de-residuos-2"><i class="fa fa-check"></i><b>15.2</b> <strong>Diagnostico de residuos</strong></a></li>
+<li class="chapter" data-level="15.3" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#pronostico-final-sarima-10001052"><i class="fa fa-check"></i><b>15.3</b> <strong>Pronostico final Sarima (1,0,0)(0,1,0)[52]</strong></a></li>
+<li class="chapter" data-level="15.4" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#interpretación-del-modelo"><i class="fa fa-check"></i><b>15.4</b> <strong>4.1 Interpretación del modelo</strong></a></li>
+<li class="chapter" data-level="15.5" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#reflexión-y-justificación-del-proceso-boxjenkins"><i class="fa fa-check"></i><b>15.5</b> <strong>4.2 Reflexión y justificación del proceso Box–Jenkins</strong></a></li>
+<li class="chapter" data-level="15.6" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#ajustes-metodológicos-y-rendimiento-computacional"><i class="fa fa-check"></i><b>15.6</b> <strong>4.3 Ajustes metodológicos y rendimiento computacional</strong></a></li>
+<li class="chapter" data-level="15.7" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#evaluación-del-modelo"><i class="fa fa-check"></i><b>15.7</b> <strong>4.4 Evaluación del modelo</strong></a></li>
+<li class="chapter" data-level="15.8" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#reflexión-metodológica-final"><i class="fa fa-check"></i><b>15.8</b> <strong>4.5 Reflexión metodológica final</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="evaluación-del-modelo-1.html"><a href="evaluación-del-modelo-1.html"><i class="fa fa-check"></i><b>16</b> <strong>5. EVALUACIÓN DEL MODELO</strong></a></li>
+<li class="chapter" data-level="17" data-path="pronostico-y-conclusiones.html"><a href="pronostico-y-conclusiones.html"><i class="fa fa-check"></i><b>17</b> <strong>6. PRONOSTICO Y CONCLUSIONES</strong></a></li>
+<li class="chapter" data-level="18" data-path="conclusiones-generales-finales.html"><a href="conclusiones-generales-finales.html"><i class="fa fa-check"></i><b>18</b> <strong>7. CONCLUSIONES GENERALES FINALES</strong></a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="desarrollo-metodológico-y-justificación-de-decisiones-1" class="section level1 hasAnchor" number="12">
+<h1><span class="header-section-number">Capítulo 12</span> <strong>Desarrollo metodológico y justificación de decisiones</strong><a href="desarrollo-metodológico-y-justificación-de-decisiones-1.html#desarrollo-metodológico-y-justificación-de-decisiones-1" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>El proceso de aplicación del modelo de <strong>Holt-Winters</strong> a la serie de tiempo del <em>precio promedio del Potato Red</em> implicó diversos ajustes metodológicos debido a las características particulares de los datos.<br />
+La variable de estudio correspondía a una <strong>serie diaria</strong> con una extensión superior a 2800 observaciones y frecuencia anual de 365. Si bien esta cantidad de datos representaba una fuente valiosa de información, también generó <strong>limitaciones computacionales</strong> al momento de ajustar modelos estacionales como <code>ets(model = "AAA")</code> o <code>hw(seasonal = "additive")</code>, debido a que la función <code>ets()</code> no está optimizada para manejar estacionalidades tan largas.</p>
+<p>Durante los primeros intentos, el software arrojó el error <em>“Frequency too high”</em> o se quedaba ejecutando indefinidamente. Esto motivó una revisión del enfoque, identificando que la <strong>estacionalidad de interés</strong> no necesariamente se presentaba de manera diaria, sino más bien <strong>en ciclos semanales o mensuales</strong>, propios de los precios agrícolas.</p>
+<div id="ajuste-de-la-frecuencia-temporal-1" class="section level2 hasAnchor" number="12.1">
+<h2><span class="header-section-number">12.1</span> <strong>Ajuste de la frecuencia temporal</strong><a href="desarrollo-metodológico-y-justificación-de-decisiones-1.html#ajuste-de-la-frecuencia-temporal-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Como solución, se decidió <strong>agregar la serie a frecuencia semanal</strong>, calculando el promedio de los precios diarios.<br />
+Esta decisión permitió conservar la forma cíclica de la serie (picos y valles regulares) y, al mismo tiempo, <strong>reducir la frecuencia de 365 a 52</strong>, lo cual hizo posible aplicar modelos estacionales de forma estable y con un tiempo de cómputo razonable.<br />
+En la práctica, esto significó reconstruir la serie con una frecuencia semanal (<code>frequency = 52</code>), evitando la sobrecarga que impedía el ajuste de Holt-Winters en la versión original.</p>
+</div>
+<div id="modelos-aplicados-1" class="section level2 hasAnchor" number="12.2">
+<h2><span class="header-section-number">12.2</span> <strong>Modelos aplicados</strong><a href="desarrollo-metodológico-y-justificación-de-decisiones-1.html#modelos-aplicados-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Una vez ajustada la frecuencia, se implementaron cuatro modelos de suavizamiento:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Suavizamiento exponencial simple (SES)</strong> – Captura únicamente el nivel de la serie.<br />
+</li>
+<li><strong>Método de Holt</strong> – Incorpora tendencia aditiva.<br />
+</li>
+<li><strong>Holt-Winters aditivo</strong> – Considera tendencia y estacionalidad de amplitud constante.<br />
+</li>
+<li><strong>Holt-Winters multiplicativo</strong> – Considera estacionalidad proporcional al nivel.</li>
+</ol>
+<p>Debido a los errores recurrentes con <code>ets()</code> y <code>hw()</code>, se optó finalmente por la función <strong><code>stats::HoltWinters()</code></strong>, que permite ajustar modelos estacionales de manera más estable con series largas o de alta frecuencia.</p>
+</div>
+<div id="validación-del-modelo-1" class="section level2 hasAnchor" number="12.3">
+<h2><span class="header-section-number">12.3</span> <strong>Validación del modelo</strong><a href="desarrollo-metodológico-y-justificación-de-decisiones-1.html#validación-del-modelo-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>La serie semanal se dividió en un conjunto de <strong>entrenamiento (80%)</strong> y otro de <strong>prueba (20%)</strong>, correspondiente aproximadamente a un año de observaciones.<br />
+Con esta división, se evaluó el desempeño predictivo de cada modelo mediante métricas como <strong>RMSE</strong>, <strong>MAE</strong> y <strong>MAPE</strong>.</p>
+<p>Los resultados mostraron que el <strong>modelo Holt-Winters multiplicativo</strong> presentó el mejor desempeño (RMSE = 18.99, MAPE = 19.6%), superando a las versiones aditiva, Holt y SES.<br />
+Esto indica que la estacionalidad es <strong>proporcional al nivel</strong> de la serie: cuando los precios son altos, las fluctuaciones semanales también lo son.</p>
+</div>
+<div id="diagnóstico-de-residuos-1" class="section level2 hasAnchor" number="12.4">
+<h2><span class="header-section-number">12.4</span> <strong>Diagnóstico de residuos</strong><a href="desarrollo-metodológico-y-justificación-de-decisiones-1.html#diagnóstico-de-residuos-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Para validar el ajuste, se analizaron los residuos del modelo Holt-Winters multiplicativo.<br />
+El test de <strong>Ljung-Box (p-valor = 0.1029)</strong> indicó ausencia de autocorrelación significativa, lo cual demuestra que el modelo logra capturar adecuadamente la tendencia y la estacionalidad de los datos.<br />
+Además, el gráfico ACF de los residuos no mostró patrones sistemáticos, confirmando que el error se comporta como <strong>ruido blanco</strong>.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="conclusiones-1.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="pronóstico-final-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/04-application.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

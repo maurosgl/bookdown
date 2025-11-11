@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Capítulo 6 2. Suavizamiento temporal | Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal</title>
+  <meta name="description" content="Análisis y predicción de precios de frutas y verduras en Nepal usando técnicas de series de tiempo y machine learning." />
+  <meta name="generator" content="bookdown 0.45 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Capítulo 6 2. Suavizamiento temporal | Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Análisis y predicción de precios de frutas y verduras en Nepal usando técnicas de series de tiempo y machine learning." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Capítulo 6 2. Suavizamiento temporal | Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal" />
+  
+  <meta name="twitter:description" content="Análisis y predicción de precios de frutas y verduras en Nepal usando técnicas de series de tiempo y machine learning." />
+  
+
+<meta name="author" content="Grupo 2" />
+
+
+<meta name="date" content="2025-11-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="exploración-inicial-de-datos.html"/>
+<link rel="next" href="estacionariedad-y-diferenciación-2.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introducción</a></li>
+<li class="chapter" data-level="2" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html"><i class="fa fa-check"></i><b>2</b> EDA y Análisis de Series de tiempo</a>
+<ul>
+<li class="chapter" data-level="2.0.1" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#cargue-de-datos"><i class="fa fa-check"></i><b>2.0.1</b> <strong>Cargue de Datos</strong></a></li>
+<li class="chapter" data-level="2.0.2" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#primera-visualización-de-los-datos"><i class="fa fa-check"></i><b>2.0.2</b> <strong>Primera Visualización de los datos</strong></a></li>
+<li class="chapter" data-level="2.0.3" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#datos-faltantes-y-duplicados"><i class="fa fa-check"></i><b>2.0.3</b> <strong>Datos faltantes y duplicados</strong></a></li>
+<li class="chapter" data-level="2.0.4" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#análisis-univariado"><i class="fa fa-check"></i><b>2.0.4</b> <strong>Análisis Univariado</strong></a></li>
+<li class="chapter" data-level="2.0.5" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#análisis-bivariado"><i class="fa fa-check"></i><b>2.0.5</b> <strong>Análisis Bivariado</strong></a></li>
+<li class="chapter" data-level="2.0.6" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#correlación-de-los-datos"><i class="fa fa-check"></i><b>2.0.6</b> <strong>Correlación de los datos</strong></a></li>
+<li class="chapter" data-level="2.1" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#analisis-de-series-de-tiempo"><i class="fa fa-check"></i><b>2.1</b> <strong>Analisis de series de tiempo</strong></a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#serie-basica-y-acf"><i class="fa fa-check"></i><b>2.1.1</b> <strong>Serie basica y ACF</strong></a></li>
+<li class="chapter" data-level="2.1.2" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#promedios-moviles-evidencia-de-suavizado"><i class="fa fa-check"></i><b>2.1.2</b> <strong>Promedios moviles (evidencia de suavizado)</strong></a></li>
+<li class="chapter" data-level="2.1.3" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#rezagos-lags-y-dependencia-temporal"><i class="fa fa-check"></i><b>2.1.3</b> <strong>Rezagos (lags) y dependencia temporal</strong></a></li>
+<li class="chapter" data-level="2.1.4" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#estacionalidad-descomposicion-stl"><i class="fa fa-check"></i><b>2.1.4</b> <strong>Estacionalidad (descomposicion STL)</strong></a></li>
+<li class="chapter" data-level="2.1.5" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#estacionariedad-y-diferenciación"><i class="fa fa-check"></i><b>2.1.5</b> <strong>Estacionariedad y diferenciación</strong></a></li>
+<li class="chapter" data-level="2.1.6" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#verificación-de-estacionariedad-adf-test"><i class="fa fa-check"></i><b>2.1.6</b> <strong>Verificación de estacionariedad (ADF Test)</strong></a></li>
+<li class="chapter" data-level="2.1.7" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#interpretacion"><i class="fa fa-check"></i><b>2.1.7</b> <strong>Interpretacion</strong></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html"><i class="fa fa-check"></i><b>3</b> <strong>Pronóstico de Demanda HoltWinters</strong></a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#analisis-de-series-de-tiempo-1"><i class="fa fa-check"></i><b>3.1</b> <strong>Analisis de series de tiempo</strong></a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#selección-del-item-objetivo"><i class="fa fa-check"></i><b>3.1.1</b> <strong>Selección del item objetivo</strong></a></li>
+<li class="chapter" data-level="3.1.2" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#serie-basica-y-acf-1"><i class="fa fa-check"></i><b>3.1.2</b> <strong>Serie basica y ACF</strong></a></li>
+<li class="chapter" data-level="3.1.3" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#promedios-moviles-evidencia-de-suavizado-1"><i class="fa fa-check"></i><b>3.1.3</b> <strong>Promedios moviles (evidencia de suavizado)</strong></a></li>
+<li class="chapter" data-level="3.1.4" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#rezagos-lags-y-dependencia-temporal-1"><i class="fa fa-check"></i><b>3.1.4</b> <strong>Rezagos (lags) y dependencia temporal</strong></a></li>
+<li class="chapter" data-level="3.1.5" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#estacionalidad-descomposicion-stl-1"><i class="fa fa-check"></i><b>3.1.5</b> <strong>Estacionalidad (descomposicion STL)</strong></a></li>
+<li class="chapter" data-level="3.1.6" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#análisis-conglomerado"><i class="fa fa-check"></i><b>3.1.6</b> <strong>Análisis Conglomerado</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#estacionariedad-y-diferenciación-1"><i class="fa fa-check"></i><b>3.2</b> <strong>Estacionariedad y diferenciación</strong></a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#verificación-de-estacionariedad-adf-test-1"><i class="fa fa-check"></i><b>3.2.1</b> <strong>Verificación de estacionariedad (ADF Test)</strong></a></li>
+<li class="chapter" data-level="3.2.2" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#interpretacion-1"><i class="fa fa-check"></i><b>3.2.2</b> <strong>Interpretacion</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#suavizamiento-y-holt-winters-sobre-la-variable-tiempo"><i class="fa fa-check"></i><b>3.3</b> <strong>Suavizamiento y Holt-Winters sobre la variable tiempo</strong></a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#particion-de-entrenamiento-prueba"><i class="fa fa-check"></i><b>3.3.1</b> <strong>Particion de entrenamiento /prueba</strong></a></li>
+<li class="chapter" data-level="3.3.2" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#agregación-semanal"><i class="fa fa-check"></i><b>3.3.2</b> <strong>Agregación semanal</strong></a></li>
+<li class="chapter" data-level="3.3.3" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#modelos-de-suavizamiento-y-holt-winters-en-serie-semanal"><i class="fa fa-check"></i><b>3.3.3</b> <strong>Modelos de suavizamiento y Holt-Winters en serie semanal</strong></a></li>
+<li class="chapter" data-level="3.3.4" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#comparación-de-precisión-fuera-de-muestra"><i class="fa fa-check"></i><b>3.3.4</b> <strong>Comparación de precisión fuera de muestra</strong></a></li>
+<li class="chapter" data-level="3.3.5" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#diagnostico-de-residuos"><i class="fa fa-check"></i><b>3.3.5</b> <strong>Diagnostico de residuos</strong></a></li>
+<li class="chapter" data-level="3.3.6" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#pronostico-final"><i class="fa fa-check"></i><b>3.3.6</b> <strong>Pronostico final</strong></a></li>
+<li class="chapter" data-level="3.3.7" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#conclusiones"><i class="fa fa-check"></i><b>3.3.7</b> Conclusiones</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#desarrollo-metodológico-y-justificación-de-decisiones"><i class="fa fa-check"></i><b>3.4</b> <strong>Desarrollo metodológico y justificación de decisiones</strong></a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#ajuste-de-la-frecuencia-temporal"><i class="fa fa-check"></i><b>3.4.1</b> Ajuste de la frecuencia temporal</a></li>
+<li class="chapter" data-level="3.4.2" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#modelos-aplicados"><i class="fa fa-check"></i><b>3.4.2</b> Modelos aplicados</a></li>
+<li class="chapter" data-level="3.4.3" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#validación-del-modelo"><i class="fa fa-check"></i><b>3.4.3</b> Validación del modelo</a></li>
+<li class="chapter" data-level="3.4.4" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#diagnóstico-de-residuos"><i class="fa fa-check"></i><b>3.4.4</b> Diagnóstico de residuos</a></li>
+<li class="chapter" data-level="3.4.5" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#pronóstico-final"><i class="fa fa-check"></i><b>3.4.5</b> Pronóstico final</a></li>
+<li class="chapter" data-level="3.4.6" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#conclusión-integradora"><i class="fa fa-check"></i><b>3.4.6</b> Conclusión integradora</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html"><i class="fa fa-check"></i><b>4</b> <strong>Modelos Estacionales en Series de Tiempo</strong></a></li>
+<li class="chapter" data-level="5" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html"><i class="fa fa-check"></i><b>5</b> <strong>1. Exploración inicial de datos</strong></a>
+<ul>
+<li class="chapter" data-level="5.0.1" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#lectura-de-datos"><i class="fa fa-check"></i><b>5.0.1</b> <strong>Lectura de datos</strong></a></li>
+<li class="chapter" data-level="5.0.2" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#transformación-inicial-de-datos"><i class="fa fa-check"></i><b>5.0.2</b> <strong>Transformación inicial de datos</strong></a></li>
+<li class="chapter" data-level="5.0.3" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#datos-nulos-y-duplicados"><i class="fa fa-check"></i><b>5.0.3</b> <strong>Datos nulos y duplicados</strong></a></li>
+<li class="chapter" data-level="5.0.4" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#análisis-univariado-1"><i class="fa fa-check"></i><b>5.0.4</b> <strong>Análisis Univariado</strong></a></li>
+<li class="chapter" data-level="5.0.5" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#análisis-bivariado-1"><i class="fa fa-check"></i><b>5.0.5</b> <strong>Análisis Bivariado</strong></a></li>
+<li class="chapter" data-level="5.1" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#analisis-de-series-de-tiempo-2"><i class="fa fa-check"></i><b>5.1</b> <strong>1.1 Analisis de series de tiempo</strong></a></li>
+<li class="chapter" data-level="5.2" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#serie-basica-y-acf-2"><i class="fa fa-check"></i><b>5.2</b> <strong>1.2 Serie basica y ACF</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="suavizamiento-temporal.html"><a href="suavizamiento-temporal.html"><i class="fa fa-check"></i><b>6</b> <strong>2. Suavizamiento temporal</strong></a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="suavizamiento-temporal.html"><a href="suavizamiento-temporal.html#promedios-moviles-evidencia-de-suavizado-2"><i class="fa fa-check"></i><b>6.1</b> <strong>2.1 Promedios moviles (evidencia de suavizado)</strong></a></li>
+<li class="chapter" data-level="6.2" data-path="suavizamiento-temporal.html"><a href="suavizamiento-temporal.html#promedios-móviles-7-y-30-base-r-png-include"><i class="fa fa-check"></i><b>6.2</b> <strong>2.2 Promedios móviles (7 y 30) — Base R + PNG + include</strong></a></li>
+<li class="chapter" data-level="6.3" data-path="suavizamiento-temporal.html"><a href="suavizamiento-temporal.html#serie-básica-ts-base-r-png-include"><i class="fa fa-check"></i><b>6.3</b> <strong>2.3 Serie básica (ts) — Base R + PNG + include</strong></a></li>
+<li class="chapter" data-level="6.4" data-path="suavizamiento-temporal.html"><a href="suavizamiento-temporal.html#rezagos-lags-y-dependencia-temporal-2"><i class="fa fa-check"></i><b>6.4</b> <strong>2.4 Rezagos (lags) y dependencia temporal</strong></a></li>
+<li class="chapter" data-level="6.5" data-path="suavizamiento-temporal.html"><a href="suavizamiento-temporal.html#estacionalidad-descomposicion-stl-2"><i class="fa fa-check"></i><b>6.5</b> <strong>2.5 Estacionalidad (descomposicion STL)</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="estacionariedad-y-diferenciación-2.html"><a href="estacionariedad-y-diferenciación-2.html"><i class="fa fa-check"></i><b>7</b> <strong>Estacionariedad y diferenciación</strong></a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="estacionariedad-y-diferenciación-2.html"><a href="estacionariedad-y-diferenciación-2.html#verificación-de-estacionariedad-adf-test-2"><i class="fa fa-check"></i><b>7.1</b> <strong>Verificación de estacionariedad (ADF Test)</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="interpretacion-2.html"><a href="interpretacion-2.html"><i class="fa fa-check"></i><b>8</b> <strong>Interpretacion</strong></a></li>
+<li class="chapter" data-level="9" data-path="ajuste-del-modelo-arima.html"><a href="ajuste-del-modelo-arima.html"><i class="fa fa-check"></i><b>9</b> <strong>3. AJUSTE DEL MODELO ARIMA</strong></a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="ajuste-del-modelo-arima.html"><a href="ajuste-del-modelo-arima.html#criterios-de-selección"><i class="fa fa-check"></i><b>9.1</b> <strong>3.1 Criterios de selección</strong></a></li>
+<li class="chapter" data-level="9.2" data-path="ajuste-del-modelo-arima.html"><a href="ajuste-del-modelo-arima.html#suavizamiento-y-holt-winters-sobre-la-variable-tiempo-1"><i class="fa fa-check"></i><b>9.2</b> <strong>3.2 Suavizamiento y Holt-Winters sobre la variable tiempo</strong></a></li>
+<li class="chapter" data-level="9.3" data-path="ajuste-del-modelo-arima.html"><a href="ajuste-del-modelo-arima.html#particion-de-entrenamiento-prueba-1"><i class="fa fa-check"></i><b>9.3</b> <strong>Particion de entrenamiento /prueba</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html"><a href="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html"><i class="fa fa-check"></i><b>10</b> <strong>Modelos de suavizamiento y Holt-Winters en serie semanal</strong></a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html"><a href="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html#comparación-de-presición-fuera-de-muestra"><i class="fa fa-check"></i><b>10.1</b> <strong>Comparación de presición fuera de muestra</strong></a></li>
+<li class="chapter" data-level="10.2" data-path="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html"><a href="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html#diagnostico-de-residuos-1"><i class="fa fa-check"></i><b>10.2</b> <strong>Diagnostico de residuos</strong></a></li>
+<li class="chapter" data-level="10.3" data-path="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html"><a href="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html#pronostico-final-1"><i class="fa fa-check"></i><b>10.3</b> <strong>Pronostico final</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="conclusiones-1.html"><a href="conclusiones-1.html"><i class="fa fa-check"></i><b>11</b> <strong>Conclusiones</strong></a></li>
+<li class="chapter" data-level="12" data-path="desarrollo-metodológico-y-justificación-de-decisiones-1.html"><a href="desarrollo-metodológico-y-justificación-de-decisiones-1.html"><i class="fa fa-check"></i><b>12</b> <strong>Desarrollo metodológico y justificación de decisiones</strong></a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="desarrollo-metodológico-y-justificación-de-decisiones-1.html"><a href="desarrollo-metodológico-y-justificación-de-decisiones-1.html#ajuste-de-la-frecuencia-temporal-1"><i class="fa fa-check"></i><b>12.1</b> <strong>Ajuste de la frecuencia temporal</strong></a></li>
+<li class="chapter" data-level="12.2" data-path="desarrollo-metodológico-y-justificación-de-decisiones-1.html"><a href="desarrollo-metodológico-y-justificación-de-decisiones-1.html#modelos-aplicados-1"><i class="fa fa-check"></i><b>12.2</b> <strong>Modelos aplicados</strong></a></li>
+<li class="chapter" data-level="12.3" data-path="desarrollo-metodológico-y-justificación-de-decisiones-1.html"><a href="desarrollo-metodológico-y-justificación-de-decisiones-1.html#validación-del-modelo-1"><i class="fa fa-check"></i><b>12.3</b> <strong>Validación del modelo</strong></a></li>
+<li class="chapter" data-level="12.4" data-path="desarrollo-metodológico-y-justificación-de-decisiones-1.html"><a href="desarrollo-metodológico-y-justificación-de-decisiones-1.html#diagnóstico-de-residuos-1"><i class="fa fa-check"></i><b>12.4</b> <strong>Diagnóstico de residuos</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="pronóstico-final-1.html"><a href="pronóstico-final-1.html"><i class="fa fa-check"></i><b>13</b> <strong>Pronóstico final</strong></a></li>
+<li class="chapter" data-level="14" data-path="conclusión-integradora-1.html"><a href="conclusión-integradora-1.html"><i class="fa fa-check"></i><b>14</b> <strong>Conclusión integradora</strong></a></li>
+<li class="chapter" data-level="15" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><i class="fa fa-check"></i><b>15</b> <strong>4. Ajuste e interpretación del modelo ARIMA/SARIMA - Box-Jenkins (ARIMA)</strong></a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#pronostico-a-h-pasos-y-metricas-rmsemaemape"><i class="fa fa-check"></i><b>15.1</b> <strong>Pronostico a h pasos y metricas RMSE/MAE/MAPE</strong></a></li>
+<li class="chapter" data-level="15.2" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#diagnostico-de-residuos-2"><i class="fa fa-check"></i><b>15.2</b> <strong>Diagnostico de residuos</strong></a></li>
+<li class="chapter" data-level="15.3" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#pronostico-final-sarima-10001052"><i class="fa fa-check"></i><b>15.3</b> <strong>Pronostico final Sarima (1,0,0)(0,1,0)[52]</strong></a></li>
+<li class="chapter" data-level="15.4" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#interpretación-del-modelo"><i class="fa fa-check"></i><b>15.4</b> <strong>4.1 Interpretación del modelo</strong></a></li>
+<li class="chapter" data-level="15.5" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#reflexión-y-justificación-del-proceso-boxjenkins"><i class="fa fa-check"></i><b>15.5</b> <strong>4.2 Reflexión y justificación del proceso Box–Jenkins</strong></a></li>
+<li class="chapter" data-level="15.6" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#ajustes-metodológicos-y-rendimiento-computacional"><i class="fa fa-check"></i><b>15.6</b> <strong>4.3 Ajustes metodológicos y rendimiento computacional</strong></a></li>
+<li class="chapter" data-level="15.7" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#evaluación-del-modelo"><i class="fa fa-check"></i><b>15.7</b> <strong>4.4 Evaluación del modelo</strong></a></li>
+<li class="chapter" data-level="15.8" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#reflexión-metodológica-final"><i class="fa fa-check"></i><b>15.8</b> <strong>4.5 Reflexión metodológica final</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="evaluación-del-modelo-1.html"><a href="evaluación-del-modelo-1.html"><i class="fa fa-check"></i><b>16</b> <strong>5. EVALUACIÓN DEL MODELO</strong></a></li>
+<li class="chapter" data-level="17" data-path="pronostico-y-conclusiones.html"><a href="pronostico-y-conclusiones.html"><i class="fa fa-check"></i><b>17</b> <strong>6. PRONOSTICO Y CONCLUSIONES</strong></a></li>
+<li class="chapter" data-level="18" data-path="conclusiones-generales-finales.html"><a href="conclusiones-generales-finales.html"><i class="fa fa-check"></i><b>18</b> <strong>7. CONCLUSIONES GENERALES FINALES</strong></a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="suavizamiento-temporal" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number">Capítulo 6</span> <strong>2. Suavizamiento temporal</strong><a href="suavizamiento-temporal.html#suavizamiento-temporal" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Con el objetivo de aclarar la señal subyacente y separar ruido de corto plazo, se aplicaron promedios móviles (MA) de 7 y 30 días sobre la serie diaria de Average. El MA(7) capturó ciclos intra-semanales asociados a dinámica de mercado y logística, mientras que el MA(30) reveló una tendencia más estructural.</p>
+<p>Interpretación. El patrón suavizado sugiere una tendencia suave al alza con episodios de fluctuación estacional. Este hallazgo justifica el uso posterior de modelos con componentes de tendencia y estacionalidad, y confirma la presencia de persistencia temporal (autocorrelación positiva en rezagos cortos), lo que anticipa buen desempeño de métodos como ARIMA/ETS.</p>
+<div id="promedios-moviles-evidencia-de-suavizado-2" class="section level2 hasAnchor" number="6.1">
+<h2><span class="header-section-number">6.1</span> <strong>2.1 Promedios moviles (evidencia de suavizado)</strong><a href="suavizamiento-temporal.html#promedios-moviles-evidencia-de-suavizado-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="suavizamiento-temporal.html#cb48-1" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">&quot;rstudio&quot;</span>, <span class="at">envir =</span> .GlobalEnv)) <span class="fu">rm</span>(<span class="st">&quot;rstudio&quot;</span>, <span class="at">envir =</span> .GlobalEnv)</span>
+<span id="cb48-2"><a href="suavizamiento-temporal.html#cb48-2" tabindex="-1"></a><span class="fu">options</span>(<span class="at">device.ask.default =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb48-3"><a href="suavizamiento-temporal.html#cb48-3" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">capabilities</span>(<span class="st">&quot;cairo&quot;</span>)) {</span>
+<span id="cb48-4"><a href="suavizamiento-temporal.html#cb48-4" tabindex="-1"></a>  knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">dev =</span> <span class="st">&quot;png&quot;</span>, <span class="at">dpi =</span> <span class="dv">150</span>, <span class="at">dev.args =</span> <span class="fu">list</span>(<span class="at">type =</span> <span class="st">&quot;cairo&quot;</span>))</span>
+<span id="cb48-5"><a href="suavizamiento-temporal.html#cb48-5" tabindex="-1"></a>  <span class="fu">options</span>(<span class="at">bitmapType =</span> <span class="st">&quot;cairo&quot;</span>)</span>
+<span id="cb48-6"><a href="suavizamiento-temporal.html#cb48-6" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb48-7"><a href="suavizamiento-temporal.html#cb48-7" tabindex="-1"></a>  knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">dev =</span> <span class="st">&quot;png&quot;</span>, <span class="at">dpi =</span> <span class="dv">150</span>)</span>
+<span id="cb48-8"><a href="suavizamiento-temporal.html#cb48-8" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="suavizamiento-temporal.html#cb49-1" tabindex="-1"></a><span class="co"># Hotfix global para gráficos (evita el viewer de RStudio)</span></span>
+<span id="cb49-2"><a href="suavizamiento-temporal.html#cb49-2" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">&quot;rstudio&quot;</span>, <span class="at">envir =</span> .GlobalEnv)) <span class="fu">rm</span>(<span class="st">&quot;rstudio&quot;</span>, <span class="at">envir =</span> .GlobalEnv)</span>
+<span id="cb49-3"><a href="suavizamiento-temporal.html#cb49-3" tabindex="-1"></a><span class="fu">options</span>(<span class="at">device.ask.default =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb49-4"><a href="suavizamiento-temporal.html#cb49-4" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">capabilities</span>(<span class="st">&quot;cairo&quot;</span>)) {</span>
+<span id="cb49-5"><a href="suavizamiento-temporal.html#cb49-5" tabindex="-1"></a>  knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">dev =</span> <span class="st">&quot;png&quot;</span>, <span class="at">dpi =</span> <span class="dv">150</span>, <span class="at">dev.args =</span> <span class="fu">list</span>(<span class="at">type =</span> <span class="st">&quot;cairo&quot;</span>))</span>
+<span id="cb49-6"><a href="suavizamiento-temporal.html#cb49-6" tabindex="-1"></a>  <span class="fu">options</span>(<span class="at">bitmapType =</span> <span class="st">&quot;cairo&quot;</span>)</span>
+<span id="cb49-7"><a href="suavizamiento-temporal.html#cb49-7" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb49-8"><a href="suavizamiento-temporal.html#cb49-8" tabindex="-1"></a>  knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">dev =</span> <span class="st">&quot;png&quot;</span>, <span class="at">dpi =</span> <span class="dv">150</span>)</span>
+<span id="cb49-9"><a href="suavizamiento-temporal.html#cb49-9" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="suavizamiento-temporal.html#cb50-1" tabindex="-1"></a><span class="co"># --- Hotfix global: NO viewer, render a PNG ---</span></span>
+<span id="cb50-2"><a href="suavizamiento-temporal.html#cb50-2" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">&quot;rstudio&quot;</span>, <span class="at">envir =</span> .GlobalEnv)) <span class="fu">rm</span>(<span class="st">&quot;rstudio&quot;</span>, <span class="at">envir =</span> .GlobalEnv)</span>
+<span id="cb50-3"><a href="suavizamiento-temporal.html#cb50-3" tabindex="-1"></a><span class="fu">options</span>(<span class="at">device.ask.default =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb50-4"><a href="suavizamiento-temporal.html#cb50-4" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">capabilities</span>(<span class="st">&quot;cairo&quot;</span>)) {</span>
+<span id="cb50-5"><a href="suavizamiento-temporal.html#cb50-5" tabindex="-1"></a>  knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">dev =</span> <span class="st">&quot;png&quot;</span>, <span class="at">dpi =</span> <span class="dv">150</span>, <span class="at">dev.args =</span> <span class="fu">list</span>(<span class="at">type =</span> <span class="st">&quot;cairo&quot;</span>))</span>
+<span id="cb50-6"><a href="suavizamiento-temporal.html#cb50-6" tabindex="-1"></a>  <span class="fu">options</span>(<span class="at">bitmapType =</span> <span class="st">&quot;cairo&quot;</span>)</span>
+<span id="cb50-7"><a href="suavizamiento-temporal.html#cb50-7" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb50-8"><a href="suavizamiento-temporal.html#cb50-8" tabindex="-1"></a>  knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">dev =</span> <span class="st">&quot;png&quot;</span>, <span class="at">dpi =</span> <span class="dv">150</span>)</span>
+<span id="cb50-9"><a href="suavizamiento-temporal.html#cb50-9" tabindex="-1"></a>}</span>
+<span id="cb50-10"><a href="suavizamiento-temporal.html#cb50-10" tabindex="-1"></a></span>
+<span id="cb50-11"><a href="suavizamiento-temporal.html#cb50-11" tabindex="-1"></a><span class="co"># Paquetes mínimos</span></span>
+<span id="cb50-12"><a href="suavizamiento-temporal.html#cb50-12" tabindex="-1"></a>libs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;dplyr&quot;</span>,<span class="st">&quot;tidyr&quot;</span>,<span class="st">&quot;lubridate&quot;</span>,<span class="st">&quot;slider&quot;</span>)</span>
+<span id="cb50-13"><a href="suavizamiento-temporal.html#cb50-13" tabindex="-1"></a><span class="cf">for</span> (p <span class="cf">in</span> libs) <span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(p, <span class="at">character.only=</span><span class="cn">TRUE</span>)) {<span class="fu">install.packages</span>(p); <span class="fu">library</span>(p, <span class="at">character.only=</span><span class="cn">TRUE</span>)}</span></code></pre></div>
+<pre><code>## Loading required package: slider</code></pre>
+<pre><code>## Warning: package &#39;slider&#39; was built under R version 4.3.3</code></pre>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="suavizamiento-temporal.html#cb53-1" tabindex="-1"></a><span class="co"># Utilidad para guardar junto al Rmd</span></span>
+<span id="cb53-2"><a href="suavizamiento-temporal.html#cb53-2" tabindex="-1"></a>safe_dir <span class="ot">&lt;-</span> <span class="cf">function</span>(){</span>
+<span id="cb53-3"><a href="suavizamiento-temporal.html#cb53-3" tabindex="-1"></a>  f <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(knitr<span class="sc">::</span><span class="fu">current_input</span>(), <span class="at">error=</span><span class="cf">function</span>(e) <span class="cn">NULL</span>)</span>
+<span id="cb53-4"><a href="suavizamiento-temporal.html#cb53-4" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(f) <span class="sc">&amp;&amp;</span> <span class="fu">nzchar</span>(f)) <span class="fu">dirname</span>(<span class="fu">normalizePath</span>(f)) <span class="cf">else</span> <span class="fu">getwd</span>()</span>
+<span id="cb53-5"><a href="suavizamiento-temporal.html#cb53-5" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="promedios-móviles-7-y-30-base-r-png-include" class="section level2 hasAnchor" number="6.2">
+<h2><span class="header-section-number">6.2</span> <strong>2.2 Promedios móviles (7 y 30) — Base R + PNG + include</strong><a href="suavizamiento-temporal.html#promedios-móviles-7-y-30-base-r-png-include" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="suavizamiento-temporal.html#cb54-1" tabindex="-1"></a><span class="co"># Librerías necesarias</span></span>
+<span id="cb54-2"><a href="suavizamiento-temporal.html#cb54-2" tabindex="-1"></a></span>
+<span id="cb54-3"><a href="suavizamiento-temporal.html#cb54-3" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb54-4"><a href="suavizamiento-temporal.html#cb54-4" tabindex="-1"></a><span class="fu">library</span>(slider)</span>
+<span id="cb54-5"><a href="suavizamiento-temporal.html#cb54-5" tabindex="-1"></a></span>
+<span id="cb54-6"><a href="suavizamiento-temporal.html#cb54-6" tabindex="-1"></a><span class="co"># Calcular promedios móviles</span></span>
+<span id="cb54-7"><a href="suavizamiento-temporal.html#cb54-7" tabindex="-1"></a></span>
+<span id="cb54-8"><a href="suavizamiento-temporal.html#cb54-8" tabindex="-1"></a>pot_ma <span class="ot">&lt;-</span> potatored</span>
+<span id="cb54-9"><a href="suavizamiento-temporal.html#cb54-9" tabindex="-1"></a>pot_ma<span class="sc">$</span>ma7  <span class="ot">&lt;-</span> <span class="fu">slide_dbl</span>(pot_ma<span class="sc">$</span>Average, mean, <span class="at">.before =</span> <span class="dv">6</span>,  <span class="at">.complete =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb54-10"><a href="suavizamiento-temporal.html#cb54-10" tabindex="-1"></a>pot_ma<span class="sc">$</span>ma30 <span class="ot">&lt;-</span> <span class="fu">slide_dbl</span>(pot_ma<span class="sc">$</span>Average, mean, <span class="at">.before =</span> <span class="dv">29</span>, <span class="at">.complete =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb54-11"><a href="suavizamiento-temporal.html#cb54-11" tabindex="-1"></a></span>
+<span id="cb54-12"><a href="suavizamiento-temporal.html#cb54-12" tabindex="-1"></a><span class="co"># Gráfico con ggplot2</span></span>
+<span id="cb54-13"><a href="suavizamiento-temporal.html#cb54-13" tabindex="-1"></a></span>
+<span id="cb54-14"><a href="suavizamiento-temporal.html#cb54-14" tabindex="-1"></a><span class="fu">ggplot</span>(pot_ma, <span class="fu">aes</span>(<span class="at">x =</span> Date)) <span class="sc">+</span></span>
+<span id="cb54-15"><a href="suavizamiento-temporal.html#cb54-15" tabindex="-1"></a><span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> Average, <span class="at">color =</span> <span class="st">&quot;Serie original&quot;</span>), <span class="at">linewidth =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb54-16"><a href="suavizamiento-temporal.html#cb54-16" tabindex="-1"></a><span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> ma7,  <span class="at">color =</span> <span class="st">&quot;Media móvil 7 días&quot;</span>), <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb54-17"><a href="suavizamiento-temporal.html#cb54-17" tabindex="-1"></a><span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> ma30, <span class="at">color =</span> <span class="st">&quot;Media móvil 30 días&quot;</span>), <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb54-18"><a href="suavizamiento-temporal.html#cb54-18" tabindex="-1"></a><span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;Serie original&quot;</span><span class="ot">=</span><span class="st">&quot;#1F77B4&quot;</span>,</span>
+<span id="cb54-19"><a href="suavizamiento-temporal.html#cb54-19" tabindex="-1"></a><span class="st">&quot;Media móvil 7 días&quot;</span><span class="ot">=</span><span class="st">&quot;#FF7F0E&quot;</span>,</span>
+<span id="cb54-20"><a href="suavizamiento-temporal.html#cb54-20" tabindex="-1"></a><span class="st">&quot;Media móvil 30 días&quot;</span><span class="ot">=</span><span class="st">&quot;#2CA02C&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb54-21"><a href="suavizamiento-temporal.html#cb54-21" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Serie y promedios móviles (7 y 30 días)&quot;</span>,</span>
+<span id="cb54-22"><a href="suavizamiento-temporal.html#cb54-22" tabindex="-1"></a><span class="at">x =</span> <span class="st">&quot;Fecha&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Precio promedio&quot;</span>, <span class="at">color =</span> <span class="st">&quot;&quot;</span>) <span class="sc">+</span></span>
+<span id="cb54-23"><a href="suavizamiento-temporal.html#cb54-23" tabindex="-1"></a><span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>) <span class="sc">+</span></span>
+<span id="cb54-24"><a href="suavizamiento-temporal.html#cb54-24" tabindex="-1"></a><span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
+<pre><code>## Warning: Removed 118 rows containing missing values or values outside the scale range
+## (`geom_line()`).</code></pre>
+<pre><code>## Warning: Removed 407 rows containing missing values or values outside the scale range
+## (`geom_line()`).</code></pre>
+<p><img src="04-application_files/figure-html/unnamed-chunk-14-1.png" width="1050" /></p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="suavizamiento-temporal.html#cb57-1" tabindex="-1"></a><span class="co"># Librerías necesarias</span></span>
+<span id="cb57-2"><a href="suavizamiento-temporal.html#cb57-2" tabindex="-1"></a></span>
+<span id="cb57-3"><a href="suavizamiento-temporal.html#cb57-3" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb57-4"><a href="suavizamiento-temporal.html#cb57-4" tabindex="-1"></a><span class="fu">library</span>(slider)</span>
+<span id="cb57-5"><a href="suavizamiento-temporal.html#cb57-5" tabindex="-1"></a></span>
+<span id="cb57-6"><a href="suavizamiento-temporal.html#cb57-6" tabindex="-1"></a><span class="co"># Calcular promedios móviles</span></span>
+<span id="cb57-7"><a href="suavizamiento-temporal.html#cb57-7" tabindex="-1"></a></span>
+<span id="cb57-8"><a href="suavizamiento-temporal.html#cb57-8" tabindex="-1"></a>pot_ma <span class="ot">&lt;-</span> potatored</span>
+<span id="cb57-9"><a href="suavizamiento-temporal.html#cb57-9" tabindex="-1"></a>pot_ma<span class="sc">$</span>ma7  <span class="ot">&lt;-</span> <span class="fu">slide_dbl</span>(pot_ma<span class="sc">$</span>Average, mean, <span class="at">.before =</span> <span class="dv">6</span>,  <span class="at">.complete =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb57-10"><a href="suavizamiento-temporal.html#cb57-10" tabindex="-1"></a>pot_ma<span class="sc">$</span>ma30 <span class="ot">&lt;-</span> <span class="fu">slide_dbl</span>(pot_ma<span class="sc">$</span>Average, mean, <span class="at">.before =</span> <span class="dv">29</span>, <span class="at">.complete =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb57-11"><a href="suavizamiento-temporal.html#cb57-11" tabindex="-1"></a></span>
+<span id="cb57-12"><a href="suavizamiento-temporal.html#cb57-12" tabindex="-1"></a><span class="co"># Gráfico con ggplot2</span></span>
+<span id="cb57-13"><a href="suavizamiento-temporal.html#cb57-13" tabindex="-1"></a></span>
+<span id="cb57-14"><a href="suavizamiento-temporal.html#cb57-14" tabindex="-1"></a><span class="fu">ggplot</span>(pot_ma, <span class="fu">aes</span>(<span class="at">x =</span> Date)) <span class="sc">+</span></span>
+<span id="cb57-15"><a href="suavizamiento-temporal.html#cb57-15" tabindex="-1"></a><span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> Average, <span class="at">color =</span> <span class="st">&quot;Serie original&quot;</span>), <span class="at">linewidth =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb57-16"><a href="suavizamiento-temporal.html#cb57-16" tabindex="-1"></a><span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> ma7,  <span class="at">color =</span> <span class="st">&quot;Media móvil 7 días&quot;</span>), <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb57-17"><a href="suavizamiento-temporal.html#cb57-17" tabindex="-1"></a><span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> ma30, <span class="at">color =</span> <span class="st">&quot;Media móvil 30 días&quot;</span>), <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb57-18"><a href="suavizamiento-temporal.html#cb57-18" tabindex="-1"></a><span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;Serie original&quot;</span><span class="ot">=</span><span class="st">&quot;#1F77B4&quot;</span>,</span>
+<span id="cb57-19"><a href="suavizamiento-temporal.html#cb57-19" tabindex="-1"></a><span class="st">&quot;Media móvil 7 días&quot;</span><span class="ot">=</span><span class="st">&quot;#FF7F0E&quot;</span>,</span>
+<span id="cb57-20"><a href="suavizamiento-temporal.html#cb57-20" tabindex="-1"></a><span class="st">&quot;Media móvil 30 días&quot;</span><span class="ot">=</span><span class="st">&quot;#2CA02C&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb57-21"><a href="suavizamiento-temporal.html#cb57-21" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Serie y promedios móviles (7 y 30 días)&quot;</span>,</span>
+<span id="cb57-22"><a href="suavizamiento-temporal.html#cb57-22" tabindex="-1"></a><span class="at">x =</span> <span class="st">&quot;Fecha&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Precio promedio&quot;</span>, <span class="at">color =</span> <span class="st">&quot;&quot;</span>) <span class="sc">+</span></span>
+<span id="cb57-23"><a href="suavizamiento-temporal.html#cb57-23" tabindex="-1"></a><span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>) <span class="sc">+</span></span>
+<span id="cb57-24"><a href="suavizamiento-temporal.html#cb57-24" tabindex="-1"></a><span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
+<pre><code>## Warning: Removed 118 rows containing missing values or values outside the scale range
+## (`geom_line()`).
+## Removed 407 rows containing missing values or values outside the scale range
+## (`geom_line()`).</code></pre>
+<p><img src="04-application_files/figure-html/unnamed-chunk-14-2.png" width="1050" /></p>
+</div>
+<div id="serie-básica-ts-base-r-png-include" class="section level2 hasAnchor" number="6.3">
+<h2><span class="header-section-number">6.3</span> <strong>2.3 Serie básica (ts) — Base R + PNG + include</strong><a href="suavizamiento-temporal.html#serie-básica-ts-base-r-png-include" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="suavizamiento-temporal.html#cb59-1" tabindex="-1"></a><span class="co"># Gráfico base de la serie</span></span>
+<span id="cb59-2"><a href="suavizamiento-temporal.html#cb59-2" tabindex="-1"></a></span>
+<span id="cb59-3"><a href="suavizamiento-temporal.html#cb59-3" tabindex="-1"></a><span class="fu">ggplot</span>(potatored, <span class="fu">aes</span>(<span class="at">x =</span> Date, <span class="at">y =</span> Average)) <span class="sc">+</span></span>
+<span id="cb59-4"><a href="suavizamiento-temporal.html#cb59-4" tabindex="-1"></a><span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">&quot;#1F77B4&quot;</span>, <span class="at">linewidth =</span> <span class="fl">0.9</span>) <span class="sc">+</span></span>
+<span id="cb59-5"><a href="suavizamiento-temporal.html#cb59-5" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Serie de tiempo: precio promedio&quot;</span>,</span>
+<span id="cb59-6"><a href="suavizamiento-temporal.html#cb59-6" tabindex="-1"></a><span class="at">x =</span> <span class="st">&quot;Fecha&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Precio promedio&quot;</span>) <span class="sc">+</span></span>
+<span id="cb59-7"><a href="suavizamiento-temporal.html#cb59-7" tabindex="-1"></a><span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>)</span></code></pre></div>
+<p><img src="04-application_files/figure-html/unnamed-chunk-15-1.png" width="1050" /></p>
+</div>
+<div id="rezagos-lags-y-dependencia-temporal-2" class="section level2 hasAnchor" number="6.4">
+<h2><span class="header-section-number">6.4</span> <strong>2.4 Rezagos (lags) y dependencia temporal</strong><a href="suavizamiento-temporal.html#rezagos-lags-y-dependencia-temporal-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="suavizamiento-temporal.html#cb60-1" tabindex="-1"></a>pot_lags <span class="ot">&lt;-</span> potatored <span class="sc">%&gt;%</span></span>
+<span id="cb60-2"><a href="suavizamiento-temporal.html#cb60-2" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb60-3"><a href="suavizamiento-temporal.html#cb60-3" tabindex="-1"></a>    <span class="at">lag1  =</span> dplyr<span class="sc">::</span><span class="fu">lag</span>(Average, <span class="dv">1</span>),</span>
+<span id="cb60-4"><a href="suavizamiento-temporal.html#cb60-4" tabindex="-1"></a>    <span class="at">lag7  =</span> dplyr<span class="sc">::</span><span class="fu">lag</span>(Average, <span class="dv">7</span>),</span>
+<span id="cb60-5"><a href="suavizamiento-temporal.html#cb60-5" tabindex="-1"></a>    <span class="at">lag30 =</span> dplyr<span class="sc">::</span><span class="fu">lag</span>(Average, <span class="dv">30</span>)</span>
+<span id="cb60-6"><a href="suavizamiento-temporal.html#cb60-6" tabindex="-1"></a>  )</span>
+<span id="cb60-7"><a href="suavizamiento-temporal.html#cb60-7" tabindex="-1"></a></span>
+<span id="cb60-8"><a href="suavizamiento-temporal.html#cb60-8" tabindex="-1"></a><span class="co"># Scatter y_t vs y_{t-1}</span></span>
+<span id="cb60-9"><a href="suavizamiento-temporal.html#cb60-9" tabindex="-1"></a><span class="fu">ggplot</span>(pot_lags, <span class="fu">aes</span>(lag1, Average)) <span class="sc">+</span></span>
+<span id="cb60-10"><a href="suavizamiento-temporal.html#cb60-10" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb60-11"><a href="suavizamiento-temporal.html#cb60-11" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">linewidth =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb60-12"><a href="suavizamiento-temporal.html#cb60-12" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb60-13"><a href="suavizamiento-temporal.html#cb60-13" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Scatter rezago 1 (y_t vs y_{t-1})&quot;</span>, <span class="at">x =</span> <span class="st">&quot;y_{t-1}&quot;</span>, <span class="at">y =</span> <span class="st">&quot;y_t&quot;</span>)</span></code></pre></div>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<pre><code>## Warning: Removed 251 rows containing non-finite outside the scale range
+## (`stat_smooth()`).</code></pre>
+<pre><code>## Warning: Removed 251 rows containing missing values or values outside the scale range
+## (`geom_point()`).</code></pre>
+<p><img src="04-application_files/figure-html/unnamed-chunk-16-1.png" width="1050" /></p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="suavizamiento-temporal.html#cb64-1" tabindex="-1"></a><span class="co"># Scatter y_t vs y_{t-7}</span></span>
+<span id="cb64-2"><a href="suavizamiento-temporal.html#cb64-2" tabindex="-1"></a><span class="fu">ggplot</span>(pot_lags, <span class="fu">aes</span>(lag7, Average)) <span class="sc">+</span></span>
+<span id="cb64-3"><a href="suavizamiento-temporal.html#cb64-3" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb64-4"><a href="suavizamiento-temporal.html#cb64-4" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">linewidth =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb64-5"><a href="suavizamiento-temporal.html#cb64-5" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb64-6"><a href="suavizamiento-temporal.html#cb64-6" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Scatter rezago 7 (aprox. semanal)&quot;</span>, <span class="at">x =</span> <span class="st">&quot;y_{t-7}&quot;</span>, <span class="at">y =</span> <span class="st">&quot;y_t&quot;</span>)</span></code></pre></div>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<pre><code>## Warning: Removed 234 rows containing non-finite outside the scale range
+## (`stat_smooth()`).</code></pre>
+<pre><code>## Warning: Removed 234 rows containing missing values or values outside the scale range
+## (`geom_point()`).</code></pre>
+<p><img src="04-application_files/figure-html/unnamed-chunk-16-2.png" width="1050" /></p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="suavizamiento-temporal.html#cb68-1" tabindex="-1"></a><span class="co"># ACF/PACF (serie regularizada)</span></span>
+<span id="cb68-2"><a href="suavizamiento-temporal.html#cb68-2" tabindex="-1"></a><span class="fu">ggAcf</span>(pot_ts)  <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ACF precio promedio (diario)&quot;</span>)</span></code></pre></div>
+<p><img src="04-application_files/figure-html/unnamed-chunk-16-3.png" width="1050" /></p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="suavizamiento-temporal.html#cb69-1" tabindex="-1"></a><span class="fu">ggPacf</span>(pot_ts) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;PACF precio promedio (diario)&quot;</span>)</span></code></pre></div>
+<p><img src="04-application_files/figure-html/unnamed-chunk-16-4.png" width="1050" /></p>
+</div>
+<div id="estacionalidad-descomposicion-stl-2" class="section level2 hasAnchor" number="6.5">
+<h2><span class="header-section-number">6.5</span> <strong>2.5 Estacionalidad (descomposicion STL)</strong><a href="suavizamiento-temporal.html#estacionalidad-descomposicion-stl-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="suavizamiento-temporal.html#cb70-1" tabindex="-1"></a>fit_stl <span class="ot">&lt;-</span> <span class="fu">stl</span>(<span class="fu">na.interp</span>(pot_ts), <span class="at">s.window =</span> <span class="st">&quot;periodic&quot;</span>, <span class="at">robust =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb70-2"><a href="suavizamiento-temporal.html#cb70-2" tabindex="-1"></a><span class="fu">autoplot</span>(fit_stl) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;STL precio promedio&quot;</span>)</span></code></pre></div>
+<pre><code>## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` instead.
+## ℹ The deprecated feature was likely used in the forecast package.
+##   Please report the issue at &lt;https://github.com/robjhyndman/forecast/issues&gt;.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
+<p><img src="04-application_files/figure-html/unnamed-chunk-17-1.png" width="1050" />
+El análisis de la serie temporal del precio promedio diario de Potato Red permitió evidenciar comportamientos consistentes con los fenómenos propios de los productos agrícolas de consumo masivo.
+En primer lugar, los gráficos de tendencia y promedios móviles muestran que los precios presentan fluctuaciones periódicas pero con una ligera tendencia creciente en el largo plazo. El promedio móvil de 7 días suaviza las variaciones diarias y deja entrever ciclos semanales asociados a la oferta en el mercado, mientras que el promedio de 30 días resalta un patrón más estructural que apunta a incrementos graduales, posiblemente relacionados con factores estacionales como la disponibilidad de cosecha o la variación de costos logísticos.</p>
+<p>El estudio de rezagos (lag 1, lag 7 y lag 30) refuerza esta observación: las gráficas de dispersión muestran una clara autocorrelación positiva, especialmente para rezagos cortos, indicando que los precios actuales dependen directamente de los valores recientes. Este comportamiento sugiere persistencia temporal: cuando los precios aumentan o disminuyen, tienden a mantener esa dirección durante varios días, lo cual es característico de mercados donde la información y las condiciones de oferta no cambian abruptamente.</p>
+<p>La función de autocorrelación (ACF) confirma esta dependencia temporal, con correlaciones significativas en los primeros rezagos que luego disminuyen de forma progresiva. Esto demuestra que la serie no sigue un comportamiento completamente aleatorio, sino que existen patrones repetitivos en el tiempo.</p>
+<p>La descomposición STL separó la serie en sus componentes de tendencia, estacionalidad y residuo. Los resultados muestran una estacionalidad marcada con ciclos anuales definidos: los precios tienden a elevarse en ciertas épocas del año y disminuir en otras, reflejando los periodos de cosecha y escasez. La tendencia general es estable con una leve inclinación al alza, mientras que los residuos mantienen una magnitud baja y no presentan patrones visibles, lo que indica que gran parte de la variabilidad del precio está explicada por la tendencia y la estacionalidad, sin presencia de choques exógenos significativos.</p>
+<p>En conjunto, estos hallazgos evidencian que la serie del precio promedio de Potato Red posee un comportamiento no estacionario, con una tendencia creciente y estacionalidad recurrente, pero sin irregularidades fuertes.
+El patrón identificado sugiere que los precios pueden modelarse de forma confiable mediante técnicas de suavizado exponencial o modelos ARIMA estacionales, una vez que se realicen las transformaciones necesarias para estabilizar la media y la varianza. En términos prácticos, los resultados reflejan que el mercado analizado responde a ciclos previsibles, lo cual facilita la planificación de precios, abastecimiento y estrategias de comercialización.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="exploración-inicial-de-datos.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="estacionariedad-y-diferenciación-2.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/04-application.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

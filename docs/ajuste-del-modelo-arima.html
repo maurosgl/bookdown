@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Capítulo 9 3. AJUSTE DEL MODELO ARIMA | Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal</title>
+  <meta name="description" content="Análisis y predicción de precios de frutas y verduras en Nepal usando técnicas de series de tiempo y machine learning." />
+  <meta name="generator" content="bookdown 0.45 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Capítulo 9 3. AJUSTE DEL MODELO ARIMA | Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Análisis y predicción de precios de frutas y verduras en Nepal usando técnicas de series de tiempo y machine learning." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Capítulo 9 3. AJUSTE DEL MODELO ARIMA | Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal" />
+  
+  <meta name="twitter:description" content="Análisis y predicción de precios de frutas y verduras en Nepal usando técnicas de series de tiempo y machine learning." />
+  
+
+<meta name="author" content="Grupo 2" />
+
+
+<meta name="date" content="2025-11-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="interpretacion-2.html"/>
+<link rel="next" href="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introducción</a></li>
+<li class="chapter" data-level="2" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html"><i class="fa fa-check"></i><b>2</b> EDA y Análisis de Series de tiempo</a>
+<ul>
+<li class="chapter" data-level="2.0.1" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#cargue-de-datos"><i class="fa fa-check"></i><b>2.0.1</b> <strong>Cargue de Datos</strong></a></li>
+<li class="chapter" data-level="2.0.2" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#primera-visualización-de-los-datos"><i class="fa fa-check"></i><b>2.0.2</b> <strong>Primera Visualización de los datos</strong></a></li>
+<li class="chapter" data-level="2.0.3" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#datos-faltantes-y-duplicados"><i class="fa fa-check"></i><b>2.0.3</b> <strong>Datos faltantes y duplicados</strong></a></li>
+<li class="chapter" data-level="2.0.4" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#análisis-univariado"><i class="fa fa-check"></i><b>2.0.4</b> <strong>Análisis Univariado</strong></a></li>
+<li class="chapter" data-level="2.0.5" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#análisis-bivariado"><i class="fa fa-check"></i><b>2.0.5</b> <strong>Análisis Bivariado</strong></a></li>
+<li class="chapter" data-level="2.0.6" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#correlación-de-los-datos"><i class="fa fa-check"></i><b>2.0.6</b> <strong>Correlación de los datos</strong></a></li>
+<li class="chapter" data-level="2.1" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#analisis-de-series-de-tiempo"><i class="fa fa-check"></i><b>2.1</b> <strong>Analisis de series de tiempo</strong></a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#serie-basica-y-acf"><i class="fa fa-check"></i><b>2.1.1</b> <strong>Serie basica y ACF</strong></a></li>
+<li class="chapter" data-level="2.1.2" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#promedios-moviles-evidencia-de-suavizado"><i class="fa fa-check"></i><b>2.1.2</b> <strong>Promedios moviles (evidencia de suavizado)</strong></a></li>
+<li class="chapter" data-level="2.1.3" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#rezagos-lags-y-dependencia-temporal"><i class="fa fa-check"></i><b>2.1.3</b> <strong>Rezagos (lags) y dependencia temporal</strong></a></li>
+<li class="chapter" data-level="2.1.4" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#estacionalidad-descomposicion-stl"><i class="fa fa-check"></i><b>2.1.4</b> <strong>Estacionalidad (descomposicion STL)</strong></a></li>
+<li class="chapter" data-level="2.1.5" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#estacionariedad-y-diferenciación"><i class="fa fa-check"></i><b>2.1.5</b> <strong>Estacionariedad y diferenciación</strong></a></li>
+<li class="chapter" data-level="2.1.6" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#verificación-de-estacionariedad-adf-test"><i class="fa fa-check"></i><b>2.1.6</b> <strong>Verificación de estacionariedad (ADF Test)</strong></a></li>
+<li class="chapter" data-level="2.1.7" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#interpretacion"><i class="fa fa-check"></i><b>2.1.7</b> <strong>Interpretacion</strong></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html"><i class="fa fa-check"></i><b>3</b> <strong>Pronóstico de Demanda HoltWinters</strong></a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#analisis-de-series-de-tiempo-1"><i class="fa fa-check"></i><b>3.1</b> <strong>Analisis de series de tiempo</strong></a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#selección-del-item-objetivo"><i class="fa fa-check"></i><b>3.1.1</b> <strong>Selección del item objetivo</strong></a></li>
+<li class="chapter" data-level="3.1.2" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#serie-basica-y-acf-1"><i class="fa fa-check"></i><b>3.1.2</b> <strong>Serie basica y ACF</strong></a></li>
+<li class="chapter" data-level="3.1.3" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#promedios-moviles-evidencia-de-suavizado-1"><i class="fa fa-check"></i><b>3.1.3</b> <strong>Promedios moviles (evidencia de suavizado)</strong></a></li>
+<li class="chapter" data-level="3.1.4" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#rezagos-lags-y-dependencia-temporal-1"><i class="fa fa-check"></i><b>3.1.4</b> <strong>Rezagos (lags) y dependencia temporal</strong></a></li>
+<li class="chapter" data-level="3.1.5" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#estacionalidad-descomposicion-stl-1"><i class="fa fa-check"></i><b>3.1.5</b> <strong>Estacionalidad (descomposicion STL)</strong></a></li>
+<li class="chapter" data-level="3.1.6" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#análisis-conglomerado"><i class="fa fa-check"></i><b>3.1.6</b> <strong>Análisis Conglomerado</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#estacionariedad-y-diferenciación-1"><i class="fa fa-check"></i><b>3.2</b> <strong>Estacionariedad y diferenciación</strong></a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#verificación-de-estacionariedad-adf-test-1"><i class="fa fa-check"></i><b>3.2.1</b> <strong>Verificación de estacionariedad (ADF Test)</strong></a></li>
+<li class="chapter" data-level="3.2.2" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#interpretacion-1"><i class="fa fa-check"></i><b>3.2.2</b> <strong>Interpretacion</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#suavizamiento-y-holt-winters-sobre-la-variable-tiempo"><i class="fa fa-check"></i><b>3.3</b> <strong>Suavizamiento y Holt-Winters sobre la variable tiempo</strong></a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#particion-de-entrenamiento-prueba"><i class="fa fa-check"></i><b>3.3.1</b> <strong>Particion de entrenamiento /prueba</strong></a></li>
+<li class="chapter" data-level="3.3.2" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#agregación-semanal"><i class="fa fa-check"></i><b>3.3.2</b> <strong>Agregación semanal</strong></a></li>
+<li class="chapter" data-level="3.3.3" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#modelos-de-suavizamiento-y-holt-winters-en-serie-semanal"><i class="fa fa-check"></i><b>3.3.3</b> <strong>Modelos de suavizamiento y Holt-Winters en serie semanal</strong></a></li>
+<li class="chapter" data-level="3.3.4" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#comparación-de-precisión-fuera-de-muestra"><i class="fa fa-check"></i><b>3.3.4</b> <strong>Comparación de precisión fuera de muestra</strong></a></li>
+<li class="chapter" data-level="3.3.5" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#diagnostico-de-residuos"><i class="fa fa-check"></i><b>3.3.5</b> <strong>Diagnostico de residuos</strong></a></li>
+<li class="chapter" data-level="3.3.6" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#pronostico-final"><i class="fa fa-check"></i><b>3.3.6</b> <strong>Pronostico final</strong></a></li>
+<li class="chapter" data-level="3.3.7" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#conclusiones"><i class="fa fa-check"></i><b>3.3.7</b> Conclusiones</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#desarrollo-metodológico-y-justificación-de-decisiones"><i class="fa fa-check"></i><b>3.4</b> <strong>Desarrollo metodológico y justificación de decisiones</strong></a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#ajuste-de-la-frecuencia-temporal"><i class="fa fa-check"></i><b>3.4.1</b> Ajuste de la frecuencia temporal</a></li>
+<li class="chapter" data-level="3.4.2" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#modelos-aplicados"><i class="fa fa-check"></i><b>3.4.2</b> Modelos aplicados</a></li>
+<li class="chapter" data-level="3.4.3" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#validación-del-modelo"><i class="fa fa-check"></i><b>3.4.3</b> Validación del modelo</a></li>
+<li class="chapter" data-level="3.4.4" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#diagnóstico-de-residuos"><i class="fa fa-check"></i><b>3.4.4</b> Diagnóstico de residuos</a></li>
+<li class="chapter" data-level="3.4.5" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#pronóstico-final"><i class="fa fa-check"></i><b>3.4.5</b> Pronóstico final</a></li>
+<li class="chapter" data-level="3.4.6" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#conclusión-integradora"><i class="fa fa-check"></i><b>3.4.6</b> Conclusión integradora</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html"><i class="fa fa-check"></i><b>4</b> <strong>Modelos Estacionales en Series de Tiempo</strong></a></li>
+<li class="chapter" data-level="5" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html"><i class="fa fa-check"></i><b>5</b> <strong>1. Exploración inicial de datos</strong></a>
+<ul>
+<li class="chapter" data-level="5.0.1" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#lectura-de-datos"><i class="fa fa-check"></i><b>5.0.1</b> <strong>Lectura de datos</strong></a></li>
+<li class="chapter" data-level="5.0.2" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#transformación-inicial-de-datos"><i class="fa fa-check"></i><b>5.0.2</b> <strong>Transformación inicial de datos</strong></a></li>
+<li class="chapter" data-level="5.0.3" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#datos-nulos-y-duplicados"><i class="fa fa-check"></i><b>5.0.3</b> <strong>Datos nulos y duplicados</strong></a></li>
+<li class="chapter" data-level="5.0.4" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#análisis-univariado-1"><i class="fa fa-check"></i><b>5.0.4</b> <strong>Análisis Univariado</strong></a></li>
+<li class="chapter" data-level="5.0.5" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#análisis-bivariado-1"><i class="fa fa-check"></i><b>5.0.5</b> <strong>Análisis Bivariado</strong></a></li>
+<li class="chapter" data-level="5.1" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#analisis-de-series-de-tiempo-2"><i class="fa fa-check"></i><b>5.1</b> <strong>1.1 Analisis de series de tiempo</strong></a></li>
+<li class="chapter" data-level="5.2" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#serie-basica-y-acf-2"><i class="fa fa-check"></i><b>5.2</b> <strong>1.2 Serie basica y ACF</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="suavizamiento-temporal.html"><a href="suavizamiento-temporal.html"><i class="fa fa-check"></i><b>6</b> <strong>2. Suavizamiento temporal</strong></a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="suavizamiento-temporal.html"><a href="suavizamiento-temporal.html#promedios-moviles-evidencia-de-suavizado-2"><i class="fa fa-check"></i><b>6.1</b> <strong>2.1 Promedios moviles (evidencia de suavizado)</strong></a></li>
+<li class="chapter" data-level="6.2" data-path="suavizamiento-temporal.html"><a href="suavizamiento-temporal.html#promedios-móviles-7-y-30-base-r-png-include"><i class="fa fa-check"></i><b>6.2</b> <strong>2.2 Promedios móviles (7 y 30) — Base R + PNG + include</strong></a></li>
+<li class="chapter" data-level="6.3" data-path="suavizamiento-temporal.html"><a href="suavizamiento-temporal.html#serie-básica-ts-base-r-png-include"><i class="fa fa-check"></i><b>6.3</b> <strong>2.3 Serie básica (ts) — Base R + PNG + include</strong></a></li>
+<li class="chapter" data-level="6.4" data-path="suavizamiento-temporal.html"><a href="suavizamiento-temporal.html#rezagos-lags-y-dependencia-temporal-2"><i class="fa fa-check"></i><b>6.4</b> <strong>2.4 Rezagos (lags) y dependencia temporal</strong></a></li>
+<li class="chapter" data-level="6.5" data-path="suavizamiento-temporal.html"><a href="suavizamiento-temporal.html#estacionalidad-descomposicion-stl-2"><i class="fa fa-check"></i><b>6.5</b> <strong>2.5 Estacionalidad (descomposicion STL)</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="estacionariedad-y-diferenciación-2.html"><a href="estacionariedad-y-diferenciación-2.html"><i class="fa fa-check"></i><b>7</b> <strong>Estacionariedad y diferenciación</strong></a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="estacionariedad-y-diferenciación-2.html"><a href="estacionariedad-y-diferenciación-2.html#verificación-de-estacionariedad-adf-test-2"><i class="fa fa-check"></i><b>7.1</b> <strong>Verificación de estacionariedad (ADF Test)</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="interpretacion-2.html"><a href="interpretacion-2.html"><i class="fa fa-check"></i><b>8</b> <strong>Interpretacion</strong></a></li>
+<li class="chapter" data-level="9" data-path="ajuste-del-modelo-arima.html"><a href="ajuste-del-modelo-arima.html"><i class="fa fa-check"></i><b>9</b> <strong>3. AJUSTE DEL MODELO ARIMA</strong></a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="ajuste-del-modelo-arima.html"><a href="ajuste-del-modelo-arima.html#criterios-de-selección"><i class="fa fa-check"></i><b>9.1</b> <strong>3.1 Criterios de selección</strong></a></li>
+<li class="chapter" data-level="9.2" data-path="ajuste-del-modelo-arima.html"><a href="ajuste-del-modelo-arima.html#suavizamiento-y-holt-winters-sobre-la-variable-tiempo-1"><i class="fa fa-check"></i><b>9.2</b> <strong>3.2 Suavizamiento y Holt-Winters sobre la variable tiempo</strong></a></li>
+<li class="chapter" data-level="9.3" data-path="ajuste-del-modelo-arima.html"><a href="ajuste-del-modelo-arima.html#particion-de-entrenamiento-prueba-1"><i class="fa fa-check"></i><b>9.3</b> <strong>Particion de entrenamiento /prueba</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html"><a href="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html"><i class="fa fa-check"></i><b>10</b> <strong>Modelos de suavizamiento y Holt-Winters en serie semanal</strong></a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html"><a href="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html#comparación-de-presición-fuera-de-muestra"><i class="fa fa-check"></i><b>10.1</b> <strong>Comparación de presición fuera de muestra</strong></a></li>
+<li class="chapter" data-level="10.2" data-path="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html"><a href="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html#diagnostico-de-residuos-1"><i class="fa fa-check"></i><b>10.2</b> <strong>Diagnostico de residuos</strong></a></li>
+<li class="chapter" data-level="10.3" data-path="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html"><a href="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html#pronostico-final-1"><i class="fa fa-check"></i><b>10.3</b> <strong>Pronostico final</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="conclusiones-1.html"><a href="conclusiones-1.html"><i class="fa fa-check"></i><b>11</b> <strong>Conclusiones</strong></a></li>
+<li class="chapter" data-level="12" data-path="desarrollo-metodológico-y-justificación-de-decisiones-1.html"><a href="desarrollo-metodológico-y-justificación-de-decisiones-1.html"><i class="fa fa-check"></i><b>12</b> <strong>Desarrollo metodológico y justificación de decisiones</strong></a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="desarrollo-metodológico-y-justificación-de-decisiones-1.html"><a href="desarrollo-metodológico-y-justificación-de-decisiones-1.html#ajuste-de-la-frecuencia-temporal-1"><i class="fa fa-check"></i><b>12.1</b> <strong>Ajuste de la frecuencia temporal</strong></a></li>
+<li class="chapter" data-level="12.2" data-path="desarrollo-metodológico-y-justificación-de-decisiones-1.html"><a href="desarrollo-metodológico-y-justificación-de-decisiones-1.html#modelos-aplicados-1"><i class="fa fa-check"></i><b>12.2</b> <strong>Modelos aplicados</strong></a></li>
+<li class="chapter" data-level="12.3" data-path="desarrollo-metodológico-y-justificación-de-decisiones-1.html"><a href="desarrollo-metodológico-y-justificación-de-decisiones-1.html#validación-del-modelo-1"><i class="fa fa-check"></i><b>12.3</b> <strong>Validación del modelo</strong></a></li>
+<li class="chapter" data-level="12.4" data-path="desarrollo-metodológico-y-justificación-de-decisiones-1.html"><a href="desarrollo-metodológico-y-justificación-de-decisiones-1.html#diagnóstico-de-residuos-1"><i class="fa fa-check"></i><b>12.4</b> <strong>Diagnóstico de residuos</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="pronóstico-final-1.html"><a href="pronóstico-final-1.html"><i class="fa fa-check"></i><b>13</b> <strong>Pronóstico final</strong></a></li>
+<li class="chapter" data-level="14" data-path="conclusión-integradora-1.html"><a href="conclusión-integradora-1.html"><i class="fa fa-check"></i><b>14</b> <strong>Conclusión integradora</strong></a></li>
+<li class="chapter" data-level="15" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><i class="fa fa-check"></i><b>15</b> <strong>4. Ajuste e interpretación del modelo ARIMA/SARIMA - Box-Jenkins (ARIMA)</strong></a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#pronostico-a-h-pasos-y-metricas-rmsemaemape"><i class="fa fa-check"></i><b>15.1</b> <strong>Pronostico a h pasos y metricas RMSE/MAE/MAPE</strong></a></li>
+<li class="chapter" data-level="15.2" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#diagnostico-de-residuos-2"><i class="fa fa-check"></i><b>15.2</b> <strong>Diagnostico de residuos</strong></a></li>
+<li class="chapter" data-level="15.3" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#pronostico-final-sarima-10001052"><i class="fa fa-check"></i><b>15.3</b> <strong>Pronostico final Sarima (1,0,0)(0,1,0)[52]</strong></a></li>
+<li class="chapter" data-level="15.4" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#interpretación-del-modelo"><i class="fa fa-check"></i><b>15.4</b> <strong>4.1 Interpretación del modelo</strong></a></li>
+<li class="chapter" data-level="15.5" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#reflexión-y-justificación-del-proceso-boxjenkins"><i class="fa fa-check"></i><b>15.5</b> <strong>4.2 Reflexión y justificación del proceso Box–Jenkins</strong></a></li>
+<li class="chapter" data-level="15.6" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#ajustes-metodológicos-y-rendimiento-computacional"><i class="fa fa-check"></i><b>15.6</b> <strong>4.3 Ajustes metodológicos y rendimiento computacional</strong></a></li>
+<li class="chapter" data-level="15.7" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#evaluación-del-modelo"><i class="fa fa-check"></i><b>15.7</b> <strong>4.4 Evaluación del modelo</strong></a></li>
+<li class="chapter" data-level="15.8" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#reflexión-metodológica-final"><i class="fa fa-check"></i><b>15.8</b> <strong>4.5 Reflexión metodológica final</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="evaluación-del-modelo-1.html"><a href="evaluación-del-modelo-1.html"><i class="fa fa-check"></i><b>16</b> <strong>5. EVALUACIÓN DEL MODELO</strong></a></li>
+<li class="chapter" data-level="17" data-path="pronostico-y-conclusiones.html"><a href="pronostico-y-conclusiones.html"><i class="fa fa-check"></i><b>17</b> <strong>6. PRONOSTICO Y CONCLUSIONES</strong></a></li>
+<li class="chapter" data-level="18" data-path="conclusiones-generales-finales.html"><a href="conclusiones-generales-finales.html"><i class="fa fa-check"></i><b>18</b> <strong>7. CONCLUSIONES GENERALES FINALES</strong></a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="ajuste-del-modelo-arima" class="section level1 hasAnchor" number="9">
+<h1><span class="header-section-number">Capítulo 9</span> <strong>3. AJUSTE DEL MODELO ARIMA</strong><a href="ajuste-del-modelo-arima.html#ajuste-del-modelo-arima" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Para seleccionar una especificación parsimoniosa se utilizó auto.arima(), que explora combinaciones de órdenes
+(𝑝,𝑑,𝑞)
+(p,d,q) y, cuando corresponde,
+(𝑃,𝐷,𝑄)
+(P,D,Q) estacionales, minimizando criterios de información como AIC (Akaike Information Criterion) y BIC (Bayesian Information Criterion).
+Previo al ajuste se evaluó la estacionariedad (prueba ADF), aplicando transformación logarítmica para estabilizar varianza y diferenciación de primer orden para remover tendencia cuando fue necesario.</p>
+<div id="criterios-de-selección" class="section level2 hasAnchor" number="9.1">
+<h2><span class="header-section-number">9.1</span> <strong>3.1 Criterios de selección</strong><a href="ajuste-del-modelo-arima.html#criterios-de-selección" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>AIC penaliza menos la complejidad; útil para captar estructura.</p>
+<p>BIC penaliza más; favorece modelos más simples.
+Se eligió el modelo con AIC/BIC mínimos y residuos con comportamiento de ruido blanco.</p>
+</div>
+<div id="suavizamiento-y-holt-winters-sobre-la-variable-tiempo-1" class="section level2 hasAnchor" number="9.2">
+<h2><span class="header-section-number">9.2</span> <strong>3.2 Suavizamiento y Holt-Winters sobre la variable tiempo</strong><a href="ajuste-del-modelo-arima.html#suavizamiento-y-holt-winters-sobre-la-variable-tiempo-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="ajuste-del-modelo-arima.html#cb88-1" tabindex="-1"></a>y_hw <span class="ot">&lt;-</span> <span class="fu">na.interp</span>(pot_ts) </span>
+<span id="cb88-2"><a href="ajuste-del-modelo-arima.html#cb88-2" tabindex="-1"></a>freq <span class="ot">&lt;-</span> <span class="fu">frequency</span>(y_hw)   </span>
+<span id="cb88-3"><a href="ajuste-del-modelo-arima.html#cb88-3" tabindex="-1"></a><span class="fu">length</span>(y_hw); freq</span></code></pre></div>
+<pre><code>## [1] 2889</code></pre>
+<pre><code>## [1] 365</code></pre>
+</div>
+<div id="particion-de-entrenamiento-prueba-1" class="section level2 hasAnchor" number="9.3">
+<h2><span class="header-section-number">9.3</span> <strong>Particion de entrenamiento /prueba</strong><a href="ajuste-del-modelo-arima.html#particion-de-entrenamiento-prueba-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="ajuste-del-modelo-arima.html#cb91-1" tabindex="-1"></a>h_test <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="dv">365</span>, <span class="fu">floor</span>(<span class="fu">length</span>(y_hw)<span class="sc">*</span><span class="fl">0.2</span>))  <span class="co"># 1 año o ~20% si no alcanza</span></span>
+<span id="cb91-2"><a href="ajuste-del-modelo-arima.html#cb91-2" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(y_hw)</span>
+<span id="cb91-3"><a href="ajuste-del-modelo-arima.html#cb91-3" tabindex="-1"></a>y_train <span class="ot">&lt;-</span> <span class="fu">window</span>(y_hw, <span class="at">end =</span> <span class="fu">time</span>(y_hw)[n <span class="sc">-</span> h_test])</span>
+<span id="cb91-4"><a href="ajuste-del-modelo-arima.html#cb91-4" tabindex="-1"></a>y_test  <span class="ot">&lt;-</span> <span class="fu">window</span>(y_hw, <span class="at">start =</span> <span class="fu">time</span>(y_hw)[n <span class="sc">-</span> h_test <span class="sc">+</span> <span class="dv">1</span>])</span>
+<span id="cb91-5"><a href="ajuste-del-modelo-arima.html#cb91-5" tabindex="-1"></a></span>
+<span id="cb91-6"><a href="ajuste-del-modelo-arima.html#cb91-6" tabindex="-1"></a><span class="fu">autoplot</span>(y_hw) <span class="sc">+</span></span>
+<span id="cb91-7"><a href="ajuste-del-modelo-arima.html#cb91-7" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">time</span>(y_hw)[n <span class="sc">-</span> h_test <span class="sc">+</span> <span class="dv">1</span>], <span class="at">linetype =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb91-8"><a href="ajuste-del-modelo-arima.html#cb91-8" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Serie completa con corte train/test&quot;</span>,</span>
+<span id="cb91-9"><a href="ajuste-del-modelo-arima.html#cb91-9" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Precio promedio&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Tiempo&quot;</span>) <span class="sc">+</span></span>
+<span id="cb91-10"><a href="ajuste-del-modelo-arima.html#cb91-10" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<p><img src="04-application_files/figure-html/unnamed-chunk-24-1.png" width="1050" />
+## <strong>Agregación semanal</strong></p>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="ajuste-del-modelo-arima.html#cb92-1" tabindex="-1"></a><span class="fu">library</span>(zoo)</span></code></pre></div>
+<pre><code>## Warning: package &#39;zoo&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## 
+## Attaching package: &#39;zoo&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     as.Date, as.Date.numeric</code></pre>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="ajuste-del-modelo-arima.html#cb96-1" tabindex="-1"></a><span class="co"># y_hw: serie ts diaria (freq=365)</span></span>
+<span id="cb96-2"><a href="ajuste-del-modelo-arima.html#cb96-2" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">frequency</span>(y_hw) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">365</span>, <span class="dv">366</span>))</span>
+<span id="cb96-3"><a href="ajuste-del-modelo-arima.html#cb96-3" tabindex="-1"></a></span>
+<span id="cb96-4"><a href="ajuste-del-modelo-arima.html#cb96-4" tabindex="-1"></a><span class="co">#secuencia de fechas real para la ts diaria</span></span>
+<span id="cb96-5"><a href="ajuste-del-modelo-arima.html#cb96-5" tabindex="-1"></a>tsp_hw <span class="ot">&lt;-</span> <span class="fu">tsp</span>(y_hw)                     <span class="co"># c(start, end, freq)</span></span>
+<span id="cb96-6"><a href="ajuste-del-modelo-arima.html#cb96-6" tabindex="-1"></a>start_year <span class="ot">&lt;-</span> <span class="fu">floor</span>(tsp_hw[<span class="dv">1</span>])</span>
+<span id="cb96-7"><a href="ajuste-del-modelo-arima.html#cb96-7" tabindex="-1"></a>start_frac <span class="ot">&lt;-</span> tsp_hw[<span class="dv">1</span>] <span class="sc">-</span> start_year</span>
+<span id="cb96-8"><a href="ajuste-del-modelo-arima.html#cb96-8" tabindex="-1"></a>start_date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="fu">paste0</span>(start_year, <span class="st">&quot;-01-01&quot;</span>)) <span class="sc">+</span> <span class="fu">round</span>(start_frac <span class="sc">*</span> <span class="fl">365.25</span>)</span>
+<span id="cb96-9"><a href="ajuste-del-modelo-arima.html#cb96-9" tabindex="-1"></a></span>
+<span id="cb96-10"><a href="ajuste-del-modelo-arima.html#cb96-10" tabindex="-1"></a>fechas_all <span class="ot">&lt;-</span> <span class="fu">seq.Date</span>(<span class="at">from =</span> start_date, <span class="at">by =</span> <span class="st">&quot;day&quot;</span>, <span class="at">length.out =</span> <span class="fu">length</span>(y_hw))</span>
+<span id="cb96-11"><a href="ajuste-del-modelo-arima.html#cb96-11" tabindex="-1"></a>z_all <span class="ot">&lt;-</span> <span class="fu">zoo</span>(<span class="fu">as.numeric</span>(y_hw), fechas_all)</span>
+<span id="cb96-12"><a href="ajuste-del-modelo-arima.html#cb96-12" tabindex="-1"></a></span>
+<span id="cb96-13"><a href="ajuste-del-modelo-arima.html#cb96-13" tabindex="-1"></a><span class="co">#Agregar por semana calendario</span></span>
+<span id="cb96-14"><a href="ajuste-del-modelo-arima.html#cb96-14" tabindex="-1"></a>z_week <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(z_all, <span class="fu">as.Date</span>(<span class="fu">cut</span>(<span class="fu">index</span>(z_all), <span class="st">&quot;week&quot;</span>)), mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb96-15"><a href="ajuste-del-modelo-arima.html#cb96-15" tabindex="-1"></a></span>
+<span id="cb96-16"><a href="ajuste-del-modelo-arima.html#cb96-16" tabindex="-1"></a><span class="co">#Convertimos a ts semanal (freq = 52)</span></span>
+<span id="cb96-17"><a href="ajuste-del-modelo-arima.html#cb96-17" tabindex="-1"></a>y_w <span class="ot">&lt;-</span> <span class="fu">ts</span>(<span class="fu">as.numeric</span>(z_week), <span class="at">frequency =</span> <span class="dv">52</span>)</span>
+<span id="cb96-18"><a href="ajuste-del-modelo-arima.html#cb96-18" tabindex="-1"></a></span>
+<span id="cb96-19"><a href="ajuste-del-modelo-arima.html#cb96-19" tabindex="-1"></a><span class="co">#Split train/test semanal</span></span>
+<span id="cb96-20"><a href="ajuste-del-modelo-arima.html#cb96-20" tabindex="-1"></a>h_test_w <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="dv">52</span>, <span class="fu">floor</span>(<span class="fu">length</span>(y_w) <span class="sc">*</span> <span class="fl">0.2</span>))</span>
+<span id="cb96-21"><a href="ajuste-del-modelo-arima.html#cb96-21" tabindex="-1"></a>n_w <span class="ot">&lt;-</span> <span class="fu">length</span>(y_w)</span>
+<span id="cb96-22"><a href="ajuste-del-modelo-arima.html#cb96-22" tabindex="-1"></a>y_train_w <span class="ot">&lt;-</span> <span class="fu">window</span>(y_w, <span class="at">end =</span> <span class="fu">time</span>(y_w)[n_w <span class="sc">-</span> h_test_w])</span>
+<span id="cb96-23"><a href="ajuste-del-modelo-arima.html#cb96-23" tabindex="-1"></a>y_test_w  <span class="ot">&lt;-</span> <span class="fu">window</span>(y_w, <span class="at">start =</span> <span class="fu">time</span>(y_w)[n_w <span class="sc">-</span> h_test_w <span class="sc">+</span> <span class="dv">1</span>])</span>
+<span id="cb96-24"><a href="ajuste-del-modelo-arima.html#cb96-24" tabindex="-1"></a></span>
+<span id="cb96-25"><a href="ajuste-del-modelo-arima.html#cb96-25" tabindex="-1"></a><span class="fu">autoplot</span>(y_w) <span class="sc">+</span></span>
+<span id="cb96-26"><a href="ajuste-del-modelo-arima.html#cb96-26" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">time</span>(y_w)[n_w <span class="sc">-</span> h_test_w <span class="sc">+</span> <span class="dv">1</span>], <span class="at">linetype =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb96-27"><a href="ajuste-del-modelo-arima.html#cb96-27" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Serie semanal con corte train/test&quot;</span>,</span>
+<span id="cb96-28"><a href="ajuste-del-modelo-arima.html#cb96-28" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Precio promedio semanal&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Tiempo&quot;</span>) <span class="sc">+</span></span>
+<span id="cb96-29"><a href="ajuste-del-modelo-arima.html#cb96-29" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<p><img src="04-application_files/figure-html/unnamed-chunk-25-1.png" width="1050" /></p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="interpretacion-2.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/04-application.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Capítulo 5 1. Exploración inicial de datos | Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal</title>
+  <meta name="description" content="Análisis y predicción de precios de frutas y verduras en Nepal usando técnicas de series de tiempo y machine learning." />
+  <meta name="generator" content="bookdown 0.45 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Capítulo 5 1. Exploración inicial de datos | Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Análisis y predicción de precios de frutas y verduras en Nepal usando técnicas de series de tiempo y machine learning." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Capítulo 5 1. Exploración inicial de datos | Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal" />
+  
+  <meta name="twitter:description" content="Análisis y predicción de precios de frutas y verduras en Nepal usando técnicas de series de tiempo y machine learning." />
+  
+
+<meta name="author" content="Grupo 2" />
+
+
+<meta name="date" content="2025-11-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="modelos-estacionales-en-series-de-tiempo.html"/>
+<link rel="next" href="suavizamiento-temporal.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introducción</a></li>
+<li class="chapter" data-level="2" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html"><i class="fa fa-check"></i><b>2</b> EDA y Análisis de Series de tiempo</a>
+<ul>
+<li class="chapter" data-level="2.0.1" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#cargue-de-datos"><i class="fa fa-check"></i><b>2.0.1</b> <strong>Cargue de Datos</strong></a></li>
+<li class="chapter" data-level="2.0.2" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#primera-visualización-de-los-datos"><i class="fa fa-check"></i><b>2.0.2</b> <strong>Primera Visualización de los datos</strong></a></li>
+<li class="chapter" data-level="2.0.3" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#datos-faltantes-y-duplicados"><i class="fa fa-check"></i><b>2.0.3</b> <strong>Datos faltantes y duplicados</strong></a></li>
+<li class="chapter" data-level="2.0.4" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#análisis-univariado"><i class="fa fa-check"></i><b>2.0.4</b> <strong>Análisis Univariado</strong></a></li>
+<li class="chapter" data-level="2.0.5" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#análisis-bivariado"><i class="fa fa-check"></i><b>2.0.5</b> <strong>Análisis Bivariado</strong></a></li>
+<li class="chapter" data-level="2.0.6" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#correlación-de-los-datos"><i class="fa fa-check"></i><b>2.0.6</b> <strong>Correlación de los datos</strong></a></li>
+<li class="chapter" data-level="2.1" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#analisis-de-series-de-tiempo"><i class="fa fa-check"></i><b>2.1</b> <strong>Analisis de series de tiempo</strong></a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#serie-basica-y-acf"><i class="fa fa-check"></i><b>2.1.1</b> <strong>Serie basica y ACF</strong></a></li>
+<li class="chapter" data-level="2.1.2" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#promedios-moviles-evidencia-de-suavizado"><i class="fa fa-check"></i><b>2.1.2</b> <strong>Promedios moviles (evidencia de suavizado)</strong></a></li>
+<li class="chapter" data-level="2.1.3" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#rezagos-lags-y-dependencia-temporal"><i class="fa fa-check"></i><b>2.1.3</b> <strong>Rezagos (lags) y dependencia temporal</strong></a></li>
+<li class="chapter" data-level="2.1.4" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#estacionalidad-descomposicion-stl"><i class="fa fa-check"></i><b>2.1.4</b> <strong>Estacionalidad (descomposicion STL)</strong></a></li>
+<li class="chapter" data-level="2.1.5" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#estacionariedad-y-diferenciación"><i class="fa fa-check"></i><b>2.1.5</b> <strong>Estacionariedad y diferenciación</strong></a></li>
+<li class="chapter" data-level="2.1.6" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#verificación-de-estacionariedad-adf-test"><i class="fa fa-check"></i><b>2.1.6</b> <strong>Verificación de estacionariedad (ADF Test)</strong></a></li>
+<li class="chapter" data-level="2.1.7" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#interpretacion"><i class="fa fa-check"></i><b>2.1.7</b> <strong>Interpretacion</strong></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html"><i class="fa fa-check"></i><b>3</b> <strong>Pronóstico de Demanda HoltWinters</strong></a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#analisis-de-series-de-tiempo-1"><i class="fa fa-check"></i><b>3.1</b> <strong>Analisis de series de tiempo</strong></a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#selección-del-item-objetivo"><i class="fa fa-check"></i><b>3.1.1</b> <strong>Selección del item objetivo</strong></a></li>
+<li class="chapter" data-level="3.1.2" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#serie-basica-y-acf-1"><i class="fa fa-check"></i><b>3.1.2</b> <strong>Serie basica y ACF</strong></a></li>
+<li class="chapter" data-level="3.1.3" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#promedios-moviles-evidencia-de-suavizado-1"><i class="fa fa-check"></i><b>3.1.3</b> <strong>Promedios moviles (evidencia de suavizado)</strong></a></li>
+<li class="chapter" data-level="3.1.4" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#rezagos-lags-y-dependencia-temporal-1"><i class="fa fa-check"></i><b>3.1.4</b> <strong>Rezagos (lags) y dependencia temporal</strong></a></li>
+<li class="chapter" data-level="3.1.5" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#estacionalidad-descomposicion-stl-1"><i class="fa fa-check"></i><b>3.1.5</b> <strong>Estacionalidad (descomposicion STL)</strong></a></li>
+<li class="chapter" data-level="3.1.6" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#análisis-conglomerado"><i class="fa fa-check"></i><b>3.1.6</b> <strong>Análisis Conglomerado</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#estacionariedad-y-diferenciación-1"><i class="fa fa-check"></i><b>3.2</b> <strong>Estacionariedad y diferenciación</strong></a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#verificación-de-estacionariedad-adf-test-1"><i class="fa fa-check"></i><b>3.2.1</b> <strong>Verificación de estacionariedad (ADF Test)</strong></a></li>
+<li class="chapter" data-level="3.2.2" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#interpretacion-1"><i class="fa fa-check"></i><b>3.2.2</b> <strong>Interpretacion</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#suavizamiento-y-holt-winters-sobre-la-variable-tiempo"><i class="fa fa-check"></i><b>3.3</b> <strong>Suavizamiento y Holt-Winters sobre la variable tiempo</strong></a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#particion-de-entrenamiento-prueba"><i class="fa fa-check"></i><b>3.3.1</b> <strong>Particion de entrenamiento /prueba</strong></a></li>
+<li class="chapter" data-level="3.3.2" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#agregación-semanal"><i class="fa fa-check"></i><b>3.3.2</b> <strong>Agregación semanal</strong></a></li>
+<li class="chapter" data-level="3.3.3" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#modelos-de-suavizamiento-y-holt-winters-en-serie-semanal"><i class="fa fa-check"></i><b>3.3.3</b> <strong>Modelos de suavizamiento y Holt-Winters en serie semanal</strong></a></li>
+<li class="chapter" data-level="3.3.4" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#comparación-de-precisión-fuera-de-muestra"><i class="fa fa-check"></i><b>3.3.4</b> <strong>Comparación de precisión fuera de muestra</strong></a></li>
+<li class="chapter" data-level="3.3.5" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#diagnostico-de-residuos"><i class="fa fa-check"></i><b>3.3.5</b> <strong>Diagnostico de residuos</strong></a></li>
+<li class="chapter" data-level="3.3.6" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#pronostico-final"><i class="fa fa-check"></i><b>3.3.6</b> <strong>Pronostico final</strong></a></li>
+<li class="chapter" data-level="3.3.7" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#conclusiones"><i class="fa fa-check"></i><b>3.3.7</b> Conclusiones</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#desarrollo-metodológico-y-justificación-de-decisiones"><i class="fa fa-check"></i><b>3.4</b> <strong>Desarrollo metodológico y justificación de decisiones</strong></a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#ajuste-de-la-frecuencia-temporal"><i class="fa fa-check"></i><b>3.4.1</b> Ajuste de la frecuencia temporal</a></li>
+<li class="chapter" data-level="3.4.2" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#modelos-aplicados"><i class="fa fa-check"></i><b>3.4.2</b> Modelos aplicados</a></li>
+<li class="chapter" data-level="3.4.3" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#validación-del-modelo"><i class="fa fa-check"></i><b>3.4.3</b> Validación del modelo</a></li>
+<li class="chapter" data-level="3.4.4" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#diagnóstico-de-residuos"><i class="fa fa-check"></i><b>3.4.4</b> Diagnóstico de residuos</a></li>
+<li class="chapter" data-level="3.4.5" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#pronóstico-final"><i class="fa fa-check"></i><b>3.4.5</b> Pronóstico final</a></li>
+<li class="chapter" data-level="3.4.6" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#conclusión-integradora"><i class="fa fa-check"></i><b>3.4.6</b> Conclusión integradora</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html"><i class="fa fa-check"></i><b>4</b> <strong>Modelos Estacionales en Series de Tiempo</strong></a></li>
+<li class="chapter" data-level="5" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html"><i class="fa fa-check"></i><b>5</b> <strong>1. Exploración inicial de datos</strong></a>
+<ul>
+<li class="chapter" data-level="5.0.1" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#lectura-de-datos"><i class="fa fa-check"></i><b>5.0.1</b> <strong>Lectura de datos</strong></a></li>
+<li class="chapter" data-level="5.0.2" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#transformación-inicial-de-datos"><i class="fa fa-check"></i><b>5.0.2</b> <strong>Transformación inicial de datos</strong></a></li>
+<li class="chapter" data-level="5.0.3" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#datos-nulos-y-duplicados"><i class="fa fa-check"></i><b>5.0.3</b> <strong>Datos nulos y duplicados</strong></a></li>
+<li class="chapter" data-level="5.0.4" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#análisis-univariado-1"><i class="fa fa-check"></i><b>5.0.4</b> <strong>Análisis Univariado</strong></a></li>
+<li class="chapter" data-level="5.0.5" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#análisis-bivariado-1"><i class="fa fa-check"></i><b>5.0.5</b> <strong>Análisis Bivariado</strong></a></li>
+<li class="chapter" data-level="5.1" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#analisis-de-series-de-tiempo-2"><i class="fa fa-check"></i><b>5.1</b> <strong>1.1 Analisis de series de tiempo</strong></a></li>
+<li class="chapter" data-level="5.2" data-path="exploración-inicial-de-datos.html"><a href="exploración-inicial-de-datos.html#serie-basica-y-acf-2"><i class="fa fa-check"></i><b>5.2</b> <strong>1.2 Serie basica y ACF</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="suavizamiento-temporal.html"><a href="suavizamiento-temporal.html"><i class="fa fa-check"></i><b>6</b> <strong>2. Suavizamiento temporal</strong></a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="suavizamiento-temporal.html"><a href="suavizamiento-temporal.html#promedios-moviles-evidencia-de-suavizado-2"><i class="fa fa-check"></i><b>6.1</b> <strong>2.1 Promedios moviles (evidencia de suavizado)</strong></a></li>
+<li class="chapter" data-level="6.2" data-path="suavizamiento-temporal.html"><a href="suavizamiento-temporal.html#promedios-móviles-7-y-30-base-r-png-include"><i class="fa fa-check"></i><b>6.2</b> <strong>2.2 Promedios móviles (7 y 30) — Base R + PNG + include</strong></a></li>
+<li class="chapter" data-level="6.3" data-path="suavizamiento-temporal.html"><a href="suavizamiento-temporal.html#serie-básica-ts-base-r-png-include"><i class="fa fa-check"></i><b>6.3</b> <strong>2.3 Serie básica (ts) — Base R + PNG + include</strong></a></li>
+<li class="chapter" data-level="6.4" data-path="suavizamiento-temporal.html"><a href="suavizamiento-temporal.html#rezagos-lags-y-dependencia-temporal-2"><i class="fa fa-check"></i><b>6.4</b> <strong>2.4 Rezagos (lags) y dependencia temporal</strong></a></li>
+<li class="chapter" data-level="6.5" data-path="suavizamiento-temporal.html"><a href="suavizamiento-temporal.html#estacionalidad-descomposicion-stl-2"><i class="fa fa-check"></i><b>6.5</b> <strong>2.5 Estacionalidad (descomposicion STL)</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="estacionariedad-y-diferenciación-2.html"><a href="estacionariedad-y-diferenciación-2.html"><i class="fa fa-check"></i><b>7</b> <strong>Estacionariedad y diferenciación</strong></a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="estacionariedad-y-diferenciación-2.html"><a href="estacionariedad-y-diferenciación-2.html#verificación-de-estacionariedad-adf-test-2"><i class="fa fa-check"></i><b>7.1</b> <strong>Verificación de estacionariedad (ADF Test)</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="interpretacion-2.html"><a href="interpretacion-2.html"><i class="fa fa-check"></i><b>8</b> <strong>Interpretacion</strong></a></li>
+<li class="chapter" data-level="9" data-path="ajuste-del-modelo-arima.html"><a href="ajuste-del-modelo-arima.html"><i class="fa fa-check"></i><b>9</b> <strong>3. AJUSTE DEL MODELO ARIMA</strong></a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="ajuste-del-modelo-arima.html"><a href="ajuste-del-modelo-arima.html#criterios-de-selección"><i class="fa fa-check"></i><b>9.1</b> <strong>3.1 Criterios de selección</strong></a></li>
+<li class="chapter" data-level="9.2" data-path="ajuste-del-modelo-arima.html"><a href="ajuste-del-modelo-arima.html#suavizamiento-y-holt-winters-sobre-la-variable-tiempo-1"><i class="fa fa-check"></i><b>9.2</b> <strong>3.2 Suavizamiento y Holt-Winters sobre la variable tiempo</strong></a></li>
+<li class="chapter" data-level="9.3" data-path="ajuste-del-modelo-arima.html"><a href="ajuste-del-modelo-arima.html#particion-de-entrenamiento-prueba-1"><i class="fa fa-check"></i><b>9.3</b> <strong>Particion de entrenamiento /prueba</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html"><a href="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html"><i class="fa fa-check"></i><b>10</b> <strong>Modelos de suavizamiento y Holt-Winters en serie semanal</strong></a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html"><a href="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html#comparación-de-presición-fuera-de-muestra"><i class="fa fa-check"></i><b>10.1</b> <strong>Comparación de presición fuera de muestra</strong></a></li>
+<li class="chapter" data-level="10.2" data-path="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html"><a href="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html#diagnostico-de-residuos-1"><i class="fa fa-check"></i><b>10.2</b> <strong>Diagnostico de residuos</strong></a></li>
+<li class="chapter" data-level="10.3" data-path="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html"><a href="modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1.html#pronostico-final-1"><i class="fa fa-check"></i><b>10.3</b> <strong>Pronostico final</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="conclusiones-1.html"><a href="conclusiones-1.html"><i class="fa fa-check"></i><b>11</b> <strong>Conclusiones</strong></a></li>
+<li class="chapter" data-level="12" data-path="desarrollo-metodológico-y-justificación-de-decisiones-1.html"><a href="desarrollo-metodológico-y-justificación-de-decisiones-1.html"><i class="fa fa-check"></i><b>12</b> <strong>Desarrollo metodológico y justificación de decisiones</strong></a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="desarrollo-metodológico-y-justificación-de-decisiones-1.html"><a href="desarrollo-metodológico-y-justificación-de-decisiones-1.html#ajuste-de-la-frecuencia-temporal-1"><i class="fa fa-check"></i><b>12.1</b> <strong>Ajuste de la frecuencia temporal</strong></a></li>
+<li class="chapter" data-level="12.2" data-path="desarrollo-metodológico-y-justificación-de-decisiones-1.html"><a href="desarrollo-metodológico-y-justificación-de-decisiones-1.html#modelos-aplicados-1"><i class="fa fa-check"></i><b>12.2</b> <strong>Modelos aplicados</strong></a></li>
+<li class="chapter" data-level="12.3" data-path="desarrollo-metodológico-y-justificación-de-decisiones-1.html"><a href="desarrollo-metodológico-y-justificación-de-decisiones-1.html#validación-del-modelo-1"><i class="fa fa-check"></i><b>12.3</b> <strong>Validación del modelo</strong></a></li>
+<li class="chapter" data-level="12.4" data-path="desarrollo-metodológico-y-justificación-de-decisiones-1.html"><a href="desarrollo-metodológico-y-justificación-de-decisiones-1.html#diagnóstico-de-residuos-1"><i class="fa fa-check"></i><b>12.4</b> <strong>Diagnóstico de residuos</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="pronóstico-final-1.html"><a href="pronóstico-final-1.html"><i class="fa fa-check"></i><b>13</b> <strong>Pronóstico final</strong></a></li>
+<li class="chapter" data-level="14" data-path="conclusión-integradora-1.html"><a href="conclusión-integradora-1.html"><i class="fa fa-check"></i><b>14</b> <strong>Conclusión integradora</strong></a></li>
+<li class="chapter" data-level="15" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><i class="fa fa-check"></i><b>15</b> <strong>4. Ajuste e interpretación del modelo ARIMA/SARIMA - Box-Jenkins (ARIMA)</strong></a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#pronostico-a-h-pasos-y-metricas-rmsemaemape"><i class="fa fa-check"></i><b>15.1</b> <strong>Pronostico a h pasos y metricas RMSE/MAE/MAPE</strong></a></li>
+<li class="chapter" data-level="15.2" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#diagnostico-de-residuos-2"><i class="fa fa-check"></i><b>15.2</b> <strong>Diagnostico de residuos</strong></a></li>
+<li class="chapter" data-level="15.3" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#pronostico-final-sarima-10001052"><i class="fa fa-check"></i><b>15.3</b> <strong>Pronostico final Sarima (1,0,0)(0,1,0)[52]</strong></a></li>
+<li class="chapter" data-level="15.4" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#interpretación-del-modelo"><i class="fa fa-check"></i><b>15.4</b> <strong>4.1 Interpretación del modelo</strong></a></li>
+<li class="chapter" data-level="15.5" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#reflexión-y-justificación-del-proceso-boxjenkins"><i class="fa fa-check"></i><b>15.5</b> <strong>4.2 Reflexión y justificación del proceso Box–Jenkins</strong></a></li>
+<li class="chapter" data-level="15.6" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#ajustes-metodológicos-y-rendimiento-computacional"><i class="fa fa-check"></i><b>15.6</b> <strong>4.3 Ajustes metodológicos y rendimiento computacional</strong></a></li>
+<li class="chapter" data-level="15.7" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#evaluación-del-modelo"><i class="fa fa-check"></i><b>15.7</b> <strong>4.4 Evaluación del modelo</strong></a></li>
+<li class="chapter" data-level="15.8" data-path="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html"><a href="ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima.html#reflexión-metodológica-final"><i class="fa fa-check"></i><b>15.8</b> <strong>4.5 Reflexión metodológica final</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="evaluación-del-modelo-1.html"><a href="evaluación-del-modelo-1.html"><i class="fa fa-check"></i><b>16</b> <strong>5. EVALUACIÓN DEL MODELO</strong></a></li>
+<li class="chapter" data-level="17" data-path="pronostico-y-conclusiones.html"><a href="pronostico-y-conclusiones.html"><i class="fa fa-check"></i><b>17</b> <strong>6. PRONOSTICO Y CONCLUSIONES</strong></a></li>
+<li class="chapter" data-level="18" data-path="conclusiones-generales-finales.html"><a href="conclusiones-generales-finales.html"><i class="fa fa-check"></i><b>18</b> <strong>7. CONCLUSIONES GENERALES FINALES</strong></a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="exploración-inicial-de-datos" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">Capítulo 5</span> <strong>1. Exploración inicial de datos</strong><a href="exploración-inicial-de-datos.html#exploración-inicial-de-datos" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>El conjunto de datos analizado corresponde a registros diarios de precios de productos agrícolas del mercado de Kalimati (Nepal). Para el caso del producto agrícola analizado “Potato Red”, se estandarizaron nombres de variables y se mapearon columnas clave (Commodity, Date, Minimum, Maximum, Average).
+Se realizaron verificaciones de tipo y consistencia (fechas válidas, numéricos no negativos, duplicados) y un análisis descriptivo de la variable de interés (Average), complementado con gráficos de distribución.</p>
+<p>Hallazgos principales. La distribución de precios promedio presentó una leve asimetría positiva, consistente con valores ocasionalmente altos. Las medidas de tendencia central (media y mediana) y de dispersión (desviación estándar y rango) indicaron una variabilidad moderada, coherente con mercados agrícolas con choques transitorios en oferta (cosecha, clima, logística).</p>
+<div id="lectura-de-datos" class="section level3 hasAnchor" number="5.0.1">
+<h3><span class="header-section-number">5.0.1</span> <strong>Lectura de datos</strong><a href="exploración-inicial-de-datos.html#lectura-de-datos" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="exploración-inicial-de-datos.html#cb2-1" tabindex="-1"></a><span class="co"># Leer datos</span></span>
+<span id="cb2-2"><a href="exploración-inicial-de-datos.html#cb2-2" tabindex="-1"></a>data_raw <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(csv_file, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-3"><a href="exploración-inicial-de-datos.html#cb2-3" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="exploración-inicial-de-datos.html#cb2-4" tabindex="-1"></a><span class="co"># Estandarizar nombres a snake para facilitar mapeo</span></span>
+<span id="cb2-5"><a href="exploración-inicial-de-datos.html#cb2-5" tabindex="-1"></a>nms <span class="ot">&lt;-</span> <span class="fu">tolower</span>(<span class="fu">gsub</span>(<span class="st">&quot;[^a-zA-Z0-9]+&quot;</span>, <span class="st">&quot;_&quot;</span>, <span class="fu">names</span>(data_raw)))</span>
+<span id="cb2-6"><a href="exploración-inicial-de-datos.html#cb2-6" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="exploración-inicial-de-datos.html#cb2-7" tabindex="-1"></a><span class="co"># Intentar mapear columnas canonicas (Commodity / Date / Minimum / Maximum / Average)</span></span>
+<span id="cb2-8"><a href="exploración-inicial-de-datos.html#cb2-8" tabindex="-1"></a>df <span class="ot">&lt;-</span> data_raw</span>
+<span id="cb2-9"><a href="exploración-inicial-de-datos.html#cb2-9" tabindex="-1"></a><span class="fu">names</span>(df) <span class="ot">&lt;-</span> nms</span>
+<span id="cb2-10"><a href="exploración-inicial-de-datos.html#cb2-10" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="exploración-inicial-de-datos.html#cb2-11" tabindex="-1"></a><span class="co"># Mapeo flexible (case-insensitive)</span></span>
+<span id="cb2-12"><a href="exploración-inicial-de-datos.html#cb2-12" tabindex="-1"></a>pick_first <span class="ot">&lt;-</span> <span class="cf">function</span>(cands) {</span>
+<span id="cb2-13"><a href="exploración-inicial-de-datos.html#cb2-13" tabindex="-1"></a>hit <span class="ot">&lt;-</span> <span class="fu">intersect</span>(cands, <span class="fu">names</span>(df))</span>
+<span id="cb2-14"><a href="exploración-inicial-de-datos.html#cb2-14" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(hit) <span class="sc">==</span> <span class="dv">0</span>) <span class="fu">return</span>(<span class="cn">NA_character_</span>) <span class="cf">else</span> <span class="fu">return</span>(hit[<span class="dv">1</span>])</span>
+<span id="cb2-15"><a href="exploración-inicial-de-datos.html#cb2-15" tabindex="-1"></a>}</span>
+<span id="cb2-16"><a href="exploración-inicial-de-datos.html#cb2-16" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="exploración-inicial-de-datos.html#cb2-17" tabindex="-1"></a>col_commodity <span class="ot">&lt;-</span> <span class="fu">pick_first</span>(<span class="fu">c</span>(<span class="st">&quot;commodity&quot;</span>,<span class="st">&quot;item&quot;</span>,<span class="st">&quot;product&quot;</span>,<span class="st">&quot;variety&quot;</span>,<span class="st">&quot;name&quot;</span>))</span>
+<span id="cb2-18"><a href="exploración-inicial-de-datos.html#cb2-18" tabindex="-1"></a>col_date      <span class="ot">&lt;-</span> <span class="fu">pick_first</span>(<span class="fu">c</span>(<span class="st">&quot;date&quot;</span>,<span class="st">&quot;fecha&quot;</span>,<span class="st">&quot;day&quot;</span>))</span>
+<span id="cb2-19"><a href="exploración-inicial-de-datos.html#cb2-19" tabindex="-1"></a>col_min       <span class="ot">&lt;-</span> <span class="fu">pick_first</span>(<span class="fu">c</span>(<span class="st">&quot;minimum&quot;</span>,<span class="st">&quot;min&quot;</span>,<span class="st">&quot;min_price&quot;</span>,<span class="st">&quot;price_min&quot;</span>))</span>
+<span id="cb2-20"><a href="exploración-inicial-de-datos.html#cb2-20" tabindex="-1"></a>col_max       <span class="ot">&lt;-</span> <span class="fu">pick_first</span>(<span class="fu">c</span>(<span class="st">&quot;maximum&quot;</span>,<span class="st">&quot;max&quot;</span>,<span class="st">&quot;max_price&quot;</span>,<span class="st">&quot;price_max&quot;</span>))</span>
+<span id="cb2-21"><a href="exploración-inicial-de-datos.html#cb2-21" tabindex="-1"></a>col_avg       <span class="ot">&lt;-</span> <span class="fu">pick_first</span>(<span class="fu">c</span>(<span class="st">&quot;average&quot;</span>,<span class="st">&quot;avg&quot;</span>,<span class="st">&quot;avg_price&quot;</span>,<span class="st">&quot;price_avg&quot;</span>,<span class="st">&quot;mean_price&quot;</span>))</span>
+<span id="cb2-22"><a href="exploración-inicial-de-datos.html#cb2-22" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="exploración-inicial-de-datos.html#cb2-23" tabindex="-1"></a>req <span class="ot">&lt;-</span> <span class="fu">c</span>(col_commodity, col_date, col_min, col_max, col_avg)</span>
+<span id="cb2-24"><a href="exploración-inicial-de-datos.html#cb2-24" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="exploración-inicial-de-datos.html#cb2-25" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">any</span>(<span class="fu">is.na</span>(req))) {</span>
+<span id="cb2-26"><a href="exploración-inicial-de-datos.html#cb2-26" tabindex="-1"></a><span class="fu">stop</span>(<span class="st">&quot;No fue posible mapear columnas clave (commodity/date/min/max/average). Revisa nombres del CSV: &quot;</span>,</span>
+<span id="cb2-27"><a href="exploración-inicial-de-datos.html#cb2-27" tabindex="-1"></a><span class="fu">paste</span>(<span class="fu">names</span>(df), <span class="at">collapse =</span> <span class="st">&quot;, &quot;</span>))</span>
+<span id="cb2-28"><a href="exploración-inicial-de-datos.html#cb2-28" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="exploración-inicial-de-datos.html#cb3-1" tabindex="-1"></a><span class="co"># --- Cargar librerías necesarias ---</span></span>
+<span id="cb3-2"><a href="exploración-inicial-de-datos.html#cb3-2" tabindex="-1"></a>libs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;dplyr&quot;</span>, <span class="st">&quot;tidyr&quot;</span>, <span class="st">&quot;lubridate&quot;</span>, <span class="st">&quot;stringr&quot;</span>, <span class="st">&quot;tseries&quot;</span>)</span>
+<span id="cb3-3"><a href="exploración-inicial-de-datos.html#cb3-3" tabindex="-1"></a><span class="cf">for</span> (pkg <span class="cf">in</span> libs) {</span>
+<span id="cb3-4"><a href="exploración-inicial-de-datos.html#cb3-4" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(pkg, <span class="at">character.only =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb3-5"><a href="exploración-inicial-de-datos.html#cb3-5" tabindex="-1"></a>    <span class="fu">install.packages</span>(pkg, <span class="at">dependencies =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-6"><a href="exploración-inicial-de-datos.html#cb3-6" tabindex="-1"></a>    <span class="fu">library</span>(pkg, <span class="at">character.only =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-7"><a href="exploración-inicial-de-datos.html#cb3-7" tabindex="-1"></a>  }</span>
+<span id="cb3-8"><a href="exploración-inicial-de-datos.html#cb3-8" tabindex="-1"></a>}</span></code></pre></div>
+<pre><code>## Loading required package: dplyr</code></pre>
+<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre><code>## Loading required package: tidyr</code></pre>
+<pre><code>## Warning: package &#39;tidyr&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## Loading required package: lubridate</code></pre>
+<pre><code>## Warning: package &#39;lubridate&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## 
+## Attaching package: &#39;lubridate&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     date, intersect, setdiff, union</code></pre>
+<pre><code>## Loading required package: stringr</code></pre>
+<pre><code>## Warning: package &#39;stringr&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## Loading required package: tseries</code></pre>
+<pre><code>## Warning: package &#39;tseries&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## Registered S3 method overwritten by &#39;quantmod&#39;:
+##   method            from
+##   as.zoo.data.frame zoo</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="exploración-inicial-de-datos.html#cb20-1" tabindex="-1"></a><span class="co"># Asegurar el operador %&gt;% disponible</span></span>
+<span id="cb20-2"><a href="exploración-inicial-de-datos.html#cb20-2" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">exists</span>(<span class="st">&quot;%&gt;%&quot;</span>)) {</span>
+<span id="cb20-3"><a href="exploración-inicial-de-datos.html#cb20-3" tabindex="-1"></a>  <span class="fu">library</span>(magrittr)</span>
+<span id="cb20-4"><a href="exploración-inicial-de-datos.html#cb20-4" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="transformación-inicial-de-datos" class="section level3 hasAnchor" number="5.0.2">
+<h3><span class="header-section-number">5.0.2</span> <strong>Transformación inicial de datos</strong><a href="exploración-inicial-de-datos.html#transformación-inicial-de-datos" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="exploración-inicial-de-datos.html#cb21-1" tabindex="-1"></a>data <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="exploración-inicial-de-datos.html#cb21-2" tabindex="-1"></a><span class="fu">transmute</span>(</span>
+<span id="cb21-3"><a href="exploración-inicial-de-datos.html#cb21-3" tabindex="-1"></a><span class="at">Commodity =</span> .data[[col_commodity]],</span>
+<span id="cb21-4"><a href="exploración-inicial-de-datos.html#cb21-4" tabindex="-1"></a><span class="at">Date      =</span> <span class="fu">as.Date</span>(.data[[col_date]]),</span>
+<span id="cb21-5"><a href="exploración-inicial-de-datos.html#cb21-5" tabindex="-1"></a><span class="at">Unit      =</span> <span class="cn">NA_character_</span>,     </span>
+<span id="cb21-6"><a href="exploración-inicial-de-datos.html#cb21-6" tabindex="-1"></a><span class="at">Minimum   =</span> <span class="fu">as.numeric</span>(.data[[col_min]]),</span>
+<span id="cb21-7"><a href="exploración-inicial-de-datos.html#cb21-7" tabindex="-1"></a><span class="at">Maximum   =</span> <span class="fu">as.numeric</span>(.data[[col_max]]),</span>
+<span id="cb21-8"><a href="exploración-inicial-de-datos.html#cb21-8" tabindex="-1"></a><span class="at">Average   =</span> <span class="fu">as.numeric</span>(.data[[col_avg]])</span>
+<span id="cb21-9"><a href="exploración-inicial-de-datos.html#cb21-9" tabindex="-1"></a>)</span>
+<span id="cb21-10"><a href="exploración-inicial-de-datos.html#cb21-10" tabindex="-1"></a></span>
+<span id="cb21-11"><a href="exploración-inicial-de-datos.html#cb21-11" tabindex="-1"></a><span class="co"># Chequeos basicos</span></span>
+<span id="cb21-12"><a href="exploración-inicial-de-datos.html#cb21-12" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">inherits</span>(data<span class="sc">$</span>Date, <span class="st">&quot;Date&quot;</span>))</span></code></pre></div>
+<p>###<strong>Vista previa de los datos</strong></p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="exploración-inicial-de-datos.html#cb22-1" tabindex="-1"></a><span class="co"># Vista previa y estructura</span></span>
+<span id="cb22-2"><a href="exploración-inicial-de-datos.html#cb22-2" tabindex="-1"></a><span class="fu">head</span>(data)</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 6
+##   Commodity           Date       Unit  Minimum Maximum Average
+##   &lt;chr&gt;               &lt;date&gt;     &lt;chr&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+## 1 Tomato Big(Nepali)  2013-06-16 &lt;NA&gt;       35      40    37.5
+## 2 Tomato Small(Local) 2013-06-16 &lt;NA&gt;       26      32    29  
+## 3 Potato Red          2013-06-16 &lt;NA&gt;       20      21    20.5
+## 4 Potato White        2013-06-16 &lt;NA&gt;       15      16    15.5
+## 5 Onion Dry (Indian)  2013-06-16 &lt;NA&gt;       28      30    29  
+## 6 Carrot(Local)       2013-06-16 &lt;NA&gt;       30      35    32.5</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="exploración-inicial-de-datos.html#cb24-1" tabindex="-1"></a><span class="fu">str</span>(data)</span></code></pre></div>
+<pre><code>## tibble [197,161 × 6] (S3: tbl_df/tbl/data.frame)
+##  $ Commodity: chr [1:197161] &quot;Tomato Big(Nepali)&quot; &quot;Tomato Small(Local)&quot; &quot;Potato Red&quot; &quot;Potato White&quot; ...
+##  $ Date     : Date[1:197161], format: &quot;2013-06-16&quot; &quot;2013-06-16&quot; ...
+##  $ Unit     : chr [1:197161] NA NA NA NA ...
+##  $ Minimum  : num [1:197161] 35 26 20 15 28 30 6 30 35 25 ...
+##  $ Maximum  : num [1:197161] 40 32 21 16 30 35 10 35 40 30 ...
+##  $ Average  : num [1:197161] 37.5 29 20.5 15.5 29 32.5 8 32.5 37.5 27.5 ...</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="exploración-inicial-de-datos.html#cb26-1" tabindex="-1"></a><span class="fu">summary</span>(data)</span></code></pre></div>
+<pre><code>##   Commodity              Date                Unit              Minimum       
+##  Length:197161      Min.   :2013-06-16   Length:197161      Min.   :   1.00  
+##  Class :character   1st Qu.:2015-08-24   Class :character   1st Qu.:  40.00  
+##  Mode  :character   Median :2017-08-03   Mode  :character   Median :  60.00  
+##                     Mean   :2017-08-09                      Mean   :  85.42  
+##                     3rd Qu.:2019-08-27                      3rd Qu.: 100.00  
+##                     Max.   :2021-05-13                      Max.   :1800.00  
+##     Maximum           Average       
+##  Min.   :   6.00   Min.   :   5.00  
+##  1st Qu.:  45.00   1st Qu.:  42.50  
+##  Median :  70.00   Median :  65.00  
+##  Mean   :  94.16   Mean   :  89.79  
+##  3rd Qu.: 110.00   3rd Qu.: 105.00  
+##  Max.   :2000.00   Max.   :1900.00</code></pre>
+</div>
+<div id="datos-nulos-y-duplicados" class="section level3 hasAnchor" number="5.0.3">
+<h3><span class="header-section-number">5.0.3</span> <strong>Datos nulos y duplicados</strong><a href="exploración-inicial-de-datos.html#datos-nulos-y-duplicados" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="exploración-inicial-de-datos.html#cb28-1" tabindex="-1"></a><span class="co"># NAs y duplicados generales</span></span>
+<span id="cb28-2"><a href="exploración-inicial-de-datos.html#cb28-2" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(data))</span></code></pre></div>
+<pre><code>## [1] 197161</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="exploración-inicial-de-datos.html#cb30-1" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">duplicated</span>(data))</span></code></pre></div>
+<pre><code>## [1] 0</code></pre>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="exploración-inicial-de-datos.html#cb32-1" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(ggplot2)) {</span>
+<span id="cb32-2"><a href="exploración-inicial-de-datos.html#cb32-2" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">&quot;ggplot2&quot;</span>)</span>
+<span id="cb32-3"><a href="exploración-inicial-de-datos.html#cb32-3" tabindex="-1"></a>  <span class="fu">library</span>(ggplot2)</span>
+<span id="cb32-4"><a href="exploración-inicial-de-datos.html#cb32-4" tabindex="-1"></a>}</span></code></pre></div>
+<pre><code>## Loading required package: ggplot2</code></pre>
+</div>
+<div id="análisis-univariado-1" class="section level3 hasAnchor" number="5.0.4">
+<h3><span class="header-section-number">5.0.4</span> <strong>Análisis Univariado</strong><a href="exploración-inicial-de-datos.html#análisis-univariado-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="exploración-inicial-de-datos.html#cb34-1" tabindex="-1"></a><span class="co">#analisis univariado</span></span>
+<span id="cb34-2"><a href="exploración-inicial-de-datos.html#cb34-2" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> Average)) <span class="sc">+</span></span>
+<span id="cb34-3"><a href="exploración-inicial-de-datos.html#cb34-3" tabindex="-1"></a><span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">5</span>, <span class="at">fill =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb34-4"><a href="exploración-inicial-de-datos.html#cb34-4" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Distribucion de Precios Promedio&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Precio Promedio&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Frecuencia&quot;</span>) <span class="sc">+</span></span>
+<span id="cb34-5"><a href="exploración-inicial-de-datos.html#cb34-5" tabindex="-1"></a><span class="fu">theme_minimal</span>()</span></code></pre></div>
+<p><img src="04-application_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="exploración-inicial-de-datos.html#cb35-1" tabindex="-1"></a>data <span class="sc">%&gt;%</span></span>
+<span id="cb35-2"><a href="exploración-inicial-de-datos.html#cb35-2" tabindex="-1"></a><span class="fu">summarise</span>(</span>
+<span id="cb35-3"><a href="exploración-inicial-de-datos.html#cb35-3" tabindex="-1"></a><span class="at">Mean =</span> <span class="fu">mean</span>(Average, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb35-4"><a href="exploración-inicial-de-datos.html#cb35-4" tabindex="-1"></a><span class="at">Median =</span> <span class="fu">median</span>(Average, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb35-5"><a href="exploración-inicial-de-datos.html#cb35-5" tabindex="-1"></a><span class="at">SD =</span> <span class="fu">sd</span>(Average, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb35-6"><a href="exploración-inicial-de-datos.html#cb35-6" tabindex="-1"></a><span class="at">Min =</span> <span class="fu">min</span>(Average, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb35-7"><a href="exploración-inicial-de-datos.html#cb35-7" tabindex="-1"></a><span class="at">Max =</span> <span class="fu">max</span>(Average, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb35-8"><a href="exploración-inicial-de-datos.html#cb35-8" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 5
+##    Mean Median    SD   Min   Max
+##   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1  89.8     65  79.6     5  1900</code></pre>
+</div>
+<div id="análisis-bivariado-1" class="section level3 hasAnchor" number="5.0.5">
+<h3><span class="header-section-number">5.0.5</span> <strong>Análisis Bivariado</strong><a href="exploración-inicial-de-datos.html#análisis-bivariado-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="exploración-inicial-de-datos.html#cb37-1" tabindex="-1"></a><span class="co">#analisis bivariado</span></span>
+<span id="cb37-2"><a href="exploración-inicial-de-datos.html#cb37-2" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="exploración-inicial-de-datos.html#cb37-3" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> Minimum, <span class="at">y =</span> Maximum)) <span class="sc">+</span></span>
+<span id="cb37-4"><a href="exploración-inicial-de-datos.html#cb37-4" tabindex="-1"></a><span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb37-5"><a href="exploración-inicial-de-datos.html#cb37-5" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Relacion entre Precio Minimo y Maximo&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Precio Minimo&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Precio Maximo&quot;</span>) <span class="sc">+</span></span>
+<span id="cb37-6"><a href="exploración-inicial-de-datos.html#cb37-6" tabindex="-1"></a><span class="fu">theme_minimal</span>()</span></code></pre></div>
+<p><img src="04-application_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="exploración-inicial-de-datos.html#cb38-1" tabindex="-1"></a><span class="fu">cor</span>(data<span class="sc">$</span>Minimum, data<span class="sc">$</span>Maximum, <span class="at">use =</span> <span class="st">&quot;complete.obs&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] 0.9950614</code></pre>
+</div>
+<div id="analisis-de-series-de-tiempo-2" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> <strong>1.1 Analisis de series de tiempo</strong><a href="exploración-inicial-de-datos.html#analisis-de-series-de-tiempo-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="exploración-inicial-de-datos.html#cb40-1" tabindex="-1"></a><span class="cf">if</span> (<span class="st">&quot;Potato Red&quot;</span> <span class="sc">%in%</span> <span class="fu">unique</span>(data<span class="sc">$</span>Commodity)) {</span>
+<span id="cb40-2"><a href="exploración-inicial-de-datos.html#cb40-2" tabindex="-1"></a>target_item <span class="ot">&lt;-</span> <span class="st">&quot;Potato Red&quot;</span></span>
+<span id="cb40-3"><a href="exploración-inicial-de-datos.html#cb40-3" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb40-4"><a href="exploración-inicial-de-datos.html#cb40-4" tabindex="-1"></a>target_item <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb40-5"><a href="exploración-inicial-de-datos.html#cb40-5" tabindex="-1"></a><span class="fu">count</span>(Commodity, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb40-6"><a href="exploración-inicial-de-datos.html#cb40-6" tabindex="-1"></a><span class="fu">slice</span>(<span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb40-7"><a href="exploración-inicial-de-datos.html#cb40-7" tabindex="-1"></a><span class="fu">pull</span>(Commodity)</span>
+<span id="cb40-8"><a href="exploración-inicial-de-datos.html#cb40-8" tabindex="-1"></a>}</span>
+<span id="cb40-9"><a href="exploración-inicial-de-datos.html#cb40-9" tabindex="-1"></a></span>
+<span id="cb40-10"><a href="exploración-inicial-de-datos.html#cb40-10" tabindex="-1"></a>target_item</span></code></pre></div>
+<pre><code>## [1] &quot;Potato Red&quot;</code></pre>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="exploración-inicial-de-datos.html#cb42-1" tabindex="-1"></a><span class="co"># Filtrar y regularizar serie diaria</span></span>
+<span id="cb42-2"><a href="exploración-inicial-de-datos.html#cb42-2" tabindex="-1"></a></span>
+<span id="cb42-3"><a href="exploración-inicial-de-datos.html#cb42-3" tabindex="-1"></a>potatored <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb42-4"><a href="exploración-inicial-de-datos.html#cb42-4" tabindex="-1"></a><span class="fu">filter</span>(Commodity <span class="sc">==</span> target_item) <span class="sc">%&gt;%</span></span>
+<span id="cb42-5"><a href="exploración-inicial-de-datos.html#cb42-5" tabindex="-1"></a><span class="fu">select</span>(Date, Average) <span class="sc">%&gt;%</span></span>
+<span id="cb42-6"><a href="exploración-inicial-de-datos.html#cb42-6" tabindex="-1"></a><span class="fu">group_by</span>(Date) <span class="sc">%&gt;%</span></span>
+<span id="cb42-7"><a href="exploración-inicial-de-datos.html#cb42-7" tabindex="-1"></a><span class="fu">summarise</span>(<span class="at">Average =</span> <span class="fu">mean</span>(Average), <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb42-8"><a href="exploración-inicial-de-datos.html#cb42-8" tabindex="-1"></a><span class="fu">complete</span>(<span class="at">Date =</span> <span class="fu">seq</span>(<span class="fu">min</span>(Date, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="fu">max</span>(Date, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">by =</span> <span class="st">&quot;day&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb42-9"><a href="exploración-inicial-de-datos.html#cb42-9" tabindex="-1"></a><span class="fu">arrange</span>(Date)</span>
+<span id="cb42-10"><a href="exploración-inicial-de-datos.html#cb42-10" tabindex="-1"></a></span>
+<span id="cb42-11"><a href="exploración-inicial-de-datos.html#cb42-11" tabindex="-1"></a><span class="co"># Construir objeto ts (diario, 365)</span></span>
+<span id="cb42-12"><a href="exploración-inicial-de-datos.html#cb42-12" tabindex="-1"></a></span>
+<span id="cb42-13"><a href="exploración-inicial-de-datos.html#cb42-13" tabindex="-1"></a>pot_ts <span class="ot">&lt;-</span> <span class="fu">ts</span>(</span>
+<span id="cb42-14"><a href="exploración-inicial-de-datos.html#cb42-14" tabindex="-1"></a>potatored<span class="sc">$</span>Average,</span>
+<span id="cb42-15"><a href="exploración-inicial-de-datos.html#cb42-15" tabindex="-1"></a><span class="at">start =</span> <span class="fu">c</span>(lubridate<span class="sc">::</span><span class="fu">year</span>(<span class="fu">min</span>(potatored<span class="sc">$</span>Date, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb42-16"><a href="exploración-inicial-de-datos.html#cb42-16" tabindex="-1"></a>lubridate<span class="sc">::</span><span class="fu">yday</span>(<span class="fu">min</span>(potatored<span class="sc">$</span>Date, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))),</span>
+<span id="cb42-17"><a href="exploración-inicial-de-datos.html#cb42-17" tabindex="-1"></a><span class="at">frequency =</span> <span class="dv">365</span></span>
+<span id="cb42-18"><a href="exploración-inicial-de-datos.html#cb42-18" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+<div id="serie-basica-y-acf-2" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> <strong>1.2 Serie basica y ACF</strong><a href="exploración-inicial-de-datos.html#serie-basica-y-acf-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="exploración-inicial-de-datos.html#cb43-1" tabindex="-1"></a><span class="co"># --- Hotfix para error &quot;rstudio$.rs.isDesktop()&quot; ---</span></span>
+<span id="cb43-2"><a href="exploración-inicial-de-datos.html#cb43-2" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">exists</span>(<span class="st">&quot;rstudio&quot;</span>, <span class="at">envir =</span> .GlobalEnv)) <span class="fu">rm</span>(<span class="st">&quot;rstudio&quot;</span>, <span class="at">envir =</span> .GlobalEnv)</span>
+<span id="cb43-3"><a href="exploración-inicial-de-datos.html#cb43-3" tabindex="-1"></a><span class="fu">options</span>(<span class="at">device.ask.default =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb43-4"><a href="exploración-inicial-de-datos.html#cb43-4" tabindex="-1"></a></span>
+<span id="cb43-5"><a href="exploración-inicial-de-datos.html#cb43-5" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">capabilities</span>(<span class="st">&quot;cairo&quot;</span>)) {</span>
+<span id="cb43-6"><a href="exploración-inicial-de-datos.html#cb43-6" tabindex="-1"></a>  knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">dev =</span> <span class="st">&quot;png&quot;</span>, <span class="at">dpi =</span> <span class="dv">150</span>, <span class="at">dev.args =</span> <span class="fu">list</span>(<span class="at">type =</span> <span class="st">&quot;cairo&quot;</span>))</span>
+<span id="cb43-7"><a href="exploración-inicial-de-datos.html#cb43-7" tabindex="-1"></a>  <span class="fu">options</span>(<span class="at">bitmapType =</span> <span class="st">&quot;cairo&quot;</span>)</span>
+<span id="cb43-8"><a href="exploración-inicial-de-datos.html#cb43-8" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb43-9"><a href="exploración-inicial-de-datos.html#cb43-9" tabindex="-1"></a>  knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">dev =</span> <span class="st">&quot;png&quot;</span>, <span class="at">dpi =</span> <span class="dv">150</span>)</span>
+<span id="cb43-10"><a href="exploración-inicial-de-datos.html#cb43-10" tabindex="-1"></a>}</span>
+<span id="cb43-11"><a href="exploración-inicial-de-datos.html#cb43-11" tabindex="-1"></a></span>
+<span id="cb43-12"><a href="exploración-inicial-de-datos.html#cb43-12" tabindex="-1"></a><span class="fu">try</span>(<span class="fu">graphics.off</span>(), <span class="at">silent =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="exploración-inicial-de-datos.html#cb44-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb44-2"><a href="exploración-inicial-de-datos.html#cb44-2" tabindex="-1"></a><span class="fu">library</span>(forecast)</span></code></pre></div>
+<pre><code>## Warning: package &#39;forecast&#39; was built under R version 4.3.3</code></pre>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="exploración-inicial-de-datos.html#cb46-1" tabindex="-1"></a><span class="fu">autoplot</span>(pot_ts) <span class="sc">+</span></span>
+<span id="cb46-2"><a href="exploración-inicial-de-datos.html#cb46-2" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb46-3"><a href="exploración-inicial-de-datos.html#cb46-3" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;📈 Serie de tiempo: precio promedio&quot;</span>,</span>
+<span id="cb46-4"><a href="exploración-inicial-de-datos.html#cb46-4" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Precio promedio&quot;</span>,</span>
+<span id="cb46-5"><a href="exploración-inicial-de-datos.html#cb46-5" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Tiempo&quot;</span></span>
+<span id="cb46-6"><a href="exploración-inicial-de-datos.html#cb46-6" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb46-7"><a href="exploración-inicial-de-datos.html#cb46-7" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb46-8"><a href="exploración-inicial-de-datos.html#cb46-8" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb46-9"><a href="exploración-inicial-de-datos.html#cb46-9" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">&quot;bold&quot;</span>, <span class="at">color =</span> <span class="st">&quot;#2C3E50&quot;</span>, <span class="at">size =</span> <span class="dv">15</span>),</span>
+<span id="cb46-10"><a href="exploración-inicial-de-datos.html#cb46-10" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">&quot;bold&quot;</span>, <span class="at">color =</span> <span class="st">&quot;#34495E&quot;</span>),</span>
+<span id="cb46-11"><a href="exploración-inicial-de-datos.html#cb46-11" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb46-12"><a href="exploración-inicial-de-datos.html#cb46-12" tabindex="-1"></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">&quot;grey90&quot;</span>)</span>
+<span id="cb46-13"><a href="exploración-inicial-de-datos.html#cb46-13" tabindex="-1"></a>  )</span></code></pre></div>
+<p><img src="04-application_files/figure-html/unnamed-chunk-9-1.png" width="1050" /></p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="exploración-inicial-de-datos.html#cb47-1" tabindex="-1"></a><span class="fu">ggAcf</span>(pot_ts) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ACF del precio promedio (diario)&quot;</span>)</span></code></pre></div>
+<p><img src="04-application_files/figure-html/unnamed-chunk-10-1.png" width="1050" /></p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="modelos-estacionales-en-series-de-tiempo.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="suavizamiento-temporal.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/04-application.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
