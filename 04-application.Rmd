@@ -263,6 +263,18 @@ if (capabilities("cairo")) {
 
 
 ```{r}
+# Hotfix global para gráficos (evita el viewer de RStudio)
+if (exists("rstudio", envir = .GlobalEnv)) rm("rstudio", envir = .GlobalEnv)
+options(device.ask.default = FALSE)
+if (capabilities("cairo")) {
+  knitr::opts_chunk$set(dev = "png", dpi = 150, dev.args = list(type = "cairo"))
+  options(bitmapType = "cairo")
+} else {
+  knitr::opts_chunk$set(dev = "png", dpi = 150)
+}
+```
+
+```{r}
 # --- Hotfix global: NO viewer, render a PNG ---
 if (exists("rstudio", envir = .GlobalEnv)) rm("rstudio", envir = .GlobalEnv)
 options(device.ask.default = FALSE)
@@ -289,75 +301,103 @@ safe_dir <- function(){
 ## **Promedios móviles (7 y 30) — Base R + PNG + include**
 
 ```{r}
-# Librerías necesarias
-
-library(ggplot2)
-library(slider)
-
-# Calcular promedios móviles
-
-pot_ma <- potatored
-pot_ma$ma7  <- slide_dbl(pot_ma$Average, mean, .before = 6,  .complete = TRUE)
-pot_ma$ma30 <- slide_dbl(pot_ma$Average, mean, .before = 29, .complete = TRUE)
-
-# Gráfico con ggplot2
-
-ggplot(pot_ma, aes(x = Date)) +
-geom_line(aes(y = Average, color = "Serie original"), linewidth = 0.7) +
-geom_line(aes(y = ma7,  color = "Media móvil 7 días"), linewidth = 1) +
-geom_line(aes(y = ma30, color = "Media móvil 30 días"), linewidth = 1) +
-scale_color_manual(values = c("Serie original"="#1F77B4",
-"Media móvil 7 días"="#FF7F0E",
-"Media móvil 30 días"="#2CA02C")) +
-labs(title = "Serie y promedios móviles (7 y 30 días)",
-x = "Fecha", y = "Precio promedio", color = "") +
-theme_minimal(base_size = 13) +
-theme(legend.position = "top")
-# Librerías necesarias
-
-library(ggplot2)
-library(slider)
-
-# Calcular promedios móviles
-
-pot_ma <- potatored
-pot_ma$ma7  <- slide_dbl(pot_ma$Average, mean, .before = 6,  .complete = TRUE)
-pot_ma$ma30 <- slide_dbl(pot_ma$Average, mean, .before = 29, .complete = TRUE)
-
-# Gráfico con ggplot2
-
-ggplot(pot_ma, aes(x = Date)) +
-geom_line(aes(y = Average, color = "Serie original"), linewidth = 0.7) +
-geom_line(aes(y = ma7,  color = "Media móvil 7 días"), linewidth = 1) +
-geom_line(aes(y = ma30, color = "Media móvil 30 días"), linewidth = 1) +
-scale_color_manual(values = c("Serie original"="#1F77B4",
-"Media móvil 7 días"="#FF7F0E",
-"Media móvil 30 días"="#2CA02C")) +
-labs(title = "Serie y promedios móviles (7 y 30 días)",
-x = "Fecha", y = "Precio promedio", color = "") +
-theme_minimal(base_size = 13) +
-theme(legend.position = "top")
-
+# ...
+fig_path <- "figuras/stl2.png"
+# ...
+message("⚠️ La imagen 'stl2.png' aún no existe...")
 
 ```
 
 
 ## **Serie básica (ts) — Base R + PNG + include**
 
-```{r}
 
-# Gráfico base de la serie
+```{r, serie_basica_png, fig.show = 'hide'}
+# Crear carpeta de figuras si no existe
+if (!dir.exists("figuras")) dir.create("figuras", recursive = TRUE)
 
-ggplot(potatored, aes(x = Date, y = Average)) +
-geom_line(color = "#1F77B4", linewidth = 0.9) +
-labs(title = "Serie de tiempo: precio promedio",
-x = "Fecha", y = "Precio promedio") +
-theme_minimal(base_size = 13)
+# Definir ruta de salida del gráfico
+outfile <- file.path("figuras", "serie_basica.png")
 
+# Generar y guardar el gráfico
+if (capabilities("cairo")) {
+  png(outfile, width = 1400, height = 600, res = 150, type = "cairo")
+} else {
+  png(outfile, width = 1400, height = 600, res = 150)
+}
+
+op <- par(mar = c(4, 4, 3, 1), mgp = c(2.2, 0.8, 0))
+plot(
+  potatored$Date, potatored$Average, type = "l",
+  col = "#1F77B4", lwd = 1.2,
+  xlab = "Fecha", ylab = "Precio promedio",
+  main = "Serie de tiempo: precio promedio"
+)
+par(op)
+dev.off()
+
+# Mostrar la imagen generada (método estandarizado)
+knitr::include_graphics(outfile)
 
 ```
 
+## **2.4 STL — Base R + PNG + include**
 
+```{r, stl_png, fig.show = 'hide'}
+# Asegurar que la carpeta 'figuras' exista (relativa al proyecto)
+if (!dir.exists("figuras")) dir.create("figuras", recursive = TRUE)
+
+# Definir la ruta de salida estándar
+outfile <- file.path("figuras", "stl.png")
+
+# --- Lógica de cálculo STL (existente) ---
+y <- ts(potatored$Average, frequency = 365)
+# interp lineal base (necesaria para STL si hay NAs)
+y <- approx(seq_along(y), y, xout=seq_along(y))$y 
+fit <- stl(ts(y, frequency=365), s.window="periodic", robust=TRUE)
+# --- Fin lógica de cálculo ---
+
+# Generar y guardar el gráfico
+if (capabilities("cairo")) {
+  png(outfile, width=1400, height=900, res=150, type="cairo")
+} else {
+  png(outfile, width=1400, height=900, res=150)
+}
+op <- par(mfrow=c(4,1), mar=c(3,4,2,1))
+plot(fit$time.series[,"remainder"], type="l", col="#7D3C98", main="Residuo", xlab="", ylab="")
+plot(fit$time.series[,"seasonal"],  type="l", col="#117A65", main="Estacionalidad", xlab="", ylab="")
+plot(fit$time.series[,"trend"],      type="l", col="#E67E22", main="Tendencia", xlab="", ylab="")
+plot(y, type="l", col="#1F77B4", main="Serie (interpolada)", xlab="Tiempo", ylab="")
+par(op); dev.off()
+
+# Incluir la imagen guardada en el bookdown
+# Esta línea reemplaza el 'cat(sprintf(...))'
+knitr::include_graphics(outfile)
+```
+
+```{r}
+# --- Promedios móviles (gráfico generado automáticamente) ---
+
+if (!dir.exists("figuras")) dir.create("figuras", recursive = TRUE)
+
+fig_path <- "figuras/promedios_moviles.png"
+
+# Generar el gráfico y guardarlo
+
+png(fig_path, width = 1200, height = 600, res = 150)
+plot(potatored$Average, type = "l", col = "steelblue",
+main = "Promedios móviles (7 y 30 días)",
+ylab = "Precio promedio", xlab = "Tiempo")
+lines(stats::filter(potatored$Average, rep(1/7,7)), col = "red", lwd = 2)
+lines(stats::filter(potatored$Average, rep(1/30,30)), col = "green", lwd = 2)
+legend("topright", legend = c("Original", "7 días", "30 días"),
+col = c("steelblue", "red", "green"), lty = 1, lwd = 2)
+dev.off()
+
+# Mostrar la imagen
+
+knitr::include_graphics(fig_path)
+```
 ## **Rezagos (lags) y dependencia temporal**
 
 ```{r}
@@ -868,16 +908,21 @@ fc_final_exp$mean  <- exp(fc_final$mean)
 fc_final_exp$lower <- exp(fc_final$lower)
 fc_final_exp$upper <- exp(fc_final$upper)
 
-# OPCION A: Grafico simple del pronostico (incluye bandas 80% y 95% automaticamente)
+fc_final_exp$x <- exp(fc_final_exp$x)
+# ---------------------------------
+
+# OPCION A: Grafico simple del pronostico (AHORA SERÁ COHERENTE)
 autoplot(fc_final_exp) +
   labs(
     title    = "Pronostico final SARIMA(1,0,0)(0,1,0)[52]",
-    subtitle = "Proyeccion de precios semanales con intervalos de confianza",
+    subtitle = "Proyeccion de precios semanales (Escala Original)",
     x = "Tiempo", y = "Precio promedio semanal"
   ) +
   theme_minimal()
 
 ```
+
+
 ```{r}
 # Ajuste automático con comparación AIC/BIC
 

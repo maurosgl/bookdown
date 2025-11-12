@@ -432,6 +432,19 @@ if (capabilities("cairo")) {
 
 
 ``` r
+# Hotfix global para gráficos (evita el viewer de RStudio)
+if (exists("rstudio", envir = .GlobalEnv)) rm("rstudio", envir = .GlobalEnv)
+options(device.ask.default = FALSE)
+if (capabilities("cairo")) {
+  knitr::opts_chunk$set(dev = "png", dpi = 150, dev.args = list(type = "cairo"))
+  options(bitmapType = "cairo")
+} else {
+  knitr::opts_chunk$set(dev = "png", dpi = 150)
+}
+```
+
+
+``` r
 # --- Hotfix global: NO viewer, render a PNG ---
 if (exists("rstudio", envir = .GlobalEnv)) rm("rstudio", envir = .GlobalEnv)
 options(device.ask.default = FALSE)
@@ -467,97 +480,131 @@ safe_dir <- function(){
 
 
 ``` r
-# Librerías necesarias
-
-library(ggplot2)
-library(slider)
-
-# Calcular promedios móviles
-
-pot_ma <- potatored
-pot_ma$ma7  <- slide_dbl(pot_ma$Average, mean, .before = 6,  .complete = TRUE)
-pot_ma$ma30 <- slide_dbl(pot_ma$Average, mean, .before = 29, .complete = TRUE)
-
-# Gráfico con ggplot2
-
-ggplot(pot_ma, aes(x = Date)) +
-geom_line(aes(y = Average, color = "Serie original"), linewidth = 0.7) +
-geom_line(aes(y = ma7,  color = "Media móvil 7 días"), linewidth = 1) +
-geom_line(aes(y = ma30, color = "Media móvil 30 días"), linewidth = 1) +
-scale_color_manual(values = c("Serie original"="#1F77B4",
-"Media móvil 7 días"="#FF7F0E",
-"Media móvil 30 días"="#2CA02C")) +
-labs(title = "Serie y promedios móviles (7 y 30 días)",
-x = "Fecha", y = "Precio promedio", color = "") +
-theme_minimal(base_size = 13) +
-theme(legend.position = "top")
+# ...
+fig_path <- "figuras/stl2.png"
+# ...
+message("⚠️ La imagen 'stl2.png' aún no existe...")
 ```
 
 ```
-## Warning: Removed 118 rows containing missing values or values outside the scale range
-## (`geom_line()`).
+## ⚠️ La imagen 'stl2.png' aún no existe...
 ```
-
-```
-## Warning: Removed 407 rows containing missing values or values outside the scale range
-## (`geom_line()`).
-```
-
-<img src="04-application_files/figure-html/unnamed-chunk-14-1.png" width="1050" />
-
-``` r
-# Librerías necesarias
-
-library(ggplot2)
-library(slider)
-
-# Calcular promedios móviles
-
-pot_ma <- potatored
-pot_ma$ma7  <- slide_dbl(pot_ma$Average, mean, .before = 6,  .complete = TRUE)
-pot_ma$ma30 <- slide_dbl(pot_ma$Average, mean, .before = 29, .complete = TRUE)
-
-# Gráfico con ggplot2
-
-ggplot(pot_ma, aes(x = Date)) +
-geom_line(aes(y = Average, color = "Serie original"), linewidth = 0.7) +
-geom_line(aes(y = ma7,  color = "Media móvil 7 días"), linewidth = 1) +
-geom_line(aes(y = ma30, color = "Media móvil 30 días"), linewidth = 1) +
-scale_color_manual(values = c("Serie original"="#1F77B4",
-"Media móvil 7 días"="#FF7F0E",
-"Media móvil 30 días"="#2CA02C")) +
-labs(title = "Serie y promedios móviles (7 y 30 días)",
-x = "Fecha", y = "Precio promedio", color = "") +
-theme_minimal(base_size = 13) +
-theme(legend.position = "top")
-```
-
-```
-## Warning: Removed 118 rows containing missing values or values outside the scale range
-## (`geom_line()`).
-## Removed 407 rows containing missing values or values outside the scale range
-## (`geom_line()`).
-```
-
-<img src="04-application_files/figure-html/unnamed-chunk-14-2.png" width="1050" />
 
 
 ## **Serie básica (ts) — Base R + PNG + include**
 
 
-``` r
-# Gráfico base de la serie
 
-ggplot(potatored, aes(x = Date, y = Average)) +
-geom_line(color = "#1F77B4", linewidth = 0.9) +
-labs(title = "Serie de tiempo: precio promedio",
-x = "Fecha", y = "Precio promedio") +
-theme_minimal(base_size = 13)
+``` r
+# Crear carpeta de figuras si no existe
+if (!dir.exists("figuras")) dir.create("figuras", recursive = TRUE)
+
+# Definir ruta de salida del gráfico
+outfile <- file.path("figuras", "serie_basica.png")
+
+# Generar y guardar el gráfico
+if (capabilities("cairo")) {
+  png(outfile, width = 1400, height = 600, res = 150, type = "cairo")
+} else {
+  png(outfile, width = 1400, height = 600, res = 150)
+}
+
+op <- par(mar = c(4, 4, 3, 1), mgp = c(2.2, 0.8, 0))
+plot(
+  potatored$Date, potatored$Average, type = "l",
+  col = "#1F77B4", lwd = 1.2,
+  xlab = "Fecha", ylab = "Precio promedio",
+  main = "Serie de tiempo: precio promedio"
+)
+par(op)
+dev.off()
 ```
 
-<img src="04-application_files/figure-html/unnamed-chunk-15-1.png" width="1050" />
+```
+## png 
+##   2
+```
+
+``` r
+# Mostrar la imagen generada (método estandarizado)
+knitr::include_graphics(outfile)
+```
+
+## **2.4 STL — Base R + PNG + include**
 
 
+``` r
+# Asegurar que la carpeta 'figuras' exista (relativa al proyecto)
+if (!dir.exists("figuras")) dir.create("figuras", recursive = TRUE)
+
+# Definir la ruta de salida estándar
+outfile <- file.path("figuras", "stl.png")
+
+# --- Lógica de cálculo STL (existente) ---
+y <- ts(potatored$Average, frequency = 365)
+# interp lineal base (necesaria para STL si hay NAs)
+y <- approx(seq_along(y), y, xout=seq_along(y))$y 
+fit <- stl(ts(y, frequency=365), s.window="periodic", robust=TRUE)
+# --- Fin lógica de cálculo ---
+
+# Generar y guardar el gráfico
+if (capabilities("cairo")) {
+  png(outfile, width=1400, height=900, res=150, type="cairo")
+} else {
+  png(outfile, width=1400, height=900, res=150)
+}
+op <- par(mfrow=c(4,1), mar=c(3,4,2,1))
+plot(fit$time.series[,"remainder"], type="l", col="#7D3C98", main="Residuo", xlab="", ylab="")
+plot(fit$time.series[,"seasonal"],  type="l", col="#117A65", main="Estacionalidad", xlab="", ylab="")
+plot(fit$time.series[,"trend"],      type="l", col="#E67E22", main="Tendencia", xlab="", ylab="")
+plot(y, type="l", col="#1F77B4", main="Serie (interpolada)", xlab="Tiempo", ylab="")
+par(op); dev.off()
+```
+
+```
+## png 
+##   2
+```
+
+``` r
+# Incluir la imagen guardada en el bookdown
+# Esta línea reemplaza el 'cat(sprintf(...))'
+knitr::include_graphics(outfile)
+```
+
+
+``` r
+# --- Promedios móviles (gráfico generado automáticamente) ---
+
+if (!dir.exists("figuras")) dir.create("figuras", recursive = TRUE)
+
+fig_path <- "figuras/promedios_moviles.png"
+
+# Generar el gráfico y guardarlo
+
+png(fig_path, width = 1200, height = 600, res = 150)
+plot(potatored$Average, type = "l", col = "steelblue",
+main = "Promedios móviles (7 y 30 días)",
+ylab = "Precio promedio", xlab = "Tiempo")
+lines(stats::filter(potatored$Average, rep(1/7,7)), col = "red", lwd = 2)
+lines(stats::filter(potatored$Average, rep(1/30,30)), col = "green", lwd = 2)
+legend("topright", legend = c("Original", "7 días", "30 días"),
+col = c("steelblue", "red", "green"), lty = 1, lwd = 2)
+dev.off()
+```
+
+```
+## png 
+##   2
+```
+
+``` r
+# Mostrar la imagen
+
+knitr::include_graphics(fig_path)
+```
+
+<img src="figuras/promedios_moviles.png" width="384" />
 ## **Rezagos (lags) y dependencia temporal**
 
 
@@ -591,7 +638,7 @@ ggplot(pot_lags, aes(lag1, Average)) +
 ## (`geom_point()`).
 ```
 
-<img src="04-application_files/figure-html/unnamed-chunk-16-1.png" width="1050" />
+<img src="04-application_files/figure-html/unnamed-chunk-17-1.png" width="1050" />
 
 ``` r
 # Scatter y_t vs y_{t-7}
@@ -616,20 +663,20 @@ ggplot(pot_lags, aes(lag7, Average)) +
 ## (`geom_point()`).
 ```
 
-<img src="04-application_files/figure-html/unnamed-chunk-16-2.png" width="1050" />
+<img src="04-application_files/figure-html/unnamed-chunk-17-2.png" width="1050" />
 
 ``` r
 # ACF/PACF (serie regularizada)
 ggAcf(pot_ts)  + labs(title = "ACF precio promedio (diario)")
 ```
 
-<img src="04-application_files/figure-html/unnamed-chunk-16-3.png" width="1050" />
+<img src="04-application_files/figure-html/unnamed-chunk-17-3.png" width="1050" />
 
 ``` r
 ggPacf(pot_ts) + labs(title = "PACF precio promedio (diario)")
 ```
 
-<img src="04-application_files/figure-html/unnamed-chunk-16-4.png" width="1050" />
+<img src="04-application_files/figure-html/unnamed-chunk-17-4.png" width="1050" />
 
 
 ## **Estacionalidad (descomposicion STL)**
@@ -650,7 +697,7 @@ autoplot(fit_stl) + labs(title = "STL precio promedio")
 ## generated.
 ```
 
-<img src="04-application_files/figure-html/unnamed-chunk-17-1.png" width="1050" />
+<img src="04-application_files/figure-html/unnamed-chunk-18-1.png" width="1050" />
 El análisis de la serie temporal del precio promedio diario de Potato Red permitió evidenciar comportamientos consistentes con los fenómenos propios de los productos agrícolas de consumo masivo.
 En primer lugar, los gráficos de tendencia y promedios móviles muestran que los precios presentan fluctuaciones periódicas pero con una ligera tendencia creciente en el largo plazo. El promedio móvil de 7 días suaviza las variaciones diarias y deja entrever ciclos semanales asociados a la oferta en el mercado, mientras que el promedio de 30 días resalta un patrón más estructural que apunta a incrementos graduales, posiblemente relacionados con factores estacionales como la disponibilidad de cosecha o la variación de costos logísticos.
 
@@ -839,7 +886,7 @@ autoplot(y_hw) +
   theme_minimal()
 ```
 
-<img src="04-application_files/figure-html/unnamed-chunk-24-1.png" width="1050" />
+<img src="04-application_files/figure-html/unnamed-chunk-25-1.png" width="1050" />
 ## **Agregación semanal**
 
 
@@ -894,7 +941,7 @@ autoplot(y_w) +
   theme_minimal()
 ```
 
-<img src="04-application_files/figure-html/unnamed-chunk-25-1.png" width="1050" />
+<img src="04-application_files/figure-html/unnamed-chunk-26-1.png" width="1050" />
 
 
 
@@ -1043,7 +1090,7 @@ best_fc <- fc_hwm_w  # ganador: Holt-Winters multiplicativo
 checkresiduals(best_fc$model)
 ```
 
-<img src="04-application_files/figure-html/unnamed-chunk-28-1.png" width="1050" />
+<img src="04-application_files/figure-html/unnamed-chunk-29-1.png" width="1050" />
 
 ```
 ## 
@@ -1082,7 +1129,7 @@ autoplot(fc_final_hw) +
   theme_minimal()
 ```
 
-<img src="04-application_files/figure-html/unnamed-chunk-29-1.png" width="1050" />
+<img src="04-application_files/figure-html/unnamed-chunk-30-1.png" width="1050" />
 
 ``` r
 # primeras filas de la tabla de pronostico
@@ -1200,13 +1247,13 @@ lengths
 ggAcf(y_train_w_log)  + labs(title = "ACF log semanal (train)")
 ```
 
-<img src="04-application_files/figure-html/unnamed-chunk-31-1.png" width="1050" />
+<img src="04-application_files/figure-html/unnamed-chunk-32-1.png" width="1050" />
 
 ``` r
 ggPacf(y_train_w_log) + labs(title = "PACF log semanal (train)")
 ```
 
-<img src="04-application_files/figure-html/unnamed-chunk-31-2.png" width="1050" />
+<img src="04-application_files/figure-html/unnamed-chunk-32-2.png" width="1050" />
 
 ``` r
 # Candidato 1: ARIMA no estacional
@@ -1334,7 +1381,7 @@ acc_tbl_arima
 checkresiduals(fit_seas_refit)
 ```
 
-<img src="04-application_files/figure-html/unnamed-chunk-34-1.png" width="1050" />
+<img src="04-application_files/figure-html/unnamed-chunk-35-1.png" width="1050" />
 
 ```
 ## 
@@ -1359,17 +1406,22 @@ fc_final_exp$mean  <- exp(fc_final$mean)
 fc_final_exp$lower <- exp(fc_final$lower)
 fc_final_exp$upper <- exp(fc_final$upper)
 
-# OPCION A: Grafico simple del pronostico (incluye bandas 80% y 95% automaticamente)
+fc_final_exp$x <- exp(fc_final_exp$x)
+# ---------------------------------
+
+# OPCION A: Grafico simple del pronostico (AHORA SERÁ COHERENTE)
 autoplot(fc_final_exp) +
   labs(
     title    = "Pronostico final SARIMA(1,0,0)(0,1,0)[52]",
-    subtitle = "Proyeccion de precios semanales con intervalos de confianza",
+    subtitle = "Proyeccion de precios semanales (Escala Original)",
     x = "Tiempo", y = "Precio promedio semanal"
   ) +
   theme_minimal()
 ```
 
-<img src="04-application_files/figure-html/unnamed-chunk-35-1.png" width="1050" />
+<img src="04-application_files/figure-html/unnamed-chunk-36-1.png" width="1050" />
+
+
 
 ``` r
 # Ajuste automático con comparación AIC/BIC

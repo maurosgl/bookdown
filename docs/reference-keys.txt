@@ -53,7 +53,7 @@ suavizamiento-temporal
 promedios-moviles-evidencia-de-suavizado-2
 promedios-móviles-7-y-30-base-r-png-include
 serie-básica-ts-base-r-png-include
-rezagos-lags-y-dependencia-temporal-2
+stl-base-r-png-include
 estacionalidad-descomposicion-stl-2
 estacionariedad-y-diferenciación-2
 verificación-de-estacionariedad-adf-test-2
