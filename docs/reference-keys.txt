@@ -86,3 +86,10 @@ reflexión-metodológica-final
 evaluación-del-modelo-1
 pronostico-y-conclusiones
 conclusiones-generales-finales
+prophet
+ajustamos-el-modelo-prophet
+generación-del-modelo-prophet
+extracción-de-componentes-del-modelo
+comparación-de-métricas
+conclusión-de-la-comparación
+pruebas-de-estacionariedad-dickey-fuller

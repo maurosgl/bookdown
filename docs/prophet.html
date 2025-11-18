@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Capítulo 5 Prophet | Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal</title>
+  <meta name="description" content="Análisis y predicción de precios de frutas y verduras en Nepal usando técnicas de series de tiempo y machine learning." />
+  <meta name="generator" content="bookdown 0.45 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Capítulo 5 Prophet | Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Análisis y predicción de precios de frutas y verduras en Nepal usando técnicas de series de tiempo y machine learning." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Capítulo 5 Prophet | Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal" />
+  
+  <meta name="twitter:description" content="Análisis y predicción de precios de frutas y verduras en Nepal usando técnicas de series de tiempo y machine learning." />
+  
+
+<meta name="author" content="Grupo 2" />
+
+
+<meta name="date" content="2025-11-17" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="modelos-estacionales-en-series-de-tiempo.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introducción</a></li>
+<li class="chapter" data-level="2" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html"><i class="fa fa-check"></i><b>2</b> EDA y Análisis de Series de tiempo</a>
+<ul>
+<li class="chapter" data-level="2.0.1" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#cargue-de-datos"><i class="fa fa-check"></i><b>2.0.1</b> <strong>Cargue de Datos</strong></a></li>
+<li class="chapter" data-level="2.0.2" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#primera-visualización-de-los-datos"><i class="fa fa-check"></i><b>2.0.2</b> <strong>Primera Visualización de los datos</strong></a></li>
+<li class="chapter" data-level="2.0.3" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#datos-faltantes-y-duplicados"><i class="fa fa-check"></i><b>2.0.3</b> <strong>Datos faltantes y duplicados</strong></a></li>
+<li class="chapter" data-level="2.0.4" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#análisis-univariado"><i class="fa fa-check"></i><b>2.0.4</b> <strong>Análisis Univariado</strong></a></li>
+<li class="chapter" data-level="2.0.5" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#análisis-bivariado"><i class="fa fa-check"></i><b>2.0.5</b> <strong>Análisis Bivariado</strong></a></li>
+<li class="chapter" data-level="2.0.6" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#correlación-de-los-datos"><i class="fa fa-check"></i><b>2.0.6</b> <strong>Correlación de los datos</strong></a></li>
+<li class="chapter" data-level="2.1" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#analisis-de-series-de-tiempo"><i class="fa fa-check"></i><b>2.1</b> <strong>Analisis de series de tiempo</strong></a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#serie-basica-y-acf"><i class="fa fa-check"></i><b>2.1.1</b> <strong>Serie basica y ACF</strong></a></li>
+<li class="chapter" data-level="2.1.2" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#promedios-moviles-evidencia-de-suavizado"><i class="fa fa-check"></i><b>2.1.2</b> <strong>Promedios moviles (evidencia de suavizado)</strong></a></li>
+<li class="chapter" data-level="2.1.3" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#rezagos-lags-y-dependencia-temporal"><i class="fa fa-check"></i><b>2.1.3</b> <strong>Rezagos (lags) y dependencia temporal</strong></a></li>
+<li class="chapter" data-level="2.1.4" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#estacionalidad-descomposicion-stl"><i class="fa fa-check"></i><b>2.1.4</b> <strong>Estacionalidad (descomposicion STL)</strong></a></li>
+<li class="chapter" data-level="2.1.5" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#estacionariedad-y-diferenciación"><i class="fa fa-check"></i><b>2.1.5</b> <strong>Estacionariedad y diferenciación</strong></a></li>
+<li class="chapter" data-level="2.1.6" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#verificación-de-estacionariedad-adf-test"><i class="fa fa-check"></i><b>2.1.6</b> <strong>Verificación de estacionariedad (ADF Test)</strong></a></li>
+<li class="chapter" data-level="2.1.7" data-path="eda-y-análisis-de-series-de-tiempo.html"><a href="eda-y-análisis-de-series-de-tiempo.html#interpretacion"><i class="fa fa-check"></i><b>2.1.7</b> <strong>Interpretacion</strong></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html"><i class="fa fa-check"></i><b>3</b> <strong>Pronóstico de Demanda HoltWinters</strong></a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#analisis-de-series-de-tiempo-1"><i class="fa fa-check"></i><b>3.1</b> <strong>Analisis de series de tiempo</strong></a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#selección-del-item-objetivo"><i class="fa fa-check"></i><b>3.1.1</b> <strong>Selección del item objetivo</strong></a></li>
+<li class="chapter" data-level="3.1.2" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#serie-basica-y-acf-1"><i class="fa fa-check"></i><b>3.1.2</b> <strong>Serie basica y ACF</strong></a></li>
+<li class="chapter" data-level="3.1.3" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#promedios-moviles-evidencia-de-suavizado-1"><i class="fa fa-check"></i><b>3.1.3</b> <strong>Promedios moviles (evidencia de suavizado)</strong></a></li>
+<li class="chapter" data-level="3.1.4" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#rezagos-lags-y-dependencia-temporal-1"><i class="fa fa-check"></i><b>3.1.4</b> <strong>Rezagos (lags) y dependencia temporal</strong></a></li>
+<li class="chapter" data-level="3.1.5" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#estacionalidad-descomposicion-stl-1"><i class="fa fa-check"></i><b>3.1.5</b> <strong>Estacionalidad (descomposicion STL)</strong></a></li>
+<li class="chapter" data-level="3.1.6" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#análisis-conglomerado"><i class="fa fa-check"></i><b>3.1.6</b> <strong>Análisis Conglomerado</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#estacionariedad-y-diferenciación-1"><i class="fa fa-check"></i><b>3.2</b> <strong>Estacionariedad y diferenciación</strong></a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#verificación-de-estacionariedad-adf-test-1"><i class="fa fa-check"></i><b>3.2.1</b> <strong>Verificación de estacionariedad (ADF Test)</strong></a></li>
+<li class="chapter" data-level="3.2.2" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#interpretacion-1"><i class="fa fa-check"></i><b>3.2.2</b> <strong>Interpretacion</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#suavizamiento-y-holt-winters-sobre-la-variable-tiempo"><i class="fa fa-check"></i><b>3.3</b> <strong>Suavizamiento y Holt-Winters sobre la variable tiempo</strong></a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#particion-de-entrenamiento-prueba"><i class="fa fa-check"></i><b>3.3.1</b> <strong>Particion de entrenamiento /prueba</strong></a></li>
+<li class="chapter" data-level="3.3.2" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#agregación-semanal"><i class="fa fa-check"></i><b>3.3.2</b> <strong>Agregación semanal</strong></a></li>
+<li class="chapter" data-level="3.3.3" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#modelos-de-suavizamiento-y-holt-winters-en-serie-semanal"><i class="fa fa-check"></i><b>3.3.3</b> <strong>Modelos de suavizamiento y Holt-Winters en serie semanal</strong></a></li>
+<li class="chapter" data-level="3.3.4" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#comparación-de-precisión-fuera-de-muestra"><i class="fa fa-check"></i><b>3.3.4</b> <strong>Comparación de precisión fuera de muestra</strong></a></li>
+<li class="chapter" data-level="3.3.5" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#diagnostico-de-residuos"><i class="fa fa-check"></i><b>3.3.5</b> <strong>Diagnostico de residuos</strong></a></li>
+<li class="chapter" data-level="3.3.6" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#pronostico-final"><i class="fa fa-check"></i><b>3.3.6</b> <strong>Pronostico final</strong></a></li>
+<li class="chapter" data-level="3.3.7" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#conclusiones"><i class="fa fa-check"></i><b>3.3.7</b> Conclusiones</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#desarrollo-metodológico-y-justificación-de-decisiones"><i class="fa fa-check"></i><b>3.4</b> <strong>Desarrollo metodológico y justificación de decisiones</strong></a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#ajuste-de-la-frecuencia-temporal"><i class="fa fa-check"></i><b>3.4.1</b> Ajuste de la frecuencia temporal</a></li>
+<li class="chapter" data-level="3.4.2" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#modelos-aplicados"><i class="fa fa-check"></i><b>3.4.2</b> Modelos aplicados</a></li>
+<li class="chapter" data-level="3.4.3" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#validación-del-modelo"><i class="fa fa-check"></i><b>3.4.3</b> Validación del modelo</a></li>
+<li class="chapter" data-level="3.4.4" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#diagnóstico-de-residuos"><i class="fa fa-check"></i><b>3.4.4</b> Diagnóstico de residuos</a></li>
+<li class="chapter" data-level="3.4.5" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#pronóstico-final"><i class="fa fa-check"></i><b>3.4.5</b> Pronóstico final</a></li>
+<li class="chapter" data-level="3.4.6" data-path="pronóstico-de-demanda-holtwinters.html"><a href="pronóstico-de-demanda-holtwinters.html#conclusión-integradora"><i class="fa fa-check"></i><b>3.4.6</b> Conclusión integradora</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html"><i class="fa fa-check"></i><b>4</b> <strong>Modelos Estacionales en Series de Tiempo</strong></a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#exploración-inicial-de-datos"><i class="fa fa-check"></i><b>4.1</b> <strong>Exploración inicial de datos</strong></a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#lectura-de-datos"><i class="fa fa-check"></i><b>4.1.1</b> <strong>Lectura de datos</strong></a></li>
+<li class="chapter" data-level="4.1.2" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#transformación-inicial-de-datos"><i class="fa fa-check"></i><b>4.1.2</b> <strong>Transformación inicial de datos</strong></a></li>
+<li class="chapter" data-level="4.1.3" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#datos-nulos-y-duplicados"><i class="fa fa-check"></i><b>4.1.3</b> <strong>Datos nulos y duplicados</strong></a></li>
+<li class="chapter" data-level="4.1.4" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#análisis-univariado-1"><i class="fa fa-check"></i><b>4.1.4</b> <strong>Análisis Univariado</strong></a></li>
+<li class="chapter" data-level="4.1.5" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#análisis-bivariado-1"><i class="fa fa-check"></i><b>4.1.5</b> <strong>Análisis Bivariado</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#analisis-de-series-de-tiempo-2"><i class="fa fa-check"></i><b>4.2</b> <strong>Analisis de series de tiempo</strong></a></li>
+<li class="chapter" data-level="4.3" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#serie-basica-y-acf-2"><i class="fa fa-check"></i><b>4.3</b> <strong>Serie basica y ACF</strong></a></li>
+<li class="chapter" data-level="4.4" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#suavizamiento-temporal"><i class="fa fa-check"></i><b>4.4</b> <strong>Suavizamiento temporal</strong></a></li>
+<li class="chapter" data-level="4.5" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#promedios-moviles-evidencia-de-suavizado-2"><i class="fa fa-check"></i><b>4.5</b> <strong>Promedios moviles (evidencia de suavizado)</strong></a></li>
+<li class="chapter" data-level="4.6" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#promedios-móviles-7-y-30-base-r-png-include"><i class="fa fa-check"></i><b>4.6</b> <strong>Promedios móviles (7 y 30) — Base R + PNG + include</strong></a></li>
+<li class="chapter" data-level="4.7" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#serie-básica-ts-base-r-png-include"><i class="fa fa-check"></i><b>4.7</b> <strong>Serie básica (ts) — Base R + PNG + include</strong></a></li>
+<li class="chapter" data-level="4.8" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#stl-base-r-png-include"><i class="fa fa-check"></i><b>4.8</b> <strong>2.4 STL — Base R + PNG + include</strong></a></li>
+<li class="chapter" data-level="4.9" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#estacionalidad-descomposicion-stl-2"><i class="fa fa-check"></i><b>4.9</b> <strong>Estacionalidad (descomposicion STL)</strong></a></li>
+<li class="chapter" data-level="4.10" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#estacionariedad-y-diferenciación-2"><i class="fa fa-check"></i><b>4.10</b> <strong>Estacionariedad y diferenciación</strong></a></li>
+<li class="chapter" data-level="4.11" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#verificación-de-estacionariedad-adf-test-2"><i class="fa fa-check"></i><b>4.11</b> <strong>Verificación de estacionariedad (ADF Test)</strong></a></li>
+<li class="chapter" data-level="4.12" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#interpretacion-2"><i class="fa fa-check"></i><b>4.12</b> <strong>Interpretacion</strong></a></li>
+<li class="chapter" data-level="4.13" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#ajuste-del-modelo-arima"><i class="fa fa-check"></i><b>4.13</b> <strong>AJUSTE DEL MODELO ARIMA</strong></a></li>
+<li class="chapter" data-level="4.14" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#criterios-de-selección"><i class="fa fa-check"></i><b>4.14</b> <strong>Criterios de selección</strong></a></li>
+<li class="chapter" data-level="4.15" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#suavizamiento-y-holt-winters-sobre-la-variable-tiempo-1"><i class="fa fa-check"></i><b>4.15</b> <strong>Suavizamiento y Holt-Winters sobre la variable tiempo</strong></a></li>
+<li class="chapter" data-level="4.16" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#particion-de-entrenamiento-prueba-1"><i class="fa fa-check"></i><b>4.16</b> <strong>Particion de entrenamiento /prueba</strong></a></li>
+<li class="chapter" data-level="4.17" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#modelos-de-suavizamiento-y-holt-winters-en-serie-semanal-1"><i class="fa fa-check"></i><b>4.17</b> <strong>Modelos de suavizamiento y Holt-Winters en serie semanal</strong></a></li>
+<li class="chapter" data-level="4.18" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#comparación-de-presición-fuera-de-muestra"><i class="fa fa-check"></i><b>4.18</b> <strong>Comparación de presición fuera de muestra</strong></a></li>
+<li class="chapter" data-level="4.19" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#diagnostico-de-residuos-1"><i class="fa fa-check"></i><b>4.19</b> <strong>Diagnostico de residuos</strong></a></li>
+<li class="chapter" data-level="4.20" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#pronostico-final-1"><i class="fa fa-check"></i><b>4.20</b> <strong>Pronostico final</strong></a></li>
+<li class="chapter" data-level="4.21" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#conclusiones-1"><i class="fa fa-check"></i><b>4.21</b> <strong>Conclusiones</strong></a></li>
+<li class="chapter" data-level="4.22" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#desarrollo-metodológico-y-justificación-de-decisiones-1"><i class="fa fa-check"></i><b>4.22</b> <strong>Desarrollo metodológico y justificación de decisiones</strong></a></li>
+<li class="chapter" data-level="4.23" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#ajuste-de-la-frecuencia-temporal-1"><i class="fa fa-check"></i><b>4.23</b> <strong>Ajuste de la frecuencia temporal</strong></a></li>
+<li class="chapter" data-level="4.24" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#modelos-aplicados-1"><i class="fa fa-check"></i><b>4.24</b> <strong>Modelos aplicados</strong></a></li>
+<li class="chapter" data-level="4.25" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#validación-del-modelo-1"><i class="fa fa-check"></i><b>4.25</b> <strong>Validación del modelo</strong></a></li>
+<li class="chapter" data-level="4.26" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#diagnóstico-de-residuos-1"><i class="fa fa-check"></i><b>4.26</b> <strong>Diagnóstico de residuos</strong></a></li>
+<li class="chapter" data-level="4.27" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#pronóstico-final-1"><i class="fa fa-check"></i><b>4.27</b> <strong>Pronóstico final</strong></a></li>
+<li class="chapter" data-level="4.28" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#conclusión-integradora-1"><i class="fa fa-check"></i><b>4.28</b> <strong>Conclusión integradora</strong></a></li>
+<li class="chapter" data-level="4.29" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#ajuste-e-interpretación-del-modelo-arimasarima---box-jenkins-arima"><i class="fa fa-check"></i><b>4.29</b> <strong>Ajuste e interpretación del modelo ARIMA/SARIMA - Box-Jenkins (ARIMA)</strong></a></li>
+<li class="chapter" data-level="4.30" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#pronostico-a-h-pasos-y-metricas-rmsemaemape"><i class="fa fa-check"></i><b>4.30</b> <strong>Pronostico a h pasos y metricas RMSE/MAE/MAPE</strong></a></li>
+<li class="chapter" data-level="4.31" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#diagnostico-de-residuos-2"><i class="fa fa-check"></i><b>4.31</b> <strong>Diagnostico de residuos</strong></a></li>
+<li class="chapter" data-level="4.32" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#pronostico-final-sarima-10001052"><i class="fa fa-check"></i><b>4.32</b> <strong>Pronostico final Sarima (1,0,0)(0,1,0)[52]</strong></a></li>
+<li class="chapter" data-level="4.33" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#interpretación-del-modelo"><i class="fa fa-check"></i><b>4.33</b> <strong>Interpretación del modelo</strong></a></li>
+<li class="chapter" data-level="4.34" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#reflexión-y-justificación-del-proceso-boxjenkins"><i class="fa fa-check"></i><b>4.34</b> <strong>Reflexión y justificación del proceso Box–Jenkins</strong></a></li>
+<li class="chapter" data-level="4.35" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#ajustes-metodológicos-y-rendimiento-computacional"><i class="fa fa-check"></i><b>4.35</b> <strong>Ajustes metodológicos y rendimiento computacional</strong></a></li>
+<li class="chapter" data-level="4.36" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#evaluación-del-modelo"><i class="fa fa-check"></i><b>4.36</b> <strong>Evaluación del modelo</strong></a></li>
+<li class="chapter" data-level="4.37" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#reflexión-metodológica-final"><i class="fa fa-check"></i><b>4.37</b> <strong>Reflexión metodológica final</strong></a></li>
+<li class="chapter" data-level="4.38" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#evaluación-del-modelo-1"><i class="fa fa-check"></i><b>4.38</b> <strong>EVALUACIÓN DEL MODELO</strong></a></li>
+<li class="chapter" data-level="4.39" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#pronostico-y-conclusiones"><i class="fa fa-check"></i><b>4.39</b> <strong>PRONOSTICO Y CONCLUSIONES</strong></a></li>
+<li class="chapter" data-level="4.40" data-path="modelos-estacionales-en-series-de-tiempo.html"><a href="modelos-estacionales-en-series-de-tiempo.html#conclusiones-generales-finales"><i class="fa fa-check"></i><b>4.40</b> <strong>CONCLUSIONES GENERALES FINALES</strong></a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="prophet.html"><a href="prophet.html"><i class="fa fa-check"></i><b>5</b> <strong>Prophet</strong></a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="prophet.html"><a href="prophet.html#ajustamos-el-modelo-prophet"><i class="fa fa-check"></i><b>5.1</b> <strong>Ajustamos el modelo Prophet</strong></a></li>
+<li class="chapter" data-level="5.2" data-path="prophet.html"><a href="prophet.html#generación-del-modelo-prophet"><i class="fa fa-check"></i><b>5.2</b> <strong>Generación del modelo Prophet</strong></a></li>
+<li class="chapter" data-level="5.3" data-path="prophet.html"><a href="prophet.html#extracción-de-componentes-del-modelo"><i class="fa fa-check"></i><b>5.3</b> <strong>Extracción de componentes del modelo</strong></a></li>
+<li class="chapter" data-level="5.4" data-path="prophet.html"><a href="prophet.html#comparación-de-métricas"><i class="fa fa-check"></i><b>5.4</b> <strong>Comparación de métricas</strong></a></li>
+<li class="chapter" data-level="5.5" data-path="prophet.html"><a href="prophet.html#conclusión-de-la-comparación"><i class="fa fa-check"></i><b>5.5</b> <strong>Conclusión de la comparación:</strong></a></li>
+<li class="chapter" data-level="5.6" data-path="prophet.html"><a href="prophet.html#pruebas-de-estacionariedad-dickey-fuller"><i class="fa fa-check"></i><b>5.6</b> <strong>Pruebas de estacionariedad Dickey Fuller</strong></a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="prophet" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">Capítulo 5</span> <strong>Prophet</strong><a href="prophet.html#prophet" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<pre><code>## Loading required package: dplyr</code></pre>
+<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre><code>## Loading required package: tidyr</code></pre>
+<pre><code>## Warning: package &#39;tidyr&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## Loading required package: lubridate</code></pre>
+<pre><code>## Warning: package &#39;lubridate&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## 
+## Attaching package: &#39;lubridate&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     date, intersect, setdiff, union</code></pre>
+<pre><code>## Loading required package: stringr</code></pre>
+<pre><code>## Warning: package &#39;stringr&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## Loading required package: tseries</code></pre>
+<pre><code>## Warning: package &#39;tseries&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## Registered S3 method overwritten by &#39;quantmod&#39;:
+##   method            from
+##   as.zoo.data.frame zoo</code></pre>
+<pre><code>## # A tibble: 6 × 6
+##   Commodity           Date       Unit  Minimum Maximum Average
+##   &lt;chr&gt;               &lt;date&gt;     &lt;chr&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+## 1 Tomato Big(Nepali)  2013-06-16 &lt;NA&gt;       35      40    37.5
+## 2 Tomato Small(Local) 2013-06-16 &lt;NA&gt;       26      32    29  
+## 3 Potato Red          2013-06-16 &lt;NA&gt;       20      21    20.5
+## 4 Potato White        2013-06-16 &lt;NA&gt;       15      16    15.5
+## 5 Onion Dry (Indian)  2013-06-16 &lt;NA&gt;       28      30    29  
+## 6 Carrot(Local)       2013-06-16 &lt;NA&gt;       30      35    32.5</code></pre>
+<pre><code>## tibble [197,161 × 6] (S3: tbl_df/tbl/data.frame)
+##  $ Commodity: chr [1:197161] &quot;Tomato Big(Nepali)&quot; &quot;Tomato Small(Local)&quot; &quot;Potato Red&quot; &quot;Potato White&quot; ...
+##  $ Date     : Date[1:197161], format: &quot;2013-06-16&quot; &quot;2013-06-16&quot; ...
+##  $ Unit     : chr [1:197161] NA NA NA NA ...
+##  $ Minimum  : num [1:197161] 35 26 20 15 28 30 6 30 35 25 ...
+##  $ Maximum  : num [1:197161] 40 32 21 16 30 35 10 35 40 30 ...
+##  $ Average  : num [1:197161] 37.5 29 20.5 15.5 29 32.5 8 32.5 37.5 27.5 ...</code></pre>
+<pre><code>##   Commodity              Date                Unit              Minimum       
+##  Length:197161      Min.   :2013-06-16   Length:197161      Min.   :   1.00  
+##  Class :character   1st Qu.:2015-08-24   Class :character   1st Qu.:  40.00  
+##  Mode  :character   Median :2017-08-03   Mode  :character   Median :  60.00  
+##                     Mean   :2017-08-09                      Mean   :  85.42  
+##                     3rd Qu.:2019-08-27                      3rd Qu.: 100.00  
+##                     Max.   :2021-05-13                      Max.   :1800.00  
+##     Maximum           Average       
+##  Min.   :   6.00   Min.   :   5.00  
+##  1st Qu.:  45.00   1st Qu.:  42.50  
+##  Median :  70.00   Median :  65.00  
+##  Mean   :  94.16   Mean   :  89.79  
+##  3rd Qu.: 110.00   3rd Qu.: 105.00  
+##  Max.   :2000.00   Max.   :1900.00</code></pre>
+<pre><code>## [1] 197161</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre><code>## Loading required package: ggplot2</code></pre>
+<p><img src="05-summary_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<pre><code>## # A tibble: 1 × 5
+##    Mean Median    SD   Min   Max
+##   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1  89.8     65  79.6     5  1900</code></pre>
+<p><img src="05-summary_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre><code>## [1] 0.9950614</code></pre>
+<pre><code>## [1] &quot;Potato Red&quot;</code></pre>
+<pre><code>## Warning: package &#39;forecast&#39; was built under R version 4.3.3</code></pre>
+<p><img src="05-summary_files/figure-html/unnamed-chunk-9-1.png" width="1050" /></p>
+<p><img src="05-summary_files/figure-html/unnamed-chunk-10-1.png" width="1050" /></p>
+<pre><code>## Loading required package: slider</code></pre>
+<pre><code>## Warning: package &#39;slider&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## ⚠️ La imagen &#39;stl2.png&#39; aún no existe...</code></pre>
+<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb247-1"><a href="prophet.html#cb247-1" tabindex="-1"></a><span class="co"># Crear carpeta de figuras si no existe</span></span>
+<span id="cb247-2"><a href="prophet.html#cb247-2" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(<span class="st">&quot;figuras&quot;</span>)) <span class="fu">dir.create</span>(<span class="st">&quot;figuras&quot;</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb247-3"><a href="prophet.html#cb247-3" tabindex="-1"></a></span>
+<span id="cb247-4"><a href="prophet.html#cb247-4" tabindex="-1"></a><span class="co"># Definir ruta de salida del gráfico</span></span>
+<span id="cb247-5"><a href="prophet.html#cb247-5" tabindex="-1"></a>outfile <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">&quot;figuras&quot;</span>, <span class="st">&quot;serie_basica.png&quot;</span>)</span>
+<span id="cb247-6"><a href="prophet.html#cb247-6" tabindex="-1"></a></span>
+<span id="cb247-7"><a href="prophet.html#cb247-7" tabindex="-1"></a><span class="co"># Generar y guardar el gráfico</span></span>
+<span id="cb247-8"><a href="prophet.html#cb247-8" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">capabilities</span>(<span class="st">&quot;cairo&quot;</span>)) {</span>
+<span id="cb247-9"><a href="prophet.html#cb247-9" tabindex="-1"></a>  <span class="fu">png</span>(outfile, <span class="at">width =</span> <span class="dv">1400</span>, <span class="at">height =</span> <span class="dv">600</span>, <span class="at">res =</span> <span class="dv">150</span>, <span class="at">type =</span> <span class="st">&quot;cairo&quot;</span>)</span>
+<span id="cb247-10"><a href="prophet.html#cb247-10" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb247-11"><a href="prophet.html#cb247-11" tabindex="-1"></a>  <span class="fu">png</span>(outfile, <span class="at">width =</span> <span class="dv">1400</span>, <span class="at">height =</span> <span class="dv">600</span>, <span class="at">res =</span> <span class="dv">150</span>)</span>
+<span id="cb247-12"><a href="prophet.html#cb247-12" tabindex="-1"></a>}</span>
+<span id="cb247-13"><a href="prophet.html#cb247-13" tabindex="-1"></a></span>
+<span id="cb247-14"><a href="prophet.html#cb247-14" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">1</span>), <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">2.2</span>, <span class="fl">0.8</span>, <span class="dv">0</span>))</span>
+<span id="cb247-15"><a href="prophet.html#cb247-15" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb247-16"><a href="prophet.html#cb247-16" tabindex="-1"></a>  potatored<span class="sc">$</span>Date, potatored<span class="sc">$</span>Average, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>,</span>
+<span id="cb247-17"><a href="prophet.html#cb247-17" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">&quot;#1F77B4&quot;</span>, <span class="at">lwd =</span> <span class="fl">1.2</span>,</span>
+<span id="cb247-18"><a href="prophet.html#cb247-18" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;Fecha&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Precio promedio&quot;</span>,</span>
+<span id="cb247-19"><a href="prophet.html#cb247-19" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">&quot;Serie de tiempo: precio promedio&quot;</span></span>
+<span id="cb247-20"><a href="prophet.html#cb247-20" tabindex="-1"></a>)</span>
+<span id="cb247-21"><a href="prophet.html#cb247-21" tabindex="-1"></a><span class="fu">par</span>(op)</span>
+<span id="cb247-22"><a href="prophet.html#cb247-22" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
+<pre><code>## png 
+##   2</code></pre>
+<div class="sourceCode" id="cb249"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb249-1"><a href="prophet.html#cb249-1" tabindex="-1"></a><span class="co"># Mostrar la imagen generada (método estandarizado)</span></span>
+<span id="cb249-2"><a href="prophet.html#cb249-2" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(outfile)</span></code></pre></div>
+<div class="sourceCode" id="cb250"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb250-1"><a href="prophet.html#cb250-1" tabindex="-1"></a><span class="co"># Asegurar que la carpeta &#39;figuras&#39; exista (relativa al proyecto)</span></span>
+<span id="cb250-2"><a href="prophet.html#cb250-2" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(<span class="st">&quot;figuras&quot;</span>)) <span class="fu">dir.create</span>(<span class="st">&quot;figuras&quot;</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb250-3"><a href="prophet.html#cb250-3" tabindex="-1"></a></span>
+<span id="cb250-4"><a href="prophet.html#cb250-4" tabindex="-1"></a><span class="co"># Definir la ruta de salida estándar</span></span>
+<span id="cb250-5"><a href="prophet.html#cb250-5" tabindex="-1"></a>outfile <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">&quot;figuras&quot;</span>, <span class="st">&quot;stl.png&quot;</span>)</span>
+<span id="cb250-6"><a href="prophet.html#cb250-6" tabindex="-1"></a></span>
+<span id="cb250-7"><a href="prophet.html#cb250-7" tabindex="-1"></a><span class="co"># --- Lógica de cálculo STL (existente) ---</span></span>
+<span id="cb250-8"><a href="prophet.html#cb250-8" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">ts</span>(potatored<span class="sc">$</span>Average, <span class="at">frequency =</span> <span class="dv">365</span>)</span>
+<span id="cb250-9"><a href="prophet.html#cb250-9" tabindex="-1"></a><span class="co"># interp lineal base (necesaria para STL si hay NAs)</span></span>
+<span id="cb250-10"><a href="prophet.html#cb250-10" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">approx</span>(<span class="fu">seq_along</span>(y), y, <span class="at">xout=</span><span class="fu">seq_along</span>(y))<span class="sc">$</span>y </span>
+<span id="cb250-11"><a href="prophet.html#cb250-11" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">stl</span>(<span class="fu">ts</span>(y, <span class="at">frequency=</span><span class="dv">365</span>), <span class="at">s.window=</span><span class="st">&quot;periodic&quot;</span>, <span class="at">robust=</span><span class="cn">TRUE</span>)</span>
+<span id="cb250-12"><a href="prophet.html#cb250-12" tabindex="-1"></a><span class="co"># --- Fin lógica de cálculo ---</span></span>
+<span id="cb250-13"><a href="prophet.html#cb250-13" tabindex="-1"></a></span>
+<span id="cb250-14"><a href="prophet.html#cb250-14" tabindex="-1"></a><span class="co"># Generar y guardar el gráfico</span></span>
+<span id="cb250-15"><a href="prophet.html#cb250-15" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">capabilities</span>(<span class="st">&quot;cairo&quot;</span>)) {</span>
+<span id="cb250-16"><a href="prophet.html#cb250-16" tabindex="-1"></a>  <span class="fu">png</span>(outfile, <span class="at">width=</span><span class="dv">1400</span>, <span class="at">height=</span><span class="dv">900</span>, <span class="at">res=</span><span class="dv">150</span>, <span class="at">type=</span><span class="st">&quot;cairo&quot;</span>)</span>
+<span id="cb250-17"><a href="prophet.html#cb250-17" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb250-18"><a href="prophet.html#cb250-18" tabindex="-1"></a>  <span class="fu">png</span>(outfile, <span class="at">width=</span><span class="dv">1400</span>, <span class="at">height=</span><span class="dv">900</span>, <span class="at">res=</span><span class="dv">150</span>)</span>
+<span id="cb250-19"><a href="prophet.html#cb250-19" tabindex="-1"></a>}</span>
+<span id="cb250-20"><a href="prophet.html#cb250-20" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">1</span>), <span class="at">mar=</span><span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">2</span>,<span class="dv">1</span>))</span>
+<span id="cb250-21"><a href="prophet.html#cb250-21" tabindex="-1"></a><span class="fu">plot</span>(fit<span class="sc">$</span>time.series[,<span class="st">&quot;remainder&quot;</span>], <span class="at">type=</span><span class="st">&quot;l&quot;</span>, <span class="at">col=</span><span class="st">&quot;#7D3C98&quot;</span>, <span class="at">main=</span><span class="st">&quot;Residuo&quot;</span>, <span class="at">xlab=</span><span class="st">&quot;&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb250-22"><a href="prophet.html#cb250-22" tabindex="-1"></a><span class="fu">plot</span>(fit<span class="sc">$</span>time.series[,<span class="st">&quot;seasonal&quot;</span>],  <span class="at">type=</span><span class="st">&quot;l&quot;</span>, <span class="at">col=</span><span class="st">&quot;#117A65&quot;</span>, <span class="at">main=</span><span class="st">&quot;Estacionalidad&quot;</span>, <span class="at">xlab=</span><span class="st">&quot;&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb250-23"><a href="prophet.html#cb250-23" tabindex="-1"></a><span class="fu">plot</span>(fit<span class="sc">$</span>time.series[,<span class="st">&quot;trend&quot;</span>],      <span class="at">type=</span><span class="st">&quot;l&quot;</span>, <span class="at">col=</span><span class="st">&quot;#E67E22&quot;</span>, <span class="at">main=</span><span class="st">&quot;Tendencia&quot;</span>, <span class="at">xlab=</span><span class="st">&quot;&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb250-24"><a href="prophet.html#cb250-24" tabindex="-1"></a><span class="fu">plot</span>(y, <span class="at">type=</span><span class="st">&quot;l&quot;</span>, <span class="at">col=</span><span class="st">&quot;#1F77B4&quot;</span>, <span class="at">main=</span><span class="st">&quot;Serie (interpolada)&quot;</span>, <span class="at">xlab=</span><span class="st">&quot;Tiempo&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb250-25"><a href="prophet.html#cb250-25" tabindex="-1"></a><span class="fu">par</span>(op); <span class="fu">dev.off</span>()</span></code></pre></div>
+<pre><code>## png 
+##   2</code></pre>
+<div class="sourceCode" id="cb252"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb252-1"><a href="prophet.html#cb252-1" tabindex="-1"></a><span class="co"># Incluir la imagen guardada en el bookdown</span></span>
+<span id="cb252-2"><a href="prophet.html#cb252-2" tabindex="-1"></a><span class="co"># Esta línea reemplaza el &#39;cat(sprintf(...))&#39;</span></span>
+<span id="cb252-3"><a href="prophet.html#cb252-3" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(outfile)</span></code></pre></div>
+<pre><code>## png 
+##   2</code></pre>
+<p><img src="figuras/promedios_moviles.png" width="384" /></p>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<pre><code>## Warning: Removed 251 rows containing non-finite outside the scale range
+## (`stat_smooth()`).</code></pre>
+<pre><code>## Warning: Removed 251 rows containing missing values or values outside the scale range
+## (`geom_point()`).</code></pre>
+<p><img src="05-summary_files/figure-html/unnamed-chunk-17-1.png" width="1050" /></p>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<pre><code>## Warning: Removed 234 rows containing non-finite outside the scale range
+## (`stat_smooth()`).</code></pre>
+<pre><code>## Warning: Removed 234 rows containing missing values or values outside the scale range
+## (`geom_point()`).</code></pre>
+<p><img src="05-summary_files/figure-html/unnamed-chunk-17-2.png" width="1050" /><img src="05-summary_files/figure-html/unnamed-chunk-17-3.png" width="1050" /><img src="05-summary_files/figure-html/unnamed-chunk-17-4.png" width="1050" /></p>
+<pre><code>## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` instead.
+## ℹ The deprecated feature was likely used in the forecast package.
+##   Please report the issue at &lt;https://github.com/robjhyndman/forecast/issues&gt;.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
+<p><img src="05-summary_files/figure-html/unnamed-chunk-18-1.png" width="1050" /></p>
+<pre><code>## 
+##  Augmented Dickey-Fuller Test
+## 
+## data:  pot_ts_clean
+## Dickey-Fuller = -3.0587, Lag order = 14, p-value = 0.1301
+## alternative hypothesis: stationary</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre><code>## [1]  15.0 113.5</code></pre>
+<pre><code>## [1] 2.708050 4.731803</code></pre>
+<pre><code>## [1] 0.1322035</code></pre>
+<pre><code>## Warning in tseries::adf.test(na.omit(y_diff1)): p-value smaller than printed
+## p-value</code></pre>
+<pre><code>## [1] 0.01</code></pre>
+<pre><code>## [1] 2889</code></pre>
+<pre><code>## [1] 365</code></pre>
+<p><img src="05-summary_files/figure-html/unnamed-chunk-25-1.png" width="1050" /></p>
+<pre><code>## Warning: package &#39;zoo&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## 
+## Attaching package: &#39;zoo&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     as.Date, as.Date.numeric</code></pre>
+<p><img src="05-summary_files/figure-html/unnamed-chunk-26-1.png" width="1050" /></p>
+<pre><code>## $pars
+## $pars$SES
+##      alpha          l 
+##  0.9998999 20.0661412 
+## 
+## $pars$Holt
+##      alpha       beta        phi          l          b 
+##  0.9998998  0.1131366  0.8000015 19.3507661  0.7318030 
+## 
+## $pars$HW_adi
+##            a            b           s1           s2           s3           s4 
+##  39.08244375   0.07882721  -7.65617219  -5.33129937  -2.12172776  -0.60521373 
+##           s5           s6           s7           s8           s9          s10 
+##   1.67227131   3.70855086   3.86297747   4.29730738   4.70950257   5.51286110 
+##          s11          s12          s13          s14          s15          s16 
+##   6.58108183   9.34052131  11.67282675  11.56985459  10.72690049  10.62915737 
+##          s17          s18          s19          s20          s21          s22 
+##  11.56624926  14.32396189  12.96493891  12.91210622  15.60833595  19.70484488 
+##          s23          s24          s25          s26          s27          s28 
+##  18.21542017  15.04288451   8.57289145   4.41893044   3.59468994   2.26948285 
+##          s29          s30          s31          s32          s33          s34 
+##   1.41348224   1.16589200   0.07345107  -2.59161738  -5.38569070  -6.81747767 
+##          s35          s36          s37          s38          s39          s40 
+##  -8.35116126 -10.31002086 -14.36805886 -15.48013931 -13.59119371 -14.10375330 
+##          s41          s42          s43          s44          s45          s46 
+## -12.98609882 -13.91879059 -12.80762063 -12.45344901 -10.91079687  -9.50278976 
+##          s47          s48          s49          s50          s51          s52 
+##  -7.48181474  -7.63951511  -9.66359895  -9.41494901  -8.19836375  -8.36815804 
+## 
+## $pars$HW_multi
+##           a           b          s1          s2          s3          s4 
+## 40.06957603  0.07882721  0.78984647  0.86149189  0.95592829  0.99520880 
+##          s5          s6          s7          s8          s9         s10 
+##  1.06150922  1.11859277  1.10742123  1.11547832  1.13362719  1.15295252 
+##         s11         s12         s13         s14         s15         s16 
+##  1.19755872  1.28051297  1.34512974  1.33136792  1.29845693  1.29564795 
+##         s17         s18         s19         s20         s21         s22 
+##  1.31337013  1.37966490  1.36129664  1.37542631  1.45910223  1.55273805 
+##         s23         s24         s25         s26         s27         s28 
+##  1.49801968  1.41880910  1.25803359  1.12986066  1.10809063  1.06878253 
+##         s29         s30         s31         s32         s33         s34 
+##  1.05012792  1.03448499  1.00251606  0.92562241  0.84794487  0.78549769 
+##         s35         s36         s37         s38         s39         s40 
+##  0.73966473  0.68969443  0.59218461  0.55743071  0.58537805  0.58407654 
+##         s41         s42         s43         s44         s45         s46 
+##  0.61227139  0.60444293  0.63415394  0.64018299  0.67488001  0.72564177 
+##         s47         s48         s49         s50         s51         s52 
+##  0.78927007  0.78769837  0.73692250  0.74269354  0.77194581  0.76652385 
+## 
+## 
+## $metodos
+##                                         SES 
+##                                &quot;ETS(A,N,N)&quot; 
+##                                        Holt 
+##                               &quot;ETS(A,Ad,N)&quot; 
+##                                      HW_adi 
+##        &quot;Holt-Winters aditivo (HoltWinters)&quot; 
+##                                      HW_mul 
+## &quot;Holt-Winters multiplicativo (HoltWinters)&quot;</code></pre>
+<pre><code>##                   model      RMSE       MAE      MAPE
+## Training set...1    SES  2.929804  1.928708  5.748854
+## Test set...2        SES 33.778723 24.276695 34.505452
+## Training set...3   Holt  2.902352  1.901817  5.638535
+## Test set...4       Holt 34.593228 24.973105 35.456690
+## Training set...5 HW_adi  2.984060  2.102575  6.453931
+## Test set...6     HW_adi 20.668712 14.555681 20.798164
+## Training set...7 HW_mul  2.846973  1.996849  6.036061
+## Test set...8     HW_mul 18.997168 13.487363 19.577035</code></pre>
+<p><img src="05-summary_files/figure-html/unnamed-chunk-29-1.png" width="1050" /></p>
+<pre><code>## 
+##  Ljung-Box test
+## 
+## data:  Residuals from HoltWinters
+## Q* = 76.422, df = 62, p-value = 0.1029
+## 
+## Model df: 0.   Total lags used: 62</code></pre>
+<p><img src="05-summary_files/figure-html/unnamed-chunk-30-1.png" width="1050" /></p>
+<pre><code>##      Semana Pronostico LI_80 LS_80 LI_95 LS_95
+## 1  8.961538      37.69 33.31 42.07 30.99 44.39
+## 2  8.980769      40.88 35.05 46.72 31.96 49.81
+## 3  9.000000      45.08 37.83 52.33 33.99 56.16
+## 4  9.019231      47.46 39.09 55.83 34.66 60.26
+## 5  9.038462      50.77 41.19 60.34 36.13 65.41
+## 6  9.057692      55.25 44.31 66.19 38.52 71.98
+## 7  9.076923      55.96 44.35 67.58 38.20 73.73
+## 8  9.096154      55.31 43.30 67.32 36.95 73.67
+## 9  9.115385      55.66 43.09 68.24 36.43 74.90
+## 10 9.134615      58.37 44.76 71.99 37.55 79.20</code></pre>
+<pre><code>## total train  test 
+##   414   362    52</code></pre>
+<p><img src="05-summary_files/figure-html/unnamed-chunk-32-1.png" width="1050" /><img src="05-summary_files/figure-html/unnamed-chunk-32-2.png" width="1050" /></p>
+<pre><code>## Series: y_train_w_log_sdiff 
+## ARIMA(1,0,0) with zero mean 
+## 
+## Coefficients:
+##          ar1
+##       0.9562
+## s.e.  0.0163
+## 
+## sigma^2 = 0.009812:  log likelihood = 276.14
+## AIC=-548.29   AICc=-548.25   BIC=-540.82</code></pre>
+<pre><code>## Series: y_train_w_log 
+## ARIMA(1,0,0)(0,1,0)[52] 
+## 
+## Coefficients:
+##          ar1
+##       0.9562
+## s.e.  0.0163
+## 
+## sigma^2 = 0.009814:  log likelihood = 276.15
+## AIC=-548.3   AICc=-548.26   BIC=-540.82</code></pre>
+<pre><code>##                  model        RMSE         MAE     MAPE
+## Training set SARIMA_52  0.09152501  0.06528711  1.90487
+## Test set     SARIMA_52 18.80827374 15.08098880 25.67046</code></pre>
+<p><img src="05-summary_files/figure-html/unnamed-chunk-35-1.png" width="1050" /></p>
+<pre><code>## 
+##  Ljung-Box test
+## 
+## data:  Residuals from ARIMA(1,0,0)(0,1,0)[52]
+## Q* = 152.72, df = 71, p-value = 6.441e-08
+## 
+## Model df: 1.   Total lags used: 72</code></pre>
+<p><img src="05-summary_files/figure-html/unnamed-chunk-36-1.png" width="1050" /></p>
+<pre><code>## Series: y 
+## ARIMA(1,1,0) 
+## 
+## Coefficients:
+##           ar1
+##       -0.2051
+## s.e.   0.0190
+## 
+## sigma^2 = 4.054:  log likelihood = -5848.36
+## AIC=11700.72   AICc=11700.73   BIC=11712.66</code></pre>
+<pre><code>## [1] 11700.72</code></pre>
+<pre><code>## [1] 11712.56</code></pre>
+<pre><code>##          Point Forecast    Lo 80    Hi 80    Lo 95    Hi 95
+## 413.7143             36 33.41964 38.58036 32.05368 39.94632
+## 413.8571             36 32.70369 39.29631 30.95873 41.04127
+## 414.0000             36 32.05918 39.94082 29.97304 42.02696
+## 414.1429             36 31.51683 40.48317 29.14359 42.85641
+## 414.2857             36 31.03139 40.96861 28.40117 43.59883
+## 414.4286             36 30.58970 41.41030 27.72566 44.27434
+## 414.5714             36 30.18137 41.81863 27.10118 44.89882
+## 414.7143             36 29.79989 42.20011 26.51775 45.48225
+## 414.8571             36 29.44055 42.55945 25.96819 46.03181
+## 415.0000             36 29.09991 42.90009 25.44722 46.55278
+## 415.1429             36 28.77530 43.22470 24.95078 47.04922
+## 415.2857             36 28.46467 43.53533 24.47571 47.52429
+## 415.4286             36 28.16635 43.83365 24.01946 47.98054
+## 415.5714             36 27.87897 44.12103 23.57996 48.42004
+## 415.7143             36 27.60143 44.39857 23.15549 48.84451
+## 415.8571             36 27.33276 44.66724 22.74461 49.25539
+## 416.0000             36 27.07218 44.92782 22.34608 49.65392
+## 416.1429             36 26.81899 45.18101 21.95886 50.04114
+## 416.2857             36 26.57260 45.42740 21.58204 50.41796
+## 416.4286             36 26.33249 45.66751 21.21482 50.78518
+## 416.5714             36 26.09819 45.90181 20.85650 51.14350
+## 416.7143             36 25.86932 46.13068 20.50646 51.49354
+## 416.8571             36 25.64550 46.35450 20.16416 51.83584
+## 417.0000             36 25.42642 46.57358 19.82910 52.17090
+## 417.1429             36 25.21179 46.78821 19.50085 52.49915
+## 417.2857             36 25.00134 46.99866 19.17900 52.82100
+## 417.4286             36 24.79485 47.20515 18.86320 53.13680
+## 417.5714             36 24.59209 47.40791 18.55311 53.44689
+## 417.7143             36 24.39287 47.60713 18.24843 53.75157
+## 417.8571             36 24.19702 47.80298 17.94890 54.05110</code></pre>
+<p>Se cargan las librerías fpp3 y fable.prophet. Luego, se preparan los datos agregando la serie diaria a un formato tsibble semanal</p>
+<div class="sourceCode" id="cb287"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb287-1"><a href="prophet.html#cb287-1" tabindex="-1"></a><span class="fu">library</span>(fpp3)</span></code></pre></div>
+<pre><code>## Registered S3 method overwritten by &#39;tsibble&#39;:
+##   method               from 
+##   as_tibble.grouped_df dplyr</code></pre>
+<pre><code>## ── Attaching packages ──────────────────────────────────────────── fpp3 1.0.2 ──</code></pre>
+<pre><code>## ✔ tibble      3.2.1     ✔ feasts      0.4.2
+## ✔ tsibble     1.1.6     ✔ fable       0.4.1
+## ✔ tsibbledata 0.4.1</code></pre>
+<pre><code>## Warning: package &#39;tibble&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## Warning: package &#39;tsibble&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## Warning: package &#39;tsibbledata&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## Warning: package &#39;fable&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## ── Conflicts ───────────────────────────────────────────────── fpp3_conflicts ──
+## ✖ lubridate::date()    masks base::date()
+## ✖ dplyr::filter()      masks stats::filter()
+## ✖ tsibble::index()     masks zoo::index()
+## ✖ tsibble::intersect() masks base::intersect()
+## ✖ tsibble::interval()  masks lubridate::interval()
+## ✖ dplyr::lag()         masks stats::lag()
+## ✖ tsibble::setdiff()   masks base::setdiff()
+## ✖ tsibble::union()     masks base::union()</code></pre>
+<div class="sourceCode" id="cb296"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb296-1"><a href="prophet.html#cb296-1" tabindex="-1"></a><span class="fu">library</span>(fable.prophet)</span></code></pre></div>
+<pre><code>## Warning: package &#39;fable.prophet&#39; was built under R version 4.3.3</code></pre>
+<pre><code>## Loading required package: Rcpp</code></pre>
+<pre><code>## Warning: package &#39;Rcpp&#39; was built under R version 4.3.3</code></pre>
+<div class="sourceCode" id="cb300"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb300-1"><a href="prophet.html#cb300-1" tabindex="-1"></a>pot_weekly_tsbl <span class="ot">&lt;-</span> potatored <span class="sc">%&gt;%</span></span>
+<span id="cb300-2"><a href="prophet.html#cb300-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Week =</span> <span class="fu">yearweek</span>(Date)) <span class="sc">%&gt;%</span>     </span>
+<span id="cb300-3"><a href="prophet.html#cb300-3" tabindex="-1"></a>  <span class="fu">group_by</span>(Week) <span class="sc">%&gt;%</span></span>
+<span id="cb300-4"><a href="prophet.html#cb300-4" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb300-5"><a href="prophet.html#cb300-5" tabindex="-1"></a>    <span class="at">Precio =</span> <span class="fu">mean</span>(Average, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),       </span>
+<span id="cb300-6"><a href="prophet.html#cb300-6" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span></span>
+<span id="cb300-7"><a href="prophet.html#cb300-7" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb300-8"><a href="prophet.html#cb300-8" tabindex="-1"></a>  <span class="fu">as_tsibble</span>(<span class="at">index =</span> Week)</span>
+<span id="cb300-9"><a href="prophet.html#cb300-9" tabindex="-1"></a></span>
+<span id="cb300-10"><a href="prophet.html#cb300-10" tabindex="-1"></a><span class="co"># Vista rapida de la serie semanal</span></span>
+<span id="cb300-11"><a href="prophet.html#cb300-11" tabindex="-1"></a>pot_weekly_tsbl</span></code></pre></div>
+<pre><code>## # A tsibble: 414 x 2 [1W]
+##        Week Precio
+##      &lt;week&gt;  &lt;dbl&gt;
+##  1 2013 W24   20.5
+##  2 2013 W25   20.5
+##  3 2013 W26   23.3
+##  4 2013 W27   23.1
+##  5 2013 W28   23.6
+##  6 2013 W29   23.7
+##  7 2013 W30   23.5
+##  8 2013 W31   24.2
+##  9 2013 W32   26.4
+## 10 2013 W33   27.7
+## # ℹ 404 more rows</code></pre>
+<div id="ajustamos-el-modelo-prophet" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> <strong>Ajustamos el modelo Prophet</strong><a href="prophet.html#ajustamos-el-modelo-prophet" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Definimos explícitamente una estacionalidad anual (season(“year”)) y semanal (season(“week”)) mediante series de Fourier (con órdenes 10 y 3, respectivamente) para capturar los patrones cíclicos.</p>
+<div class="sourceCode" id="cb302"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb302-1"><a href="prophet.html#cb302-1" tabindex="-1"></a>fit_prophet <span class="ot">&lt;-</span> pot_weekly_tsbl <span class="sc">%&gt;%</span></span>
+<span id="cb302-2"><a href="prophet.html#cb302-2" tabindex="-1"></a>  <span class="fu">model</span>(</span>
+<span id="cb302-3"><a href="prophet.html#cb302-3" tabindex="-1"></a>    <span class="at">prophet =</span> <span class="fu">prophet</span>(</span>
+<span id="cb302-4"><a href="prophet.html#cb302-4" tabindex="-1"></a>      Precio <span class="sc">~</span> <span class="fu">season</span>(<span class="st">&quot;year&quot;</span>, <span class="at">order =</span> <span class="dv">10</span>) <span class="sc">+</span>   <span class="co">#anual</span></span>
+<span id="cb302-5"><a href="prophet.html#cb302-5" tabindex="-1"></a>                 <span class="fu">season</span>(<span class="st">&quot;week&quot;</span>, <span class="at">order =</span> <span class="dv">3</span>)    <span class="co">#semanal</span></span>
+<span id="cb302-6"><a href="prophet.html#cb302-6" tabindex="-1"></a>    )</span>
+<span id="cb302-7"><a href="prophet.html#cb302-7" tabindex="-1"></a>  )</span>
+<span id="cb302-8"><a href="prophet.html#cb302-8" tabindex="-1"></a></span>
+<span id="cb302-9"><a href="prophet.html#cb302-9" tabindex="-1"></a>fit_prophet</span></code></pre></div>
+<pre><code>## # A mable: 1 x 1
+##     prophet
+##     &lt;model&gt;
+## 1 &lt;prophet&gt;</code></pre>
+</div>
+<div id="generación-del-modelo-prophet" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> <strong>Generación del modelo Prophet</strong><a href="prophet.html#generación-del-modelo-prophet" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Generamos un pronóstico a 52 semanas (un año) usando el modelo Prophet ajustado. Procedemos a graficar este pronóstico (fc_prophet) junto a la serie original (pot_weekly_tsbl) para evaluar visualmente el ajuste.</p>
+<div class="sourceCode" id="cb304"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb304-1"><a href="prophet.html#cb304-1" tabindex="-1"></a>h_future <span class="ot">&lt;-</span> <span class="dv">52</span>   <span class="co"># un año</span></span>
+<span id="cb304-2"><a href="prophet.html#cb304-2" tabindex="-1"></a></span>
+<span id="cb304-3"><a href="prophet.html#cb304-3" tabindex="-1"></a><span class="co">#pronóstico</span></span>
+<span id="cb304-4"><a href="prophet.html#cb304-4" tabindex="-1"></a>fc_prophet <span class="ot">&lt;-</span> fit_prophet <span class="sc">%&gt;%</span></span>
+<span id="cb304-5"><a href="prophet.html#cb304-5" tabindex="-1"></a>  <span class="fu">forecast</span>(<span class="at">h =</span> h_future)</span>
+<span id="cb304-6"><a href="prophet.html#cb304-6" tabindex="-1"></a></span>
+<span id="cb304-7"><a href="prophet.html#cb304-7" tabindex="-1"></a><span class="co">#gráfico del pronóstico</span></span>
+<span id="cb304-8"><a href="prophet.html#cb304-8" tabindex="-1"></a><span class="fu">autoplot</span>(fc_prophet, pot_weekly_tsbl) <span class="sc">+</span></span>
+<span id="cb304-9"><a href="prophet.html#cb304-9" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Pronóstico Prophet (52 semanas)&quot;</span>,</span>
+<span id="cb304-10"><a href="prophet.html#cb304-10" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Precio promedio semanal&quot;</span>,</span>
+<span id="cb304-11"><a href="prophet.html#cb304-11" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Tiempo&quot;</span>) <span class="sc">+</span></span>
+<span id="cb304-12"><a href="prophet.html#cb304-12" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<p><img src="05-summary_files/figure-html/unnamed-chunk-41-1.png" width="1050" /></p>
+<div class="sourceCode" id="cb305"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb305-1"><a href="prophet.html#cb305-1" tabindex="-1"></a><span class="fu">head</span>(fc_prophet, <span class="dv">10</span>)</span></code></pre></div>
+<pre><code>## # A fable: 10 x 4 [1W]
+## # Key:     .model [1]
+##    .model      Week       Precio .mean
+##    &lt;chr&gt;     &lt;week&gt;       &lt;dist&gt; &lt;dbl&gt;
+##  1 prophet 2021 W20 sample[5000]  46.6
+##  2 prophet 2021 W21 sample[5000]  47.8
+##  3 prophet 2021 W22 sample[5000]  49.0
+##  4 prophet 2021 W23 sample[5000]  49.6
+##  5 prophet 2021 W24 sample[5000]  50.7
+##  6 prophet 2021 W25 sample[5000]  52.3
+##  7 prophet 2021 W26 sample[5000]  54.0
+##  8 prophet 2021 W27 sample[5000]  55.4
+##  9 prophet 2021 W28 sample[5000]  56.8
+## 10 prophet 2021 W29 sample[5000]  58.2</code></pre>
+</div>
+<div id="extracción-de-componentes-del-modelo" class="section level2 hasAnchor" number="5.3">
+<h2><span class="header-section-number">5.3</span> <strong>Extracción de componentes del modelo</strong><a href="prophet.html#extracción-de-componentes-del-modelo" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Extraemos y visualizamos los componentes internos que el modelo Prophet ha estimado: la tendencia (trend), la estacionalidad anual (season_year) y la estacionalidad semanal (season_week).</p>
+<div class="sourceCode" id="cb307"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb307-1"><a href="prophet.html#cb307-1" tabindex="-1"></a>components_prophet <span class="ot">&lt;-</span> <span class="fu">components</span>(fit_prophet)</span>
+<span id="cb307-2"><a href="prophet.html#cb307-2" tabindex="-1"></a></span>
+<span id="cb307-3"><a href="prophet.html#cb307-3" tabindex="-1"></a><span class="fu">autoplot</span>(components_prophet) <span class="sc">+</span></span>
+<span id="cb307-4"><a href="prophet.html#cb307-4" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Componentes del modelo Prophet&quot;</span>,</span>
+<span id="cb307-5"><a href="prophet.html#cb307-5" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Tiempo&quot;</span>, <span class="at">y =</span> <span class="st">&quot;&quot;</span>) <span class="sc">+</span></span>
+<span id="cb307-6"><a href="prophet.html#cb307-6" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<p><img src="05-summary_files/figure-html/unnamed-chunk-42-1.png" width="1050" /></p>
+</div>
+<div id="comparación-de-métricas" class="section level2 hasAnchor" number="5.4">
+<h2><span class="header-section-number">5.4</span> <strong>Comparación de métricas</strong><a href="prophet.html#comparación-de-métricas" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Extraemos el pronóstico de Prophet, lo convertimos a un objeto ts (compatible con forecast::accuracy) y calculamos el RMSE, MAE y MAPE contra el set de prueba (y_test_w). Finalmente, lo comparamos con las métricas ya calculadas de Holt-Winters (HW) y SARIMA.</p>
+<div class="sourceCode" id="cb308"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb308-1"><a href="prophet.html#cb308-1" tabindex="-1"></a>fc_prophet_mean <span class="ot">&lt;-</span> fc_prophet <span class="sc">%&gt;%</span></span>
+<span id="cb308-2"><a href="prophet.html#cb308-2" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb308-3"><a href="prophet.html#cb308-3" tabindex="-1"></a>  <span class="fu">pull</span>(.mean)</span>
+<span id="cb308-4"><a href="prophet.html#cb308-4" tabindex="-1"></a></span>
+<span id="cb308-5"><a href="prophet.html#cb308-5" tabindex="-1"></a><span class="fu">length</span>(fc_prophet_mean); <span class="fu">length</span>(y_test_w)</span></code></pre></div>
+<pre><code>## [1] 52</code></pre>
+<pre><code>## [1] 52</code></pre>
+<div class="sourceCode" id="cb311"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb311-1"><a href="prophet.html#cb311-1" tabindex="-1"></a>fc_prophet_mean_ts <span class="ot">&lt;-</span> <span class="fu">ts</span>(</span>
+<span id="cb311-2"><a href="prophet.html#cb311-2" tabindex="-1"></a>  fc_prophet_mean,</span>
+<span id="cb311-3"><a href="prophet.html#cb311-3" tabindex="-1"></a>  <span class="at">start     =</span> <span class="fu">start</span>(y_test_w),</span>
+<span id="cb311-4"><a href="prophet.html#cb311-4" tabindex="-1"></a>  <span class="at">frequency =</span> <span class="fu">frequency</span>(y_test_w)</span>
+<span id="cb311-5"><a href="prophet.html#cb311-5" tabindex="-1"></a>)</span>
+<span id="cb311-6"><a href="prophet.html#cb311-6" tabindex="-1"></a></span>
+<span id="cb311-7"><a href="prophet.html#cb311-7" tabindex="-1"></a></span>
+<span id="cb311-8"><a href="prophet.html#cb311-8" tabindex="-1"></a>acc_prophet <span class="ot">&lt;-</span> forecast<span class="sc">::</span><span class="fu">accuracy</span>(fc_prophet_mean_ts, y_test_w)</span>
+<span id="cb311-9"><a href="prophet.html#cb311-9" tabindex="-1"></a></span>
+<span id="cb311-10"><a href="prophet.html#cb311-10" tabindex="-1"></a></span>
+<span id="cb311-11"><a href="prophet.html#cb311-11" tabindex="-1"></a>acc_hw <span class="ot">&lt;-</span> forecast<span class="sc">::</span><span class="fu">accuracy</span>(fc_hwm_w, y_test_w)</span>
+<span id="cb311-12"><a href="prophet.html#cb311-12" tabindex="-1"></a></span>
+<span id="cb311-13"><a href="prophet.html#cb311-13" tabindex="-1"></a></span>
+<span id="cb311-14"><a href="prophet.html#cb311-14" tabindex="-1"></a>acc_arima <span class="ot">&lt;-</span> forecast<span class="sc">::</span><span class="fu">accuracy</span>(fc_seas, y_test_w)</span>
+<span id="cb311-15"><a href="prophet.html#cb311-15" tabindex="-1"></a></span>
+<span id="cb311-16"><a href="prophet.html#cb311-16" tabindex="-1"></a>acc_prophet</span></code></pre></div>
+<pre><code>##                ME     RMSE      MAE       MPE     MAPE      ACF1 Theil&#39;s U
+## Test set -3.95777 16.33774 14.53309 -23.10411 35.06264 0.9235695  3.973996</code></pre>
+<div class="sourceCode" id="cb313"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb313-1"><a href="prophet.html#cb313-1" tabindex="-1"></a>acc_hw</span></code></pre></div>
+<pre><code>##                        ME      RMSE       MAE        MPE      MAPE      MASE
+## Training set  0.002067938  2.846973  1.996849 -0.5664407  6.036061 0.2282876
+## Test set     11.967660543 18.997168 13.487363 14.9635500 19.577035 1.5419278
+##                   ACF1 Theil&#39;s U
+## Training set 0.1709493        NA
+## Test set     0.9102806  2.309535</code></pre>
+<div class="sourceCode" id="cb315"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb315-1"><a href="prophet.html#cb315-1" tabindex="-1"></a>acc_arima</span></code></pre></div>
+<pre><code>##                      ME        RMSE         MAE        MPE     MAPE       MASE
+## Training set 0.00243205  0.09152501  0.06528711 0.03373683  1.90487  0.2339729
+## Test set     9.04150112 18.80827374 15.08098880 6.33254734 25.67046 54.0465406
+##                     ACF1 Theil&#39;s U
+## Training set 0.003903853        NA
+## Test set     0.913122336  2.719755</code></pre>
+<div class="sourceCode" id="cb317"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb317-1"><a href="prophet.html#cb317-1" tabindex="-1"></a>row_p   <span class="ot">&lt;-</span> <span class="fu">nrow</span>(acc_prophet)</span>
+<span id="cb317-2"><a href="prophet.html#cb317-2" tabindex="-1"></a>row_hw  <span class="ot">&lt;-</span> <span class="fu">nrow</span>(acc_hw)</span>
+<span id="cb317-3"><a href="prophet.html#cb317-3" tabindex="-1"></a>row_ar  <span class="ot">&lt;-</span> <span class="fu">nrow</span>(acc_arima)</span>
+<span id="cb317-4"><a href="prophet.html#cb317-4" tabindex="-1"></a></span>
+<span id="cb317-5"><a href="prophet.html#cb317-5" tabindex="-1"></a>acc_compare <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb317-6"><a href="prophet.html#cb317-6" tabindex="-1"></a>  <span class="at">model =</span> <span class="fu">c</span>(<span class="st">&quot;Prophet&quot;</span>, <span class="st">&quot;HW_multiplicativo&quot;</span>, <span class="st">&quot;SARIMA_52&quot;</span>),</span>
+<span id="cb317-7"><a href="prophet.html#cb317-7" tabindex="-1"></a>  <span class="at">RMSE  =</span> <span class="fu">c</span>(acc_prophet[row_p, <span class="st">&quot;RMSE&quot;</span>],</span>
+<span id="cb317-8"><a href="prophet.html#cb317-8" tabindex="-1"></a>            acc_hw[row_hw,    <span class="st">&quot;RMSE&quot;</span>],</span>
+<span id="cb317-9"><a href="prophet.html#cb317-9" tabindex="-1"></a>            acc_arima[row_ar, <span class="st">&quot;RMSE&quot;</span>]),</span>
+<span id="cb317-10"><a href="prophet.html#cb317-10" tabindex="-1"></a>  <span class="at">MAE   =</span> <span class="fu">c</span>(acc_prophet[row_p, <span class="st">&quot;MAE&quot;</span>],</span>
+<span id="cb317-11"><a href="prophet.html#cb317-11" tabindex="-1"></a>            acc_hw[row_hw,    <span class="st">&quot;MAE&quot;</span>],</span>
+<span id="cb317-12"><a href="prophet.html#cb317-12" tabindex="-1"></a>            acc_arima[row_ar, <span class="st">&quot;MAE&quot;</span>]),</span>
+<span id="cb317-13"><a href="prophet.html#cb317-13" tabindex="-1"></a>  <span class="at">MAPE  =</span> <span class="fu">c</span>(acc_prophet[row_p, <span class="st">&quot;MAPE&quot;</span>],</span>
+<span id="cb317-14"><a href="prophet.html#cb317-14" tabindex="-1"></a>            acc_hw[row_hw,    <span class="st">&quot;MAPE&quot;</span>],</span>
+<span id="cb317-15"><a href="prophet.html#cb317-15" tabindex="-1"></a>            acc_arima[row_ar, <span class="st">&quot;MAPE&quot;</span>])</span>
+<span id="cb317-16"><a href="prophet.html#cb317-16" tabindex="-1"></a>)</span>
+<span id="cb317-17"><a href="prophet.html#cb317-17" tabindex="-1"></a></span>
+<span id="cb317-18"><a href="prophet.html#cb317-18" tabindex="-1"></a>acc_compare</span></code></pre></div>
+<pre><code>##               model     RMSE      MAE     MAPE
+## 1           Prophet 16.33774 14.53309 35.06264
+## 2 HW_multiplicativo 18.99717 13.48736 19.57704
+## 3         SARIMA_52 18.80827 15.08099 25.67046</code></pre>
+<p><em>Comparación de desempeño entre Prophet, Holt–Winters y SARIMA</em></p>
+<p>A partir de la ventana de prueba de 52 semanas, se evaluó la capacidad predictiva de los tres modelos (Prophet, Holt-Winters multiplicativo y SARIMA(1,0,0)(0,1,0)[52]) utilizando las métricas RMSE, MAE y MAPE.</p>
+<p>Los resultados muestran diferencias claras en el desempeño:</p>
+<ul>
+<li><p><strong>Holt-Winters Multiplicativo (Ganador):</strong> Obtuvo el MAPE más bajo (19.58%) y el menor MAE (13.49). Esto indica que es el modelo con menor error porcentual fuera de muestra y la mejor estabilidad en la magnitud absoluta de sus errores.</p></li>
+<li><p><strong>Prophet:</strong> Logró el RMSE más bajo (16.27), sugiriendo que, en promedio, la desviación de sus pronósticos fue menor. Sin embargo, presentó el MAPE más alto (34.91%), indicando errores proporcionalmente mayores en ciertos puntos, posiblemente por un sobreajuste o suavizado excesivo de las oscilaciones semanales del precio.</p></li>
+<li><p><strong>SARIMA(1,0,0)(0,1,0)[52]:</strong> Mostró un RMSE similar a Holt-Winters (18.81), aunque su error porcentual (MAPE = 25.67%) fue superior. Esto sugiere que su captura de la estacionalidad (vía diferencia estacional) no fue tan precisa como el patrón multiplicativo de Holt-Winters.</p></li>
+</ul>
+</div>
+<div id="conclusión-de-la-comparación" class="section level2 hasAnchor" number="5.5">
+<h2><span class="header-section-number">5.5</span> <strong>Conclusión de la comparación:</strong><a href="prophet.html#conclusión-de-la-comparación" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>El mejor equilibrio entre precisión (RMSE) y estabilidad (MAPE/MAE) fue logrado por el modelo Holt-Winters multiplicativo. No obstante, Prophet demostró ser competitivo en RMSE, y SARIMA se mantuvo como una alternativa sólida intermedia.</p>
+</div>
+<div id="pruebas-de-estacionariedad-dickey-fuller" class="section level2 hasAnchor" number="5.6">
+<h2><span class="header-section-number">5.6</span> <strong>Pruebas de estacionariedad Dickey Fuller</strong><a href="prophet.html#pruebas-de-estacionariedad-dickey-fuller" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Evaluamos la serie en tres estados: en niveles (original), con transformación logarítmica y con una primera diferencia sobre el logaritmo.</p>
+<div class="sourceCode" id="cb319"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb319-1"><a href="prophet.html#cb319-1" tabindex="-1"></a><span class="fu">library</span>(tseries)</span>
+<span id="cb319-2"><a href="prophet.html#cb319-2" tabindex="-1"></a></span>
+<span id="cb319-3"><a href="prophet.html#cb319-3" tabindex="-1"></a><span class="co"># Serie original semanal</span></span>
+<span id="cb319-4"><a href="prophet.html#cb319-4" tabindex="-1"></a>y0 <span class="ot">&lt;-</span> y_w </span>
+<span id="cb319-5"><a href="prophet.html#cb319-5" tabindex="-1"></a></span>
+<span id="cb319-6"><a href="prophet.html#cb319-6" tabindex="-1"></a><span class="co">#ADF test en niveles</span></span>
+<span id="cb319-7"><a href="prophet.html#cb319-7" tabindex="-1"></a>adf_nivel <span class="ot">&lt;-</span> <span class="fu">adf.test</span>(y0)</span></code></pre></div>
+<pre><code>## Warning in adf.test(y0): p-value smaller than printed p-value</code></pre>
+<div class="sourceCode" id="cb321"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb321-1"><a href="prophet.html#cb321-1" tabindex="-1"></a>adf_nivel<span class="sc">$</span>p.value</span></code></pre></div>
+<pre><code>## [1] 0.01</code></pre>
+<div class="sourceCode" id="cb323"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb323-1"><a href="prophet.html#cb323-1" tabindex="-1"></a><span class="co">#Transformación log</span></span>
+<span id="cb323-2"><a href="prophet.html#cb323-2" tabindex="-1"></a>y_log <span class="ot">&lt;-</span> <span class="fu">log</span>(y0)</span>
+<span id="cb323-3"><a href="prophet.html#cb323-3" tabindex="-1"></a>adf_log <span class="ot">&lt;-</span> <span class="fu">adf.test</span>(y_log)</span></code></pre></div>
+<pre><code>## Warning in adf.test(y_log): p-value smaller than printed p-value</code></pre>
+<div class="sourceCode" id="cb325"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb325-1"><a href="prophet.html#cb325-1" tabindex="-1"></a>adf_log<span class="sc">$</span>p.value</span></code></pre></div>
+<pre><code>## [1] 0.01</code></pre>
+<div class="sourceCode" id="cb327"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb327-1"><a href="prophet.html#cb327-1" tabindex="-1"></a><span class="co">#Diferencia de primer orden</span></span>
+<span id="cb327-2"><a href="prophet.html#cb327-2" tabindex="-1"></a>y_diff <span class="ot">&lt;-</span> <span class="fu">diff</span>(y_log, <span class="at">differences =</span> <span class="dv">1</span>)</span>
+<span id="cb327-3"><a href="prophet.html#cb327-3" tabindex="-1"></a>adf_diff <span class="ot">&lt;-</span> <span class="fu">adf.test</span>(<span class="fu">na.omit</span>(y_diff))</span></code></pre></div>
+<pre><code>## Warning in adf.test(na.omit(y_diff)): p-value smaller than printed p-value</code></pre>
+<div class="sourceCode" id="cb329"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb329-1"><a href="prophet.html#cb329-1" tabindex="-1"></a>adf_diff<span class="sc">$</span>p.value</span></code></pre></div>
+<pre><code>## [1] 0.01</code></pre>
+<div class="sourceCode" id="cb331"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb331-1"><a href="prophet.html#cb331-1" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
+<span id="cb331-2"><a href="prophet.html#cb331-2" tabindex="-1"></a>  <span class="at">Serie =</span> <span class="fu">c</span>(<span class="st">&quot;Nivel&quot;</span>, <span class="st">&quot;Log&quot;</span>, <span class="st">&quot;Log diferencia 1&quot;</span>),</span>
+<span id="cb331-3"><a href="prophet.html#cb331-3" tabindex="-1"></a>  <span class="at">p_value =</span> <span class="fu">c</span>(adf_nivel<span class="sc">$</span>p.value, adf_log<span class="sc">$</span>p.value, adf_diff<span class="sc">$</span>p.value)</span>
+<span id="cb331-4"><a href="prophet.html#cb331-4" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>##              Serie p_value
+## 1            Nivel    0.01
+## 2              Log    0.01
+## 3 Log diferencia 1    0.01</code></pre>
+<p><em>Justificación del uso de la serie como regresión</em></p>
+<p>De acuerdo con la teoría, una regresión en series de tiempo requiere que las variables sean estacionarias para evitar regresiones espurias, donde se encuentran relaciones estadísticas que no existen en la realidad. Por ello, se evaluó la estacionariedad del precio semanal del Potato Red (la serie y_w).</p>
+<p><strong>Resultados de la Prueba ADF (Augmented Dickey-Fuller)</strong></p>
+<ul>
+<li><p>Serie en Niveles: p-valor = 0.01</p></li>
+<li><p>Serie en Logaritmo: p-valor = 0.01</p></li>
+<li><p>Serie en Log-Diferencia (d=1): p-valor = 0.01</p></li>
+</ul>
+<p><strong>Conclusión de Estacionariedad</strong>
+En los tres casos, el p-valor (0.01) es significativamente menor al nivel de significancia del 5% (0.05), lo que permite rechazar la hipótesis nula (H0) de raíz unitaria.</p>
+<p>Esto confirma que la serie semanal es estacionaria (o al menos estacionaria en tendencia) en sus diferentes transformaciones. Este cumplimiento de la condición de estacionariedad valida el uso de enfoques de regresión para modelar la serie.</p>
+<p>Tanto SARIMA (que puede verse como una regresión con errores ARMA) como Prophet (que se formula como un modelo de regresión no lineal aditivo) son, por lo tanto, enfoques teóricamente viables para esta serie de tiempo.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="modelos-estacionales-en-series-de-tiempo.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/05-summary.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

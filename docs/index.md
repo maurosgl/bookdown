@@ -1,7 +1,7 @@
 ---
 title: "Series de Tiempo - Predicción de Precios de Frutas y Verduras en Nepal"
 author: "Grupo 2"
-date: "2025-11-11"
+date: "2025-11-17"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
 documentclass: book
